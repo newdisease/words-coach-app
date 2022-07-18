@@ -2,13 +2,15 @@
 exclude =
     .git,
     .gitignore,
+    .dockerignore,
     *.pot,
     *.py[co],
     __pycache__,
+    __init__.py,
     venv,
-    .env
-    migrations
+    .env,
+    migrations,
     manage.py,
-    settings.py,
+    settings
 
 max-line-length = 200

@@ -2,10 +2,7 @@ import environ
 import os
 from pathlib import Path
 
-env = environ.FileAwareEnv(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
+env = environ.FileAwareEnv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,12 +15,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
-
-ALLOWED_HOSTS = ["*"]
-
 
 # Application definition
 
@@ -58,11 +49,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://localhost:8000',
-)
-
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -82,24 +68,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-# Parse database connection url strings
-# like psql://user:pass@127.0.0.1:8458/db
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('DATABASE_NAME', default='postgres'),
-        'USER': env('DATABASE_USER', default='postgres'),
-        'PASSWORD': env('DATABASE_PASSWORD', default='postgres'),
-        'HOST': env('DATABASE_HOST', default='db'),
-        'PORT': '5432',
-    }
-}
 
 
 # Password validation
