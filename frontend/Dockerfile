@@ -1,7 +1,7 @@
-FROM node:14-alpine
+FROM node:18-alpine
 WORKDIR /app/frontend
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install 
 RUN npm install react-scripts@5.0.1 -g 
 COPY . /app/frontend/
