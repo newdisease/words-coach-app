@@ -9,9 +9,9 @@ const Navigation = () => {
     return (
         <>
             <Navbar bg="light" className='mt-5'>
-                <Navbar.Brand href="#">Word coach app</Navbar.Brand>
+                <Navbar.Brand href="/">Word coach app</Navbar.Brand>
                 <Nav>
-                    <Nav.Link href="#">
+                    <Nav.Link href="/dictionary">
                         Dictionary
                     </Nav.Link>
                 </Nav>

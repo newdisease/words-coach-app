@@ -1,19 +1,27 @@
-import MainPage from "./Pages/MainPage";
+import { Routes, Route } from "react-router-dom";
 import Navigation from "./Header/Navigation";
 import { Container } from "react-bootstrap";
-import QuizPage from "./Pages/QuizPage";
-import ErrorPage from "./Pages/ErrorPage";
-import DictionaryPage from "./Pages/DictionaryPage";
+import { MainPage, ErrorPage, QuizPage, DictionaryPage } from "./Pages";
 
 function App() {
   return (
-    <Container fluid="sm" className="mt-5 text-center">
-      <Navigation />
-      <MainPage />
-      {/* <ErrorPage /> */}
-      {/* <QuizPage /> */}
-      {/* <DictionaryPage /> */}
-    </Container >
+    <div className="app">
+      <header>
+        <Container fluid="sm" className="mt-5 text-center">
+          <Navigation />
+        </Container >
+      </header>
+      <main>
+        <Container fluid="sm" className="mt-5 text-center">
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/dictionary" element={<DictionaryPage />} />
+            <Route path="/quiz" element={<QuizPage />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </Container >
+      </main >
+    </div>
   );
 }
 
