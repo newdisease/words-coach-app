@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Container } from 'react-bootstrap';
 import WordsSearchForm from '../WordsSearchForm/WordsSearchForm';
+import DictionaryPage from './DictionaryPage';
 
 function MainPage() {
     // const [testData, setTestData] = useState([]);
