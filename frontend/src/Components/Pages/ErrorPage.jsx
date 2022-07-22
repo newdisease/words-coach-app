@@ -3,7 +3,7 @@ import { Row, Col, Button } from "react-bootstrap";
 const ErrorPage = () => {
     return (
         <>
-            <Row style={{ "min-height": "50vh" }} className="d-flex justify-content-center align-items-center">
+            <Row style={{ "minHeight": "50vh" }} className="d-flex justify-content-center align-items-center">
                 <Col xs={10} md={9} lg={6} className="text-center">
                     <span className="display-1 d-block">404</span>
                     <div className="mb-4 lead">The page you are looking for was not found.</div>
