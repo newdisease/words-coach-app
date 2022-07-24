@@ -7,15 +7,15 @@ const QuizPage = () => {
     return (
         <>
             <p className="h2 my-3">Quiz</p>
-            <div style={{ "max-width": "80vh" }} className="mx-auto">
+            <div style={{ "maxWidth": "80vh" }} className="mx-auto">
                 <ProgressBar
-                    style={{ "min-height": "25px", "max-width": "70vh" }}
+                    style={{ "minHeight": "25px", "maxWidth": "70vh" }}
                     className="my-3 mx-auto"
                     now="10"
                     label="1/10"
                 />
                 <Row
-                    style={{ "min-height": "15vh" }}>
+                    style={{ "minHeight": "15vh" }}>
                     <Col xs={2} md={2} lg={2} className="my-auto">
                         <ArrowLeftCircle className="text-primary" size={30} />
                     </Col>
@@ -29,17 +29,17 @@ const QuizPage = () => {
                 </Row>
                 <Form>
                     <Row
-                        style={{ "min-height": "25vh" }}
+                        style={{ "minHeight": "25vh" }}
                         className='d-flex justify-content-center align-items-center'
                     >
 
                         <Col xs={12} md={12} lg={12}>
                             <Form.Group className="mb-1 d-flex justify-content-center">
-                                <Form.Control style={{ "max-width": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
-                                <Form.Control style={{ "max-width": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
-                                <Form.Control style={{ "max-width": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
-                                <Form.Control style={{ "max-width": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
-                                <Form.Control style={{ "max-width": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
+                                <Form.Control style={{ "maxWidth": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
+                                <Form.Control style={{ "maxWidth": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
+                                <Form.Control style={{ "maxWidth": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
+                                <Form.Control style={{ "maxWidth": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
+                                <Form.Control style={{ "maxWidth": "6vh" }} className="mx-1 text-center" type="text" maxLength="1" />
                             </Form.Group>
                             <Button className='col-sm-5 my-2' type="submit" variant="success" size="lg">Check</Button>
                         </Col>

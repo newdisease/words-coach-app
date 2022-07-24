@@ -12,7 +12,7 @@ function App() {
         </Container >
       </header>
       <main>
-        <Container fluid="sm" className="mt-5 text-center">
+        <Container fluid="sm" className="text-center">
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/dictionary" element={<DictionaryPage />} />
