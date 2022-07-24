@@ -1,23 +1,40 @@
 import { useState } from 'react';
 import { Button, Form, Col, Row, Spinner } from 'react-bootstrap';
+import { useForm } from "react-hook-form";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 import getTranslate from '../../Services/TranslatorService';
+
+const schema = yup.object({
+    expression: yup.string()
+        .min(2, 'must be at least 2 characters long')
+        .max(15, 'an expression is too long')
+        .matches(/^([^\s]*[\s]?[^\s]*){0,2}$/, { message: "too many words in the expression" })
+        .matches(/^[а-яА-ЯіІїЇa-zA-Z\s']+$/, { message: "only letters are allowed" }),
+}).required();
 
 const WordsSearchForm = () => {
     const [word, setWord] = useState(null);
     const [translated, setTranslated] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const getData = async (word) => {
+    const { register, formState: { errors }, handleSubmit } = useForm({
+        resolver: yupResolver(schema)
+    });
+
+    const getData = async ({ expression }) => {
         setIsLoading(true);
-        const data = await getTranslate(word);
+        const data = await getTranslate(expression);
         setTranslated(data);
         setIsLoading(false);
     }
 
+
     return (
-        <Form>
-            <Row style={{ "maxHeight": "15vh", "minHeight": "15vh" }} className='d-flex justify-content-center align-items-end'>
+        <>
+            <Row style={{ "maxHeight": "15vh", "minHeight": "15vh" }}
+                className='d-flex justify-content-center align-items-end'>
                 <Col xs={10} md={5} lg={3}>
                     {(!isLoading && !translated) && <div><p className='h5'>Write a word in <br /> <mark>English</mark> or <mark>Ukrainian</mark> </p></div>}
                     {isLoading && <Spinner animation="border" role="status">
@@ -26,18 +43,19 @@ const WordsSearchForm = () => {
                     {translated && <ShowTranslatedResult result={translated} />}
                 </Col>
             </Row>
-            <Row style={{ "minHeight": "35vh" }} className='d-flex justify-content-center align-items-center mb-5'>
-                <Col xs={10} md={5} lg={3}>
-                    <Form.Group className="my-2">
-                        <Form.Control size="lg" type="text" placeholder="Add a word..." onChange={(e) => setWord(e.target.value)}></Form.Control>
-                    </Form.Group>
-                    <Button className={`col-sm-5 ${isLoading && "disabled"}`} type="submit" variant="warning" size="lg" onClick={(e) => {
-                        e.preventDefault();
-                        getData(word);
-                    }}>Submit</Button>
-                </Col>
-            </Row>
-        </Form>
+            <Form onSubmit={handleSubmit(getData)}>
+                <Row style={{ "minHeight": "35vh" }}
+                    className='d-flex justify-content-center align-items-center mb-5'>
+                    <Col xs={10} md={5} lg={3}>
+                        <Form.Group className="my-2">
+                            <Form.Control size="lg" type="text" placeholder="Add a word..." {...register("expression")}></Form.Control>
+                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.expression?.message}</p>
+                            <Button className={`col-sm-5 ${(isLoading || errors.expression) && "disabled"}`} type="submit" variant="warning" size="lg">Translate</Button>
+                        </Form.Group>
+                    </Col>
+                </Row>
+            </Form>
+        </>
     )
 }
 
