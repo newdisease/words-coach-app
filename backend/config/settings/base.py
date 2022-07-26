@@ -29,8 +29,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     # Local apps
+    "accounts",
     'api',
 ]
+
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

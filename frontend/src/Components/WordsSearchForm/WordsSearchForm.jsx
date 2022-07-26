@@ -15,7 +15,6 @@ const schema = yup.object({
 }).required();
 
 const WordsSearchForm = () => {
-    const [word, setWord] = useState(null);
     const [translated, setTranslated] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
