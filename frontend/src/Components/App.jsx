@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import Navigation from "./Header/Navigation";
+import Navigation from "./Navigation/Navigation";
 import { Container } from "react-bootstrap";
 import { MainPage, ErrorPage, QuizPage, DictionaryPage } from "./Pages";
 import { store } from "../Store";
@@ -12,7 +12,7 @@ function App() {
     <Provider store={store}>
       <div className="app">
         <header>
-          <Container fluid="sm" className="mt-5 text-center">
+          <Container fluid="sm" className="mt-5">
             <Navigation />
           </Container >
         </header>

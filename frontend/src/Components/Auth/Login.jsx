@@ -39,10 +39,14 @@ const Login = ({ show, onHide }) => {
                 })
                     .catch(error => {
                         setError("Something went wrong");
+                        setIsLoading(false);
+                        throw error;
                     })
             })
             .catch(error => {
                 setError("Something went wrong");
+                setIsLoading(false);
+                throw error;
             });
 
     }
