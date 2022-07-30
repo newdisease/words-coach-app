@@ -2,7 +2,7 @@
 ### Authentication Endpoints
 
 
- -   Registration Endpoint (POST): `/api/accounts/users`
+ -   Registration Endpoint (POST): `/api/accounts/users/`
 
         ```
         {
@@ -10,11 +10,11 @@
             "password": ""
         }
         ```
--  Token Login Endpoint (POST): `/api/accounts/token/login`
+-  Token Login Endpoint (POST): `/api/accounts/token/login/`
 
         {
             "email": "",
             "password": ""
         }
-- Token Logout Endpoint (POST): `/api/accounts/token/logout`
+- Token Logout Endpoint (POST): `/api/accounts/token/logout/`
 

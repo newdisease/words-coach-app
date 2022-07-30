@@ -1,7 +1,8 @@
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useState } from 'react';
-import ModalAuth from '../ModalUser/ModalAuth';
-import ModalCreateAccount from '../ModalUser/ModalCreateAccount';
+import Login from '../Auth/Login';
+import Signup from '../Signup/Signup';
+import Logout from '../Auth/Logout';
 
 const Navigation = () => {
     const [modalAuthShow, setModalAuthShow] = useState(false);
@@ -18,7 +19,7 @@ const Navigation = () => {
                 <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
                     <Nav className="">
                         <NavDropdown title="John Dou" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item onClick={Logout}>
                                 Logout
                             </NavDropdown.Item>
                             <NavDropdown.Item onClick={() => setModalAuthShow(true)}>
@@ -31,12 +32,12 @@ const Navigation = () => {
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
-            <ModalCreateAccount
+            <Signup
                 show={modalRegistrationShow}
                 onHide={() => setModalRegistrationShow(false)}
             />
 
-            <ModalAuth
+            <Login
                 show={modalAuthShow}
                 onHide={() => setModalAuthShow(false)}
             />

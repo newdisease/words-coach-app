@@ -29,10 +29,9 @@ const WordsSearchForm = () => {
         setIsLoading(false);
     }
 
-
     return (
         <>
-            <Row style={{ "maxHeight": "15vh", "minHeight": "15vh" }}
+            <Row style={{ "maxHeight": "20vh", "minHeight": "20vh" }}
                 className='d-flex justify-content-center align-items-end'>
                 <Col xs={10} md={5} lg={3}>
                     {(!isLoading && !translated) && <div><p className='h5'>Write a word in <br /> <mark>English</mark> or <mark>Ukrainian</mark> </p></div>}
@@ -65,7 +64,7 @@ const ShowTranslatedResult = ({ result }) => {
                 {result.language === 'en' ?
                     <p className='h4'>{result.enWord} - <strong><mark>{result.ukWord}</mark></strong></p> :
                     <p className='h4'>{result.ukWord} - <strong><mark>{result.enWord}</mark></strong></p>}
-                <a className="btn btn-link btn-sm" href="#">add to dictionary</a>
+                <a className="btn btn-link btn-sm" href="/">add to dictionary</a>
             </div>
         )
     }
