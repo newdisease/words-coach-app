@@ -6,6 +6,7 @@ import { loginSetToken, loginSetUser } from "./AuthSlice";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoginFormValidatorsSchema as schema } from './LoginFormValidators';
 import { useState } from 'react';
+// import { BASE_URL } from '../App';
 
 const Login = ({ show, onHide }) => {
     const [error, setError] = useState(null);
@@ -24,13 +25,13 @@ const Login = ({ show, onHide }) => {
     const onSubmit = ({ email, password }) => {
         setIsLoading(true);
         axios
-            .post("http://127.0.0.1:8000/api/accounts/token/login/", { email, password })
+            .post("accounts/token/login/", { email, password })
             .then((response) => {
                 const token = response.data['auth_token'];
                 dispatch(loginSetToken(token));
                 localStorage.setItem("authTokens", token);
                 axios.defaults.headers.common["Authorization"] = "Token " + token;
-                axios.get("http://127.0.0.1:8000/api/accounts/users/me/").then((response) => {
+                axios.get("accounts/users/me/").then((response) => {
                     dispatch(loginSetUser(response.data));
                     localStorage.setItem("user", JSON.stringify(response.data));
                     onHide();

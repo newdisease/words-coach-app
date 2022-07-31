@@ -10,24 +10,23 @@ const Navigation = () => {
     const { isAuthenticated } = useSelector(state => state.login);
     const [modalAuthShow, setModalAuthShow] = useState(false);
     const [modalRegistrationShow, setModalRegistrationShow] = useState(false);
+    const [expanded, setExpanded] = useState(false);
     return (
         <>
-            <Navbar expand="sm">
+            <Navbar expand="sm" expanded={expanded} onClick={() => setExpanded(!expanded)}>
                 <Navbar.Brand as={Link} to="/">Word coach app</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                {!isAuthenticated ?
-                    <Navbar.Collapse className="justify-content-end mx-3" id="basic-navbar-nav">
+                <Navbar.Collapse className="justify-content-end mx-3" id="basic-navbar-nav">
+                    {!isAuthenticated ?
                         <Nav variant="tabs">
                             <Nav.Link onClick={() => setModalAuthShow(true)}>Login</Nav.Link>
                             <Nav.Link onClick={() => setModalRegistrationShow(true)}>Signup</Nav.Link>
                         </Nav>
-                    </Navbar.Collapse> :
-                    <Navbar.Collapse className="justify-content-end mx-3" id="basic-navbar-nav">
-                        <Nav variant="tabs">
+                        : <Nav variant="tabs">
                             <Nav.Link as={NavLink} to="/dictionary" className={({ isActive }) => (isActive ? 'active' : '')}>My dictionary</Nav.Link>
                             <Nav.Link onClick={Logout}>Logout</Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>}
+                        </Nav>}
+                </Navbar.Collapse>
             </Navbar>
             <Signup
                 show={modalRegistrationShow}

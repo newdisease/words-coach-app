@@ -44,26 +44,3 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
-
-
-# User Profile Model
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        CustomUser, on_delete=models.CASCADE, related_name="profile"
-    )
-    email = models.EmailField(blank=False, null=False, unique=True)
-    first_name = models.CharField(max_length=50, blank=True)
-    last_name = models.CharField(max_length=50, blank=True)
-    is_active = models.BooleanField(default=True)
-    registration_date = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.email
-
-
-# Signal for User Profile Model
-@receiver(post_save, sender=CustomUser)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance, email=instance.email)

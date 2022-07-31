@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SignupFormValidatorsSchema as schema } from './SignupFormValidators';
-// import { useSelector, useDispatch } from "react-redux";
-// import { signupUserSubmited, signupUserSuccess, signupUserError, signupCloseAlert } from "./SignupSlice";
 import { useState } from 'react';
 
 
@@ -28,7 +26,7 @@ const Signup = ({ show, onHide }) => {
     const onSubmit = ({ email, password }) => {
         setIsSubmitted(true);
         axios
-            .post("http://127.0.0.1:8000/api/accounts/users/", { email, password })
+            .post("accounts/users/", { email, password })
             .then(() => {
                 onHide();
                 setIsSent(true);

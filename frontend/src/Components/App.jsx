@@ -4,8 +4,10 @@ import Navigation from "./Navigation/Navigation";
 import { Container } from "react-bootstrap";
 import { MainPage, ErrorPage, QuizPage, DictionaryPage } from "./Pages";
 import { store } from "../Store";
+import axios from "axios";
 
 
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 function App() {
   return (
