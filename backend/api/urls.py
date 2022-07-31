@@ -1,3 +1,9 @@
 from django.urls import path
+from rest_framework import routers
+from api.views import DictionaryCreateListViewSet
 
-urlpatterns = []
+router = routers.SimpleRouter()
+
+router.register(r'dictionary', DictionaryCreateListViewSet, 'dictionary')
+
+urlpatterns = router.urls
