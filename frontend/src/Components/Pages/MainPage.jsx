@@ -9,7 +9,8 @@ function MainPage() {
         <>
             <WordsSearchForm />
             <div>
-                <Button variant="success" size="lg" href='/quiz' disabled={!isAuthenticated}>
+                <Button variant="success" size="lg"
+                    href='/quiz' disabled={!isAuthenticated}>
                     Start learning
                 </Button>
             </div>

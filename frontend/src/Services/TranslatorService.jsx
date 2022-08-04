@@ -27,18 +27,21 @@ const getTranslate = async (word) => {
         });
         const data = response.data[0];
 
-        if ((data.detectedLanguage.language === 'en' || data.detectedLanguage.language === 'uk' || data.detectedLanguage.language === 'ru') && data.translations[0].text.length > 0) {
-            const obj = {
+        let obj = {};
+        if (['en', 'uk', 'ru'].includes(data.detectedLanguage.language) && data.translations[0].text.length > 0) {
+            obj = {
                 language: data.detectedLanguage.language,
                 ukWord: data.translations[0].text.toLowerCase(),
                 enWord: data.translations[1].text.toLowerCase()
             }
-            return obj;
         } else {
-            console.log('Language not supported');
+            obj = {
+                language: 'This language is not supported'
+            }
         }
+        return obj;
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 }
 
