@@ -12,5 +12,5 @@ class DictionaryCreateListViewSet(
     def get_queryset(self):
         return Dictionary.objects.filter(user_id=self.request.user.id)
 
-    def perform_create(self, serializer):
-        serializer.save(user_id=self.request.user.id, progress=0)
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}

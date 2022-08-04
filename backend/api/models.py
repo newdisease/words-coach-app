@@ -17,12 +17,13 @@ class Dictionary(TimeStampedModel):
     en_word = models.CharField(max_length=20)
     progress = models.IntegerField(default=0)
     user = models.ForeignKey(
-        User, related_name='dictionaries', on_delete=models.CASCADE
+        User, related_name='dictionary', on_delete=models.CASCADE
     )
 
     def __str__(self):
         return self.uk_word + ' - ' + self.en_word
 
     class Meta:
-        verbose_name_plural = 'Dictionaries'
-        unique_together = ('en_word', 'user')
+        verbose_name_plural = 'Dictionary'
+        unique_together = ('uk_word', 'en_word', 'user_id')
+        ordering = ('created_at',)

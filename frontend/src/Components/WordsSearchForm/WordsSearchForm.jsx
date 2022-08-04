@@ -1,18 +1,12 @@
 import { useState } from 'react';
-import { Button, Form, Col, Row, Spinner } from 'react-bootstrap';
+import axios from 'axios';
+import { Button, Form, Col, Row, Spinner, Toast, ToastContainer } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from "yup";
-
+import { WordsFormValidatorsSchema as schema } from './WordsFormValidators';
+import { useSelector } from 'react-redux';
 import getTranslate from '../../Services/TranslatorService';
 
-const schema = yup.object({
-    expression: yup.string()
-        .min(2, 'must be at least 2 characters long')
-        .max(15, 'an expression is too long')
-        .matches(/^([^\s]*[\s]?[^\s]*){0,2}$/, { message: "too many words in the expression" })
-        .matches(/^[а-яА-ЯіІїЇa-zA-Z\s']+$/, { message: "only letters are allowed" }),
-}).required();
 
 const WordsSearchForm = () => {
     const [translated, setTranslated] = useState(null);
@@ -58,14 +52,35 @@ const WordsSearchForm = () => {
 }
 
 const ShowTranslatedResult = ({ result }) => {
+    const { isAuthenticated } = useSelector(state => state.login);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const { ukWord, enWord } = result;
+
+    const addWordToDB = () => {
+        setIsLoading(true);
+        axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
+            .then(() => {
+                setIsSuccess(true);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                setIsLoading(false);
+                setIsError(true);
+                throw error;
+            });
+    }
+
     if (result) {
         return (
-            <div>
+            <>
                 {result.language === 'en' ?
                     <p className='h4'>{result.enWord} - <strong><mark>{result.ukWord}</mark></strong></p> :
                     <p className='h4'>{result.ukWord} - <strong><mark>{result.enWord}</mark></strong></p>}
-                <a className="btn btn-link btn-sm" href="/">add to dictionary</a>
-            </div>
+                {!isLoading ? <Button variant="link" size="sm" disabled={!isAuthenticated} onClick={addWordToDB}>add to dictionary</Button> :
+                    <Button variant="link"><Spinner animation="border" size="sm" /></Button>}
+            </>
         )
     }
 }

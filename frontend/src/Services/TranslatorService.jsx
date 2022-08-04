@@ -27,7 +27,7 @@ const getTranslate = async (word) => {
         });
         const data = response.data[0];
 
-        if (data.detectedLanguage.language === 'en' || data.detectedLanguage.language === 'uk') {
+        if ((data.detectedLanguage.language === 'en' || data.detectedLanguage.language === 'uk' || data.detectedLanguage.language === 'ru') && data.translations[0].text.length > 0) {
             const obj = {
                 language: data.detectedLanguage.language,
                 ukWord: data.translations[0].text.toLowerCase(),

@@ -6,14 +6,14 @@ function MainPage() {
     const { isAuthenticated } = useSelector(state => state.login);
 
     return (
-        <div>
+        <>
             <WordsSearchForm />
             <div>
                 <Button variant="success" size="lg" href='/quiz' disabled={!isAuthenticated}>
                     Start learning
                 </Button>
             </div>
-        </div>
+        </>
     );
 }
 
