@@ -1,11 +1,20 @@
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from rest_framework.mixins import (
+    ListModelMixin,
+    CreateModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+)
 from rest_framework.viewsets import GenericViewSet
 from .models import Dictionary
 from .serializers import DictionarySerializer
 
 
 class DictionaryCreateListViewSet(
-    ListModelMixin, CreateModelMixin, GenericViewSet
+    ListModelMixin,
+    CreateModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+    GenericViewSet,
 ):
     serializer_class = DictionarySerializer
 

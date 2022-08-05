@@ -26,4 +26,4 @@ class Dictionary(TimeStampedModel):
     class Meta:
         verbose_name_plural = 'Dictionary'
         unique_together = ('uk_word', 'en_word', 'user_id')
-        ordering = ('created_at',)
+        ordering = ('-created_at',)
