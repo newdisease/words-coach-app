@@ -37,13 +37,14 @@ const DictionaryItem = ({ item, onDeleteItem, onUpdateItem, isLoading }) => {
 const DictionaryPage = () => {
     const [dictionary, setDictionary] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [offset, setOffset] = useState(0);
+    const [isEnd, setIsEnd] = useState(false);
 
     const onRequest = () => {
         setIsLoading(true);
-        axios.get('/dictionary/')
+        axios.get(`/dictionary/?limit=2&offset=${offset}`)
             .then(res => {
-                setDictionary(res.data);
-                setIsLoading(false);
+                onDictionaryLoaded(res.data.results);
             })
             .catch(err => console.log(err));
     }
@@ -51,6 +52,17 @@ const DictionaryPage = () => {
     useEffect(() => {
         onRequest();
     }, []);
+
+    const onDictionaryLoaded = (newItems) => {
+        let isEnd = false;
+        if (newItems.length < 2) {
+            isEnd = true;
+        }
+        setDictionary([...dictionary, ...newItems]);
+        setOffset(offset => offset + 2);
+        setIsEnd(isEnd);
+        setIsLoading(false);
+    }
 
     const onUpdateItem = (id) => {
         setIsLoading(true);
@@ -107,10 +119,13 @@ const DictionaryPage = () => {
                     )}
                 </tbody>
             </Table>
-            <Button className='mt-3' variant="primary" size="lg"
+            {!isEnd && < Button className='mt-3'
+                variant="primary"
+                size="lg"
+                onClick={onRequest}
                 disabled={isLoading}>
                 Load more
-            </Button>
+            </Button>}
         </>
     )
 }
