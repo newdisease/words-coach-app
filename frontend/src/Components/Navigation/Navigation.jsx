@@ -13,18 +13,43 @@ const Navigation = () => {
     const [expanded, setExpanded] = useState(false);
     return (
         <>
-            <Navbar expand="sm" expanded={expanded} onClick={() => setExpanded(!expanded)}>
-                <Navbar.Brand as={Link} to="/">Word coach app</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse className="justify-content-end mx-3" id="basic-navbar-nav">
+            <Navbar
+                sticky="top"
+                expand="sm"
+                expanded={expanded}
+                onClick={() => setExpanded(!expanded)}>
+                <Navbar.Brand
+                    as={Link}
+                    to="/">
+                    Word coach app
+                </Navbar.Brand>
+                <Navbar.Toggle
+                    aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse
+                    className="justify-content-end mx-3"
+                    id="basic-navbar-nav">
                     {!isAuthenticated ?
-                        <Nav variant="tabs">
-                            <Nav.Link onClick={() => setModalAuthShow(true)}>Login</Nav.Link>
-                            <Nav.Link onClick={() => setModalRegistrationShow(true)}>Signup</Nav.Link>
+                        <Nav
+                            variant="tabs">
+                            <Nav.Link
+                                onClick={() => setModalAuthShow(true)}>
+                                Login</Nav.Link>
+                            <Nav.Link
+                                onClick={() => setModalRegistrationShow(true)}>
+                                Signup</Nav.Link>
                         </Nav>
-                        : <Nav variant="tabs">
-                            <Nav.Link as={NavLink} to="/dictionary" className={({ isActive }) => (isActive ? 'active' : '')}>My dictionary</Nav.Link>
-                            <Nav.Link onClick={Logout}>Logout</Nav.Link>
+                        : <Nav
+                            variant="tabs">
+                            <Nav.Link
+                                as={NavLink}
+                                to="/dictionary"
+                                className={({ isActive }) => (isActive ? 'active' : '')}>
+                                My dictionary
+                            </Nav.Link>
+                            <Nav.Link
+                                onClick={Logout}>
+                                Logout
+                            </Nav.Link>
                         </Nav>}
                 </Navbar.Collapse>
             </Navbar>

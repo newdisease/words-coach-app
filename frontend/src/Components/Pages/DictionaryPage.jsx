@@ -1,133 +1,17 @@
-import { Table, Button, ButtonGroup, Spinner } from 'react-bootstrap';
-import { ArrowRepeat, Trash } from 'react-bootstrap-icons';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
-const DictionaryItem = ({ item, onDeleteItem, onUpdateItem, isLoading }) => {
-    const { id, en_word, uk_word, progress } = item;
-
-    return (
-        <tr>
-            <td>{en_word}</td>
-            <td>{uk_word}</td>
-            <td>{progress}/3</td>
-            <td>
-                <ButtonGroup>
-                    <Button size='sm'
-                        className="mx-1"
-                        onClick={() => onUpdateItem(id)}
-                        disabled={isLoading}
-                    >
-                        <ArrowRepeat size={20} />
-                    </Button>
-                    <Button size='sm'
-                        className="mx-1"
-                        onClick={() => onDeleteItem(id)}
-                        disabled={isLoading}
-                    >
-                        <Trash size={20} />
-                    </Button>
-                </ButtonGroup>
-            </td>
-        </tr>
-    )
-}
+import DictionaryList from "../Dictionary/Dictionary";
 
 
 const DictionaryPage = () => {
-    const [dictionary, setDictionary] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [offset, setOffset] = useState(0);
-    const [isEnd, setIsEnd] = useState(false);
-
-    const onRequest = () => {
-        setIsLoading(true);
-        axios.get(`/dictionary/?limit=2&offset=${offset}`)
-            .then(res => {
-                onDictionaryLoaded(res.data.results);
-            })
-            .catch(err => console.log(err));
-    }
-
-    useEffect(() => {
-        onRequest();
-    }, []);
-
-    const onDictionaryLoaded = (newItems) => {
-        let isEnd = false;
-        if (newItems.length < 2) {
-            isEnd = true;
-        }
-        setDictionary([...dictionary, ...newItems]);
-        setOffset(offset => offset + 2);
-        setIsEnd(isEnd);
-        setIsLoading(false);
-    }
-
-    const onUpdateItem = (id) => {
-        setIsLoading(true);
-        axios.patch(`/dictionary/${id}/`, {
-            progress: 1
-        })
-            .then(res => {
-                setDictionary(
-                    dictionary.map(item => item.id === id ? res.data : item));
-                setIsLoading(false);
-            })
-            .catch(err => console.log(err));
-    }
-
-    const onDeleteItem = (id) => {
-        setIsLoading(true);
-        axios.delete(`/dictionary/${id}/`)
-            .then(() => {
-                setDictionary(dictionary.filter(item => item.id !== id));
-                setIsLoading(false);
-            }
-            )
-            .catch(err => {
-                console.log(err);
-            }
-            );
-    }
+    const { isAuthenticated } = useSelector(state => state.login);
 
     return (
         <>
-            {isLoading && !dictionary.length && <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>}
-            <Table className='mt-5' striped bordered hover size="sm">
-                <thead>
-                    <tr>
-                        <th className='text-left'>en</th>
-                        <th>uk</th>
-                        <th style={{ 'width': '40px' }}>progress</th>
-                        <th style={{ 'width': '40px' }}>
-                            actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dictionary.map(
-                        item => <DictionaryItem
-                            key={item.id}
-                            item={item}
-                            onDeleteItem={onDeleteItem}
-                            onUpdateItem={onUpdateItem}
-                            isLoading={isLoading}
-                        />
-                    )}
-                </tbody>
-            </Table>
-            {!isEnd && < Button className='mt-3'
-                variant="primary"
-                size="lg"
-                onClick={onRequest}
-                disabled={isLoading}>
-                Load more
-            </Button>}
+            {!isAuthenticated ? <Navigate to='/' /> : <DictionaryList />}
         </>
-    )
+    );
 }
 
 export default DictionaryPage;

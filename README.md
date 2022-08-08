@@ -4,9 +4,9 @@
 2. config your .env files in frontend and backend dirs (see .env.example)
 3. run `docker-compose up -d`
 
-Quick creation of a superuser: `docker-compose exec backend python manage.py initadmin`
+Quick creation of a test superuser: `docker-compose exec backend python manage.py initadmin`
 
-- login: `admin`
-- password: `admin`
+- login: `admin@admin.com`
+- password: `adminadmin`
 
 Quick creation of a test data `docker-compose exec backend python manage.py createdata`

@@ -1,4 +1,5 @@
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import WordsSearchForm from '../WordsSearchForm/WordsSearchForm';
 import { useSelector } from 'react-redux';
 
@@ -9,8 +10,8 @@ function MainPage() {
         <>
             <WordsSearchForm />
             <div>
-                <Button variant="success" size="lg"
-                    href='/quiz' disabled={!isAuthenticated}>
+                <Button as={Link} variant="success" size="lg"
+                    to='/quiz' disabled={!isAuthenticated}>
                     Start learning
                 </Button>
             </div>
