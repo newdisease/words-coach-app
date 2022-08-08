@@ -1,4 +1,4 @@
-import { Button, Modal, Form, Alert } from 'react-bootstrap';
+import { Button, Modal, Form, Alert, Toast, ToastContainer } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -44,7 +44,12 @@ const Signup = ({ show, onHide }) => {
 
     return (
         <>
-            {isSent && <Alert variant="success" onClose={() => setIsSent(false)} dismissible>Success! Now you can login</Alert>}
+            {isSent && <ToastContainer position="middle-center">
+                <Toast bg="Light" onClose={() => setIsSent(false)} delay={3000} autohide>
+                    <Toast.Header>Success!</Toast.Header>
+                    <Toast.Body>Now you can login</Toast.Body>
+                </Toast>
+            </ToastContainer>}
             <Modal
                 show={show}
                 onHide={onHide}

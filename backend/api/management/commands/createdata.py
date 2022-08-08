@@ -1,12 +1,31 @@
 from django.core.management.base import BaseCommand
-from api.models import TestModel
+from api.models import Dictionary
+
+WORDS = [
+    ('брат', 'brother'),
+    ('сестра', 'sister'),
+    ('дід', 'grandfather'),
+    ('бабуся', 'grandmother'),
+    ('тато', 'father'),
+    ('мамо', 'mother'),
+    ('дружина', 'wife'),
+    ('друг', 'friend'),
+    ('помічник', 'helper'),
+    ('пес', 'dog'),
+    ('кіт', 'cat'),
+    ('курка', 'chicken'),
+    ('свиня', 'pig'),
+]
 
 
 class Command(BaseCommand):
     help = 'Command information'
 
     def handle(self, *args, **kwargs):
-
-        TestModel.objects.create(name='John Doe', age=20)
-        TestModel.objects.create(name='Alex Couper', age=30)
-        TestModel.objects.create(name='Jane Doe', age=40)
+        for uk_word, en_word in WORDS:
+            Dictionary.objects.create(
+                uk_word=uk_word, en_word=en_word, user_id=1
+            )
+        print('Created %s words' % len(WORDS))
+        print('Done')
+        return 0

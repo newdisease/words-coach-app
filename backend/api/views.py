@@ -1,11 +1,25 @@
-from rest_framework import generics
-from .models import TestModel
-from .serializers import TestModelSerializer
+from rest_framework.mixins import (
+    ListModelMixin,
+    CreateModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+)
+from rest_framework.viewsets import GenericViewSet
+from .models import Dictionary
+from .serializers import DictionarySerializer
 
 
-class TestModelList(generics.ListCreateAPIView):
-    '''Test view to check if the application works'''
+class DictionaryCreateListViewSet(
+    ListModelMixin,
+    CreateModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+    GenericViewSet,
+):
+    serializer_class = DictionarySerializer
 
-    queryset = TestModel.objects.all()
-    serializer_class = TestModelSerializer
-    name = 'test-model-list'
+    def get_queryset(self):
+        return Dictionary.objects.filter(user_id=self.request.user.id)
+
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}

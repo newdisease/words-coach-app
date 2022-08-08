@@ -1,44 +1,135 @@
 import { useState } from 'react';
-import { Button, Form, Col, Row, Spinner } from 'react-bootstrap';
+import axios from 'axios';
+import {
+    Button, Form, Col, Row,
+    Spinner, Alert
+} from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from "yup";
-
+import { WordsFormValidatorsSchema as schema } from './WordsFormValidators';
+import { useSelector } from 'react-redux';
 import getTranslate from '../../Services/TranslatorService';
 
-const schema = yup.object({
-    expression: yup.string()
-        .min(2, 'must be at least 2 characters long')
-        .max(15, 'an expression is too long')
-        .matches(/^([^\s]*[\s]?[^\s]*){0,2}$/, { message: "too many words in the expression" })
-        .matches(/^[а-яА-ЯіІїЇa-zA-Z\s']+$/, { message: "only letters are allowed" }),
-}).required();
+
+const ActionsWithTranslatedResult = ({ result }) => {
+
+    const { isAuthenticated } = useSelector(state => state.login);
+    const [status, setStatus] = useState(null);
+    const { ukWord, enWord } = result;
+
+    const addWordToDB = () => {
+        setStatus("loading");
+        axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
+            .then(() => {
+                setStatus("success");
+            })
+            .catch(error => {
+                setStatus("error");
+            });
+    }
+
+    const showResult = (status) => {
+        switch (status) {
+            case "loading":
+                return <Button variant="link">
+                    <Spinner animation="border" size="sm" />
+                </Button>;
+            case "success":
+                return <Alert variant="success">
+                    Word was added to the dictionary
+                </Alert>;
+            case "error":
+                return <Alert variant="danger">
+                    The word is already in the dictionary
+                </Alert>;
+            default:
+                return <Button variant="link" size="sm"
+                    disabled={!isAuthenticated} onClick={addWordToDB}>
+                    add to dictionary
+                </Button>;
+        }
+    }
+
+    return (
+        <>
+            {showResult(status)}
+        </>
+    )
+}
+
+
+const ShowTranslatedResult = ({ result }) => {
+    if (result) {
+        return (
+            <>
+                {result.language === 'en' ?
+                    <p className='h4'>
+                        {result.enWord} - <strong><mark>{result.ukWord}
+                        </mark></strong></p> :
+                    <p className='h4'>
+                        {result.ukWord} - <strong><mark>{result.enWord}
+                        </mark></strong></p>}
+                <ActionsWithTranslatedResult result={result} />
+            </>
+        )
+    }
+}
+
+
+const ShowTranslatedPlug = () => {
+    return (
+        <div>
+            <p className='h5'>
+                Write a word in <br /> <mark>English</mark> or <mark>Ukrainian</mark>
+            </p></div>
+    )
+}
+
 
 const WordsSearchForm = () => {
     const [translated, setTranslated] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [action, setAction] = useState(null);
+    const [error, setError] = useState(null);
 
-    const { register, formState: { errors }, handleSubmit } = useForm({
+    const { register, formState: { errors }, handleSubmit, reset } = useForm({
         resolver: yupResolver(schema)
     });
 
+    const showResult = (action) => {
+        switch (action) {
+            case "loading":
+                return <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>;
+            case "success":
+                return <ShowTranslatedResult result={translated} />;
+            case "error":
+                return <Alert variant="danger">{error}</Alert>;
+            default:
+                return <ShowTranslatedPlug />;
+        }
+    }
+
     const getData = async ({ expression }) => {
-        setIsLoading(true);
+        setError(null);
+        setAction("loading");
         const data = await getTranslate(expression);
-        setTranslated(data);
-        setIsLoading(false);
+        if (data.language === 'This language is not supported') {
+            setError(data.language);
+            setAction("error");
+        } else {
+            setTranslated(data);
+            setAction("success");
+            reset();
+        }
     }
 
     return (
         <>
             <Row style={{ "maxHeight": "20vh", "minHeight": "20vh" }}
-                className='d-flex justify-content-center align-items-end'>
+                className='d-flex justify-content-center mt-3'>
                 <Col xs={10} md={5} lg={3}>
-                    {(!isLoading && !translated) && <div><p className='h5'>Write a word in <br /> <mark>English</mark> or <mark>Ukrainian</mark> </p></div>}
-                    {isLoading && <Spinner animation="border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </Spinner>}
-                    {translated && <ShowTranslatedResult result={translated} />}
+                    {showResult(action)}
                 </Col>
             </Row>
             <Form onSubmit={handleSubmit(getData)}>
@@ -46,28 +137,23 @@ const WordsSearchForm = () => {
                     className='d-flex justify-content-center align-items-center mb-5'>
                     <Col xs={10} md={5} lg={3}>
                         <Form.Group className="my-2">
-                            <Form.Control size="lg" type="text" placeholder="Add a word..." {...register("expression")}></Form.Control>
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.expression?.message}</p>
-                            <Button className={`col-sm-5 ${(isLoading || errors.expression) && "disabled"}`} type="submit" variant="warning" size="lg">Translate</Button>
+                            <Form.Control
+                                size="lg" type="text"
+                                placeholder="Add a word..."
+                                {...register("expression")}></Form.Control>
+                            <p style={{ minHeight: "1.5em" }}
+                                className="text-danger">
+                                {errors.expression?.message}</p>
+                            <Button className={`col-sm-5 ${action === "loading" && "disabled"}`}
+                                type="submit" variant="warning" size="lg">
+                                Translate
+                            </Button>
                         </Form.Group>
                     </Col>
                 </Row>
             </Form>
         </>
     )
-}
-
-const ShowTranslatedResult = ({ result }) => {
-    if (result) {
-        return (
-            <div>
-                {result.language === 'en' ?
-                    <p className='h4'>{result.enWord} - <strong><mark>{result.ukWord}</mark></strong></p> :
-                    <p className='h4'>{result.ukWord} - <strong><mark>{result.enWord}</mark></strong></p>}
-                <a className="btn btn-link btn-sm" href="/">add to dictionary</a>
-            </div>
-        )
-    }
 }
 
 export default WordsSearchForm;
