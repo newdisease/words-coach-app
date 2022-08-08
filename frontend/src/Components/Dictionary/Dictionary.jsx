@@ -63,8 +63,7 @@ const DictionaryList = () => {
       isEnd = true;
     }
     setDictionary([...dictionary, ...newItems]);
-    setOffset(offset => offset + limit);
-    console.log(offset);
+    setOffset(offset => limit);
     setIsEnd(isEnd);
     setIsLoading(false);
   }
@@ -88,6 +87,7 @@ const DictionaryList = () => {
       .then(() => {
         setDictionary(dictionary.filter(item => item.id !== id));
         setIsLoading(false);
+        setOffset(offset => offset - 1);
       }
       )
       .catch(err => {

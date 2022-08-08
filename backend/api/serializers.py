@@ -1,4 +1,3 @@
-from functools import partial
 from rest_framework import serializers
 from .models import Dictionary
 
@@ -8,7 +7,6 @@ class DictionarySerializer(serializers.Serializer):
     uk_word = serializers.CharField(max_length=20)
     en_word = serializers.CharField(max_length=20)
     progress = serializers.IntegerField(default=0)
-    user_id = serializers.IntegerField(read_only=True)
 
     def create(self, validated_data):
         validated_data['user_id'] = self.context['user_id']
