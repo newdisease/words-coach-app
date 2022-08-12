@@ -1,8 +1,7 @@
 import { Table, Button, ButtonGroup, Spinner } from 'react-bootstrap';
 import { ArrowRepeat, Trash } from 'react-bootstrap-icons';
 import { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const DictionaryItem = ({ item, onDeleteItem, onUpdateItem, isLoading }) => {
@@ -71,7 +70,7 @@ const DictionaryList = () => {
   const onUpdateItem = (id) => {
     setIsLoading(true);
     axios.patch(`/dictionary/${id}/`, {
-      progress: 1
+      progress: 0
     })
       .then(res => {
         setDictionary(
