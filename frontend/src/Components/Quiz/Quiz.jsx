@@ -1,5 +1,5 @@
 import { Form, Col, Row, Button, ProgressBar, Spinner } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import QuizInput from './QuizInput';
 import axios from 'axios';
 
@@ -35,7 +35,6 @@ const TypedQuizAnswer = ({
     } else {
       setReplyStatus(INCORRECT);
     }
-    console.log(1, answer, wordForCheck);
   }
 
   const onClick = (e) => {
@@ -46,7 +45,11 @@ const TypedQuizAnswer = ({
     setIndex(prevIndex => prevIndex + 1);
     setAnswer("");
     setReplyStatus(IN_PROGRESS);
+    if (e.key === "Enter") {
+      onSubmit(e);
+    }
   }
+
 
   const renderButton = (replyStatus) => {
     switch (replyStatus) {
@@ -66,6 +69,7 @@ const TypedQuizAnswer = ({
             className='col-sm-5 my-2'
             variant='success'
             size="lg"
+            type="submit"
             onClick={onClick}>
             Next
           </Button>
@@ -76,6 +80,7 @@ const TypedQuizAnswer = ({
             className='col-sm-5 my-2'
             variant='danger'
             size="lg"
+            type="submit"
             onClick={onClick}>
             Next
           </Button>
@@ -93,9 +98,8 @@ const TypedQuizAnswer = ({
       <Col xs={10} md={10} lg={10}>
         <Form onSubmit={onSubmit}>
           <QuizInput
-            handleOutputString={setAnswer}
+            setAnswer={setAnswer}
             amount={wordForCheck.length}
-            autoFocus
             replyStatus={replyStatus}
           />
           {renderButton(replyStatus)}

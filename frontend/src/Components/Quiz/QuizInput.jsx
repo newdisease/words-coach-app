@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { useState, useEffect, useCallback } from 'react';
 import { CORRECT, INCORRECT, IN_PROGRESS } from './Quiz'
 
 const InputBox = ({
@@ -37,123 +37,99 @@ const InputBox = ({
   )
 }
 
-class QuizInput extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { characterArray: Array(props.amount).fill(null) }
+const QuizInput = ({ amount, replyStatus, setAnswer }) => {
+  const [characterArray, setCharacterArray] = useState(Array(amount).fill(null))
+  const inputElements = {}
 
-    this.handleKeyDown = this.handleKeyDown.bind(this)
-    this.handleFocus = this.handleFocus.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.inputElements = {}
-  }
+  useEffect(() => {
+    inputElements['input0']?.select()
+  }, [amount])
 
-  componentDidMount() {
-    if (this.props.autoFocus) {
-      this.inputElements['input0'].select()
-    }
-  }
 
-  shouldComponentUpdate(nextProps) {
-    if (
-      this.props.amount !== nextProps.amount ||
-      this.props.replyStatus !== nextProps.replyStatus
-    ) {
-      return true
-    }
-    return false
-  }
-
-  renderItems() {
+  const renderItems = () => {
     let items = []
-
-    for (var i = 0; i < this.props.amount; i++) {
+    for (let i = 0; i < amount; i++) {
       items.push(
         <InputBox
-          type="text"
           key={i}
-          handleKeyDown={this.handleKeyDown}
-          handleFocus={this.handleFocus}
-          handleChange={this.handleChange}
-          name={'input' + i}
-          replyStatus={this.props.replyStatus}
+          type='text'
+          handleKeyDown={handleKeyDown}
+          handleChange={handleChange}
+          handleFocus={handleFocus}
+          name={`input${i}`}
+          replyStatus={replyStatus}
           inputRef={el => {
             if (!el) return
-            this.inputElements[el.name] = el
+            inputElements[`input${i}`] = el
           }}
         />
       )
     }
-
     return items
   }
 
-  render() {
-    return (
-      <div>
-        <div>{this.renderItems()}</div>
-      </div>
-    )
-  }
-
-  handleChange({ target }) {
+  const handleChange = useCallback(({ target }) => {
     if (target.value.match(/^[а-яА-ЯіІїЇa-zA-Z\s' ]+$/)) {
-      this.focusNextChar(target)
-      this.setModuleOutput(target)
+      focusNextChar(target)
+      setModuleOutput(target)
     } else {
-      target.value = this.state.characterArray[target.name.replace('input', '')]
+      target.value = characterArray[target.name.replace('input', '')]
     }
-  }
+  }, [characterArray])
 
-  handleKeyDown({ target, key }) {
+  const handleKeyDown = useCallback(({ target, key }) => {
     if (key === 'Backspace') {
       if (target.value === '' && target.previousElementSibling !== null) {
         target.previousElementSibling.value = ''
-        this.focusPrevChar(target)
+        focusPrevChar(target)
       } else {
         target.value = ''
       }
-      this.setModuleOutput(target)
+      setModuleOutput(target)
     } else if (key === 'ArrowLeft') {
-      this.focusPrevChar(target)
+      focusPrevChar(target)
     } else if (key === 'ArrowRight') {
-      this.focusNextChar(target)
+      focusNextChar(target)
     }
     else if (key === 'Space') {
-      this.focusNextChar(target)
+      focusNextChar(target)
     }
-  }
+  }, [characterArray])
 
-  handleFocus({ target }) {
-    var el = target
+  const handleFocus = useCallback(({ target }) => {
+    const el = target
     // In most browsers .select() does not work without the added timeout.
     setTimeout(function () {
       el.select()
     }, 0)
-  }
+  }, [])
 
-  focusPrevChar(target) {
+  const focusPrevChar = useCallback((target) => {
     if (target.previousElementSibling !== null) {
       target.previousElementSibling.focus()
     }
-  }
+  }, [])
 
-  focusNextChar(target) {
+  const focusNextChar = useCallback((target) => {
     if (target.nextElementSibling !== null) {
       target.nextElementSibling.focus()
     }
-  }
+  }, [])
 
-  setModuleOutput() {
-    this.setState(() => {
-      const characterArray = Array(this.props.amount).fill(null)
-      const updatedCharacters = characterArray.map((character, number) => {
-        return this.inputElements['input' + number].value
-      })
+  const setModuleOutput = useCallback(() => {
+    const characterArray = Array(amount).fill(null)
+    const updatedCharacters = characterArray.map((character, number) => {
+      return inputElements['input' + number].value
+    })
+    setAnswer(updatedCharacters.join(''))
+    setCharacterArray(updatedCharacters)
+  }, [amount, characterArray, inputElements])
 
-      return { characterArray: updatedCharacters }
-    }, () => this.props.handleOutputString(this.state.characterArray.join('')))
-  }
+  return (
+    <div>
+      <div>{renderItems()}</div>
+    </div>
+  )
 }
 
 export default QuizInput
