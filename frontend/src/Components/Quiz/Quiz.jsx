@@ -1,20 +1,35 @@
-import { Form, Col, Row, Button, ProgressBar, Spinner } from "react-bootstrap";
-import { useEffect, useState, useCallback } from "react";
+import {
+  Form, Col, Row, Button,
+  ProgressBar, Spinner, Placeholder
+} from "react-bootstrap";
+import { CheckLg } from 'react-bootstrap-icons'
+import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
+
 import QuizInput from './QuizInput';
 import axios from 'axios';
+
 
 export const IN_PROGRESS = "IN_PROGRESS";
 export const CORRECT = "CORRECT";
 export const INCORRECT = "INCORRECT";
+export const COMPLETE = "COMPLETE";
 
-const QuizProgress = ({ progress }) => {
+const QuizProgress = ({ progress, replyStatus }) => {
   return (
-    <ProgressBar
-      style={{ "minHeight": "25px", "maxWidth": "70vh" }}
-      className="my-3 mx-auto"
-      now={`${progress}0`}
-      label={`${progress}/10`}
-    />
+    <Row className="d-flex justify-content-center align-items-center"
+      style={{ "minHeight": "10vh" }}>
+      <Col xs={11} md={11} lg={11}>
+        <ProgressBar
+          style={{ "minHeight": "25px", "maxWidth": "70vh" }}
+          className="my-3 mx-auto"
+          now={`${progress}0`}
+          label={`${progress}/10`}
+          variant={replyStatus === COMPLETE ? "success" : "primary"}
+          max="100"
+        />
+      </Col>
+    </Row>
   )
 }
 
@@ -50,7 +65,6 @@ const TypedQuizAnswer = ({
     }
   }
 
-
   const renderButton = (replyStatus) => {
     switch (replyStatus) {
       case IN_PROGRESS:
@@ -84,7 +98,18 @@ const TypedQuizAnswer = ({
             onClick={onClick}>
             Next
           </Button>
-        )
+        );
+      case COMPLETE:
+        return (
+          <Button
+            className='col-sm-5 my-2'
+            variant='primary'
+            size="lg"
+            type="submit"
+            as={Link} to="/">
+            To the main page
+          </Button>
+        );
       default:
         return null;
     }
@@ -109,14 +134,16 @@ const TypedQuizAnswer = ({
   )
 }
 
-const WordForQuestion = ({ wordForQuestion }) => {
+const WordForQuestion = ({ wordForQuestion, replyStatus }) => {
   return (
     <Row
-      style={{ "minHeight": "5vh" }}
+      style={{ "minHeight": "10vh", "maxHeight": "10vh" }}
       className="d-flex justify-content-center align-items-center">
 
       <Col xs={10} md={10} lg={10}>
-        <p className="h3 mt-5 mb-2">{wordForQuestion}</p>
+        {replyStatus !== COMPLETE ?
+          <p className="h3 mt-3 mb-2">{wordForQuestion}</p> :
+          <p className="h3 my-2 text-success">Training is complete</p>}
       </Col>
     </Row>
   )
@@ -127,11 +154,21 @@ const WordForCheck = ({ wordForCheck, replyStatus }) => {
     <Row style={{ "minHeight": "10vh", "maxHeight": "10vh" }}
       className="d-flex justify-content-center align-items-center">
       <Col xs={10} md={10} lg={10}>
-        {replyStatus === INCORRECT && <p className="h3 mt-2 mb-2 text-danger">{wordForCheck}</p>}
-        {replyStatus === CORRECT && <p className="h3 mt-2 mb-2 text-success">{wordForCheck}</p>}
-        {replyStatus === IN_PROGRESS && <p className="h3 mt-2 mb-2 text-primary">Try to translate</p>}
+        {replyStatus === INCORRECT &&
+          <p className="h3 my-2 text-danger"> {wordForCheck}</p>}
+        {replyStatus === CORRECT &&
+          <p className="h3 my-2 text-success"><CheckLg size={35} /></p>}
+        {replyStatus === IN_PROGRESS && <Placeholder
+          as="p"
+          size="lg"
+          className="h3 my-2"
+          animation="wave">
+          <Placeholder xs={7} md={7} lg={7} />
+        </Placeholder>}
+        {replyStatus === COMPLETE &&
+          <p className="h5 mt-5">You have got <strong>4</strong> correct answers</p>}
       </Col>
-    </Row>
+    </Row >
   )
 }
 
@@ -151,25 +188,34 @@ const Quiz = () => {
     });
   }, []);
 
+
   useEffect(() => {
-    const task = quiz[index] || {};
-    setWord(Math.floor(Math.random() * 2) ? {
-      wordForQuestion: task.uk_word,
-      wordForCheck: task.en_word
-    } : {
-      wordForQuestion: task.en_word,
-      wordForCheck: task.uk_word
-    });
+    if (index < 10) {
+      const task = quiz[index] || {};
+      setWord(Math.floor(Math.random() * 2) ? {
+        wordForQuestion: task.uk_word,
+        wordForCheck: task.en_word
+      } : {
+        wordForQuestion: task.en_word,
+        wordForCheck: task.uk_word
+      });
+    } else {
+      setReplyStatus(COMPLETE);
+    }
   }, [index, quiz]);
 
   return (
     <>
-      <p className="h2 my-3">Quiz</p>
+      <p className="h2 my-3">Learning words</p>
       <div style={{ "maxWidth": "80vh" }} className="mx-auto">
-        <QuizProgress progress={index + 1} />
+        <QuizProgress progress={index} replyStatus={replyStatus} />
         {isLoading ? <Spinner animation="border" size="sm" /> : <>
-          <WordForQuestion wordForQuestion={word.wordForQuestion} />
-          <WordForCheck wordForCheck={word.wordForCheck} replyStatus={replyStatus} />
+          <WordForQuestion
+            wordForQuestion={word.wordForQuestion}
+            replyStatus={replyStatus} />
+          <WordForCheck
+            wordForCheck={word.wordForCheck}
+            replyStatus={replyStatus} />
           <TypedQuizAnswer
             setReplyStatus={setReplyStatus}
             replyStatus={replyStatus}

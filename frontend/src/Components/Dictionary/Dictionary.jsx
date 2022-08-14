@@ -57,14 +57,20 @@ const DictionaryList = () => {
   }, []);
 
   const onDictionaryLoaded = (newItems) => {
-    let isEnd = false;
     if (newItems.length < limit) {
-      isEnd = true;
+      setDictionary([...dictionary, ...newItems]);
+      setOffset(offset => limit);
+      setIsEnd(true);
+      setIsLoading(false);
+    } else if (newItems.length === 0) {
+      setIsEnd(true);
+      setIsLoading(false);
     }
-    setDictionary([...dictionary, ...newItems]);
-    setOffset(offset => limit);
-    setIsEnd(isEnd);
-    setIsLoading(false);
+    else {
+      setDictionary([...dictionary, ...newItems]);
+      setOffset(offset => offset + limit);
+      setIsLoading(false);
+    }
   }
 
   const onUpdateItem = (id) => {
@@ -94,6 +100,8 @@ const DictionaryList = () => {
       }
       );
   }
+
+  console.log(1, dictionary);
 
   return (
     <>
@@ -130,23 +138,25 @@ const DictionaryList = () => {
           )}
         </tbody>
       </Table>
-      {!isEnd && < Button
-        className='m-2'
-        variant="primary"
-        size="lg"
-        onClick={onRequest}
-        disabled={isLoading}>
-        Load more
-      </Button>}
-      <Button
-        as={Link}
-        to="/"
-        className='m-2'
-        variant="success"
-        size="lg"
-        disabled={isLoading}>
-        To the main page
-      </Button>
+      <ButtonGroup vertical="true">
+        {!isEnd && < Button
+          className='m-2'
+          variant="primary"
+          size="lg"
+          onClick={onRequest}
+          disabled={isLoading}>
+          Load more
+        </Button>}
+        <Button
+          as={Link}
+          to="/"
+          className='m-2'
+          variant="success"
+          size="lg"
+          disabled={isLoading}>
+          To the main page
+        </Button>
+      </ButtonGroup>
     </>
   )
 }

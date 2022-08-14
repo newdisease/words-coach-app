@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { CORRECT, INCORRECT, IN_PROGRESS } from './Quiz'
+import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './Quiz'
 
 const InputBox = ({
   type,
@@ -17,8 +17,8 @@ const InputBox = ({
   return (
     <input
       style={{
-        width: "40px",
-        height: "40px",
+        width: "35px",
+        height: "35px",
         margin: "5px",
         textAlign: "center",
         fontSize: "1.5rem",
@@ -33,6 +33,8 @@ const InputBox = ({
       maxLength='1'
       name={name}
       ref={inputRef}
+      readOnly={replyStatus !== IN_PROGRESS}
+      hidden={replyStatus === COMPLETE}
     />
   )
 }
@@ -126,7 +128,7 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
   }, [amount, characterArray, inputElements])
 
   return (
-    <div>
+    <div style={{ "minHeight": "15vh" }} className="my-2">
       <div>{renderItems()}</div>
     </div>
   )
