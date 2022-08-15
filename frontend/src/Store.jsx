@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import axios from 'axios';
-import LoginReducer from './Components/Auth/AuthSlice';
+import UserReducer from './Components/Auth/AuthSlice';
 
 const reHydrateStore = () => {
     if (localStorage.getItem("authTokens") !== null && localStorage.getItem("user") !== null) {
         axios.defaults.headers.common["Authorization"] = "Token " + localStorage.getItem("authTokens");
         return {
-            login: {
+            user: {
                 isAuthenticated: true,
                 user: JSON.parse(localStorage.getItem("user")),
                 token: localStorage.getItem("authTokens")
@@ -18,7 +18,7 @@ const reHydrateStore = () => {
 export const store = configureStore(
     {
         reducer: {
-            login: LoginReducer,
+            user: UserReducer,
 
         },
         preloadedState: reHydrateStore(),

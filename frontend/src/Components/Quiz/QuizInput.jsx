@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './Quiz'
+import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './QuizConstants';
 
 const InputBox = ({
   type,

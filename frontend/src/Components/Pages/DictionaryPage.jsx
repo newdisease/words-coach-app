@@ -5,7 +5,7 @@ import DictionaryList from "../Dictionary/Dictionary";
 
 
 const DictionaryPage = () => {
-    const { isAuthenticated } = useSelector(state => state.login);
+    const { isAuthenticated } = useSelector(state => state.user);
 
     return (
         <>

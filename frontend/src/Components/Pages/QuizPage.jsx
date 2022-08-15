@@ -5,7 +5,7 @@ import Quiz from "../Quiz/Quiz";
 
 
 const QuizPage = () => {
-    const { isAuthenticated } = useSelector(state => state.login);
+    const { isAuthenticated } = useSelector(state => state.user);
     return (
         <>
             {!isAuthenticated ? <Navigate to='/' /> : <Quiz />}

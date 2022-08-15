@@ -47,7 +47,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
-DJOSER = {"USER_ID_FIELD": "email"}
+DJOSER = {
+    "USER_ID_FIELD": "email",
+    'SERIALIZERS': {
+        'current_user': 'accounts.serializers.UserSerializer',
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

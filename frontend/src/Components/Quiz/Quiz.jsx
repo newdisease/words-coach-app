@@ -5,17 +5,15 @@ import {
 import { CheckLg } from 'react-bootstrap-icons'
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
+import { useDispatch, useSelector } from "react-redux";
 
 import QuizInput from './QuizInput';
-import axios from 'axios';
+import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './QuizConstants';
 
 
-export const IN_PROGRESS = "IN_PROGRESS";
-export const CORRECT = "CORRECT";
-export const INCORRECT = "INCORRECT";
-export const COMPLETE = "COMPLETE";
-
-const QuizProgress = ({ progress, replyStatus }) => {
+const QuizProgress = ({ quizProgress, replyStatus }) => {
   return (
     <Row className="d-flex justify-content-center align-items-center"
       style={{ "minHeight": "10vh" }}>
@@ -23,8 +21,8 @@ const QuizProgress = ({ progress, replyStatus }) => {
         <ProgressBar
           style={{ "minHeight": "25px", "maxWidth": "70vh" }}
           className="my-3 mx-auto"
-          now={`${progress}0`}
-          label={`${progress}/10`}
+          now={`${quizProgress}0`}
+          label={`${quizProgress}/10`}
           variant={replyStatus === COMPLETE ? "success" : "primary"}
           max="100"
         />
@@ -34,21 +32,45 @@ const QuizProgress = ({ progress, replyStatus }) => {
 }
 
 const TypedQuizAnswer = ({
+  quiz,
+  index,
   setReplyStatus,
   replyStatus,
   setIndex,
+  setQuizProgress,
+  quizProgress,
   wordForCheck
 }) => {
   const [answer, setAnswer] = useState("");
+  const { user } = useSelector(state => state.user);
+
+  const dispatch = useDispatch();
 
   if (!wordForCheck) { return null }
+
+  const onUpdateItem = (id) => {
+    axios.patch(`/dictionary/${id}/`, { progress: quiz[index].progress + 1 })
+
+      .then(res => {
+        if (res.data.progress > 2) {
+          dispatch(changeCountOfWordsInProgress(
+            user.words_in_progress - 1
+          ));
+          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: user.words_in_progress - 1 }));
+        }
+      })
+      .catch(err => console.log(err));
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (answer === wordForCheck) {
       setReplyStatus(CORRECT);
+      setQuizProgress(quizProgress + 1);
+      onUpdateItem(quiz[index].id);
     } else {
       setReplyStatus(INCORRECT);
+      setQuizProgress(quizProgress + 1);
     }
   }
 
@@ -176,6 +198,7 @@ const Quiz = () => {
 
   const [quiz, setQuiz] = useState([]);
   const [index, setIndex] = useState(0);
+  const [quizProgress, setQuizProgress] = useState(0);
   const [replyStatus, setReplyStatus] = useState(IN_PROGRESS);
   const [isLoading, setIsLoading] = useState(false);
   const [word, setWord] = useState({});
@@ -187,7 +210,6 @@ const Quiz = () => {
       setIsLoading(false);
     });
   }, []);
-
 
   useEffect(() => {
     if (index < 10) {
@@ -208,7 +230,9 @@ const Quiz = () => {
     <>
       <p className="h2 my-3">Learning words</p>
       <div style={{ "maxWidth": "80vh" }} className="mx-auto">
-        <QuizProgress progress={index} replyStatus={replyStatus} />
+        <QuizProgress
+          quizProgress={quizProgress}
+          replyStatus={replyStatus} />
         {isLoading ? <Spinner animation="border" size="sm" /> : <>
           <WordForQuestion
             wordForQuestion={word.wordForQuestion}
@@ -217,9 +241,13 @@ const Quiz = () => {
             wordForCheck={word.wordForCheck}
             replyStatus={replyStatus} />
           <TypedQuizAnswer
+            quiz={quiz}
+            index={index}
             setReplyStatus={setReplyStatus}
             replyStatus={replyStatus}
             setIndex={setIndex}
+            setQuizProgress={setQuizProgress}
+            quizProgress={quizProgress}
             wordForCheck={word.wordForCheck} />
         </>}
       </div>

@@ -5,6 +5,9 @@ from rest_framework.mixins import (
     DestroyModelMixin,
 )
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from .models import Dictionary
 from .serializers import DictionarySerializer
 

@@ -3,6 +3,8 @@ import { ArrowRepeat, Trash } from 'react-bootstrap-icons';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
+import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
 
 const DictionaryItem = ({ item, onDeleteItem, onUpdateItem, isLoading }) => {
   const { id, en_word, uk_word, progress } = item;
@@ -40,8 +42,12 @@ const DictionaryList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
+  const { user } = useSelector(state => state.user);
+
+  const dispatch = useDispatch();
 
   const limit = 5;
+  const words_in_progress = user.words_in_progress;
 
   const onRequest = () => {
     setIsLoading(true);
@@ -74,6 +80,7 @@ const DictionaryList = () => {
   }
 
   const onUpdateItem = (id) => {
+    const prevProgress = dictionary.find(item => item.id === id).progress;
     setIsLoading(true);
     axios.patch(`/dictionary/${id}/`, {
       progress: 0
@@ -82,17 +89,30 @@ const DictionaryList = () => {
         setDictionary(
           dictionary.map(item => item.id === id ? res.data : item));
         setIsLoading(false);
+        if (prevProgress > 2) {
+          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress + 1 }));
+          dispatch(changeCountOfWordsInProgress(
+            words_in_progress + 1
+          ));
+        }
       })
       .catch(err => console.log(err));
   }
 
   const onDeleteItem = (id) => {
+    const prevProgress = dictionary.find(item => item.id === id).progress;
     setIsLoading(true);
     axios.delete(`/dictionary/${id}/`)
       .then(() => {
         setDictionary(dictionary.filter(item => item.id !== id));
         setIsLoading(false);
         setOffset(offset => offset - 1);
+        if (prevProgress < 3) {
+          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress - 1 }));
+          dispatch(changeCountOfWordsInProgress(
+            words_in_progress - 1
+          ));
+        }
       }
       )
       .catch(err => {
@@ -100,8 +120,6 @@ const DictionaryList = () => {
       }
       );
   }
-
-  console.log(1, dictionary);
 
   return (
     <>

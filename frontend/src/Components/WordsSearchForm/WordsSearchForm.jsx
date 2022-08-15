@@ -7,21 +7,28 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { WordsFormValidatorsSchema as schema } from './WordsFormValidators';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
 import getTranslate from '../../Services/TranslatorService';
 
 
 const ActionsWithTranslatedResult = ({ result }) => {
 
-    const { isAuthenticated } = useSelector(state => state.login);
+    const { isAuthenticated, user } = useSelector(state => state.user);
     const [status, setStatus] = useState(null);
     const { ukWord, enWord } = result;
+
+    const dispatch = useDispatch();
+
+    const words_in_progress = user.words_in_progress;
 
     const addWordToDB = () => {
         setStatus("loading");
         axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
             .then(() => {
                 setStatus("success");
+                localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress + 1 }));
+                dispatch(changeCountOfWordsInProgress(words_in_progress + 1));
             })
             .catch(error => {
                 setStatus("error");
@@ -134,7 +141,7 @@ const WordsSearchForm = () => {
             </Row>
             <Form onSubmit={handleSubmit(getData)}>
                 <Row style={{ "minHeight": "35vh" }}
-                    className='d-flex justify-content-center align-items-center mb-5'>
+                    className='d-flex justify-content-center align-items-center'>
                     <Col xs={10} md={5} lg={3}>
                         <Form.Group className="my-2">
                             <Form.Control
