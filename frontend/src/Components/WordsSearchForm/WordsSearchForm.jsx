@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
     Button, Form, Col, Row,
@@ -16,22 +16,31 @@ const ActionsWithTranslatedResult = ({ result }) => {
 
     const { isAuthenticated, user } = useSelector(state => state.user);
     const [status, setStatus] = useState(null);
+    const [showAlert, setShowAlert] = useState(false);
     const { ukWord, enWord } = result;
 
     const dispatch = useDispatch();
 
     const words_in_progress = user.words_in_progress;
 
+    useEffect(() => {
+        setTimeout(() => {
+            setShowAlert(false);
+        }, 3000);
+    }, [showAlert]);
+
     const addWordToDB = () => {
         setStatus("loading");
         axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
             .then(() => {
                 setStatus("success");
+                setShowAlert(true);
                 localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress + 1 }));
                 dispatch(changeCountOfWordsInProgress(words_in_progress + 1));
             })
             .catch(error => {
                 setStatus("error");
+                setShowAlert(true);
             });
     }
 
@@ -42,11 +51,11 @@ const ActionsWithTranslatedResult = ({ result }) => {
                     <Spinner animation="border" size="sm" />
                 </Button>;
             case "success":
-                return <Alert variant="success">
+                return <Alert variant="success" show={showAlert} >
                     Word was added to the dictionary
                 </Alert>;
             case "error":
-                return <Alert variant="danger">
+                return <Alert variant="danger" show={showAlert} >
                     The word is already in the dictionary
                 </Alert>;
             default:
@@ -58,9 +67,9 @@ const ActionsWithTranslatedResult = ({ result }) => {
     }
 
     return (
-        <>
+        <Row style={{ "minHeight": "10vh", "maxHeight": "10vh" }}>
             {showResult(status)}
-        </>
+        </Row>
     )
 }
 
@@ -85,10 +94,11 @@ const ShowTranslatedResult = ({ result }) => {
 
 const ShowTranslatedPlug = () => {
     return (
-        <div>
-            <p className='h5'>
+        <>
+            <p className='h5 mt-3'>
                 Write a word in <br /> <mark>English</mark> or <mark>Ukrainian</mark>
-            </p></div>
+            </p>
+        </>
     )
 }
 

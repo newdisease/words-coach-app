@@ -1,13 +1,13 @@
-import { Button, Modal, Form, Alert, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, Modal, Form, Alert } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SignupFormValidatorsSchema as schema } from './SignupFormValidators';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 const Signup = ({ show, onHide }) => {
-    const [isSent, setIsSent] = useState(false);
+    const [isSent, setIsSent] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [signupError, setSignupError] = useState({
         emailError: null,
@@ -22,6 +22,12 @@ const Signup = ({ show, onHide }) => {
     } = useForm({
         resolver: yupResolver(schema)
     });
+
+    useEffect(() => {
+        setTimeout(() => {
+            setIsSent(false);
+        }, 3000);
+    }, [isSent]);
 
     const onSubmit = ({ email, password }) => {
         setIsSubmitted(true);
@@ -44,12 +50,13 @@ const Signup = ({ show, onHide }) => {
 
     return (
         <>
-            {isSent && <ToastContainer position="middle-center">
-                <Toast bg="Light" onClose={() => setIsSent(false)} delay={3000} autohide>
-                    <Toast.Header>Success!</Toast.Header>
-                    <Toast.Body>Now you can login</Toast.Body>
-                </Toast>
-            </ToastContainer>}
+            {<Alert
+                variant="success"
+                style={{ position: "absolute", top: "0", left: "0", width: "100%", zIndex: "1" }}
+                className='d-flex justify-content-center mx-auto'
+                show={isSent}>
+                Success! Now you can login
+            </Alert>}
             <Modal
                 show={show}
                 onHide={onHide}
