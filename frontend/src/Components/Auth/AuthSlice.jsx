@@ -7,8 +7,8 @@ const initialState = {
     token: "",
 }
 
-export const LoginReducer = createSlice({
-    name: 'login',
+export const UserReducer = createSlice({
+    name: 'user',
     initialState,
     reducers: {
         loginSetToken: (state, action) => {
@@ -22,15 +22,18 @@ export const LoginReducer = createSlice({
             state.isAuthenticated = false;
             state.user = {};
             state.token = "";
+        },
+        changeCountOfWordsInProgress: (state, action) => {
+            state.user.words_in_progress = action.payload;
         }
-    }
-},
-)
+    },
+})
 
 export const {
     loginSetToken,
     loginSetUser,
     loginUnsetUser,
-} = LoginReducer.actions
+    changeCountOfWordsInProgress
+} = UserReducer.actions
 
-export default LoginReducer.reducer
+export default UserReducer.reducer

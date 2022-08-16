@@ -1,9 +1,10 @@
 import { Table, Button, ButtonGroup, Spinner } from 'react-bootstrap';
 import { ArrowRepeat, Trash } from 'react-bootstrap-icons';
 import { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch, useSelector } from "react-redux";
+import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
 
 const DictionaryItem = ({ item, onDeleteItem, onUpdateItem, isLoading }) => {
   const { id, en_word, uk_word, progress } = item;
@@ -41,8 +42,12 @@ const DictionaryList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
+  const { user } = useSelector(state => state.user);
 
-  const limit = 5;
+  const dispatch = useDispatch();
+
+  const limit = 10;
+  const words_in_progress = user.words_in_progress;
 
   const onRequest = () => {
     setIsLoading(true);
@@ -58,36 +63,56 @@ const DictionaryList = () => {
   }, []);
 
   const onDictionaryLoaded = (newItems) => {
-    let isEnd = false;
     if (newItems.length < limit) {
-      isEnd = true;
+      setDictionary([...dictionary, ...newItems]);
+      setOffset(offset => limit);
+      setIsEnd(true);
+      setIsLoading(false);
+    } else if (newItems.length === 0) {
+      setIsEnd(true);
+      setIsLoading(false);
     }
-    setDictionary([...dictionary, ...newItems]);
-    setOffset(offset => limit);
-    setIsEnd(isEnd);
-    setIsLoading(false);
+    else {
+      setDictionary([...dictionary, ...newItems]);
+      setOffset(offset => offset + limit);
+      setIsLoading(false);
+    }
   }
 
   const onUpdateItem = (id) => {
+    const prevProgress = dictionary.find(item => item.id === id).progress;
     setIsLoading(true);
     axios.patch(`/dictionary/${id}/`, {
-      progress: 1
+      progress: 0
     })
       .then(res => {
         setDictionary(
           dictionary.map(item => item.id === id ? res.data : item));
         setIsLoading(false);
+        if (prevProgress > 2) {
+          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress + 1 }));
+          dispatch(changeCountOfWordsInProgress(
+            words_in_progress + 1
+          ));
+        }
       })
       .catch(err => console.log(err));
   }
 
   const onDeleteItem = (id) => {
+    const prevProgress = dictionary.find(item => item.id === id).progress;
     setIsLoading(true);
     axios.delete(`/dictionary/${id}/`)
       .then(() => {
         setDictionary(dictionary.filter(item => item.id !== id));
         setIsLoading(false);
         setOffset(offset => offset - 1);
+        if (prevProgress < 3) {
+          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress - 1 }));
+          dispatch(changeCountOfWordsInProgress(
+            words_in_progress - 1
+          ));
+        }
       }
       )
       .catch(err => {
@@ -111,10 +136,10 @@ const DictionaryList = () => {
         striped bordered hover size="sm">
         <thead>
           <tr>
-            <th className='text-left'>en</th>
-            <th style={{ 'width': '40%' }}>uk</th>
-            <th style={{ 'width': '10%' }}>progress</th>
-            <th style={{ 'width': '10%' }}>
+            <th style={{ 'width': '45%' }}>en</th>
+            <th style={{ 'width': '45%' }}>uk</th>
+            <th style={{ 'width': '5%' }}>progress</th>
+            <th style={{ 'width': '5%' }}>
               actions
             </th>
           </tr>
@@ -131,23 +156,25 @@ const DictionaryList = () => {
           )}
         </tbody>
       </Table>
-      {!isEnd && < Button
-        className='m-2'
-        variant="primary"
-        size="lg"
-        onClick={onRequest}
-        disabled={isLoading}>
-        Load more
-      </Button>}
-      <Button
-        as={Link}
-        to="/"
-        className='m-2'
-        variant="success"
-        size="lg"
-        disabled={isLoading}>
-        To the main page
-      </Button>
+      <ButtonGroup vertical="true">
+        {!isEnd && < Button
+          className='m-2'
+          variant="primary"
+          size="lg"
+          onClick={onRequest}
+          disabled={isLoading}>
+          Load more
+        </Button>}
+        <Button
+          as={Link}
+          to="/"
+          className='m-2'
+          variant="success"
+          size="lg"
+          disabled={isLoading}>
+          To the main page
+        </Button>
+      </ButtonGroup>
     </>
   )
 }

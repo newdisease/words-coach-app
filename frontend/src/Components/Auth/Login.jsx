@@ -6,7 +6,6 @@ import { loginSetToken, loginSetUser } from "./AuthSlice";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoginFormValidatorsSchema as schema } from './LoginFormValidators';
 import { useState } from 'react';
-// import { BASE_URL } from '../App';
 
 const Login = ({ show, onHide }) => {
     const [error, setError] = useState(null);

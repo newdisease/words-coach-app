@@ -62,5 +62,5 @@
             "progress": number,
         }
 
-- Get random 10 words where progress < 3 for learning (GET): `/api/dictionary/quiz/`
+- Get random 10 words where progress < 3 for learning (GET): `/api/quiz/`
 

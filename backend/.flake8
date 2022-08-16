@@ -9,8 +9,14 @@ exclude =
     __init__.py,
     venv,
     .env,
-    migrations,
-    manage.py,
-    settings
+    tests,
+    docs,
+    api/migrations/,
+    accounts/migrations/,
+    config/settings
+
+per-file-ignores =
+    # imported but unused
+    __init__.py: F401
 
 max-line-length = 200
