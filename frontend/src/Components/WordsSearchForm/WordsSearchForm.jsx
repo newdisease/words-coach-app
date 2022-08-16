@@ -34,9 +34,9 @@ const ActionsWithTranslatedResult = ({ result }) => {
         axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
             .then(() => {
                 setStatus("success");
-                setShowAlert(true);
                 localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress + 1 }));
                 dispatch(changeCountOfWordsInProgress(words_in_progress + 1));
+                setShowAlert(true);
             })
             .catch(error => {
                 setStatus("error");

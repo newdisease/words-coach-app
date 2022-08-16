@@ -46,7 +46,7 @@ const DictionaryList = () => {
 
   const dispatch = useDispatch();
 
-  const limit = 5;
+  const limit = 10;
   const words_in_progress = user.words_in_progress;
 
   const onRequest = () => {
@@ -136,10 +136,10 @@ const DictionaryList = () => {
         striped bordered hover size="sm">
         <thead>
           <tr>
-            <th className='text-left'>en</th>
-            <th style={{ 'width': '40%' }}>uk</th>
-            <th style={{ 'width': '10%' }}>progress</th>
-            <th style={{ 'width': '10%' }}>
+            <th style={{ 'width': '45%' }}>en</th>
+            <th style={{ 'width': '45%' }}>uk</th>
+            <th style={{ 'width': '5%' }}>progress</th>
+            <th style={{ 'width': '5%' }}>
               actions
             </th>
           </tr>

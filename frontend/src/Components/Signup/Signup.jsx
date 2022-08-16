@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 
 
 const Signup = ({ show, onHide }) => {
-    const [isSent, setIsSent] = useState(true);
+    const [isSent, setIsSent] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [signupError, setSignupError] = useState({
         emailError: null,

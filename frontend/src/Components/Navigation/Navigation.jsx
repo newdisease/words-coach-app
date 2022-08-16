@@ -2,9 +2,11 @@ import { Nav, Navbar } from 'react-bootstrap';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
-import Login from '../Auth/Login';
-import Signup from '../Signup/Signup';
+import { lazy, Suspense } from 'react';
 import Logout from '../Auth/Logout';
+
+const LazyLogin = lazy(() => import('../Auth/Login'));
+const LazySignup = lazy(() => import('../Signup/Signup'));
 
 const Navigation = () => {
     const { isAuthenticated } = useSelector(state => state.user);
@@ -62,15 +64,17 @@ const Navigation = () => {
                         </Nav>}
                 </Navbar.Collapse>
             </Navbar>
-            <Signup
-                show={modalRegistrationShow}
-                onHide={() => setModalRegistrationShow(false)}
-            />
+            <Suspense fallback={<span className="visually-hidden">Loading...</span>}>
+                <LazySignup
+                    show={modalRegistrationShow}
+                    onHide={() => setModalRegistrationShow(false)}
+                />
 
-            <Login
-                show={modalAuthShow}
-                onHide={() => setModalAuthShow(false)}
-            />
+                <LazyLogin
+                    show={modalAuthShow}
+                    onHide={() => setModalAuthShow(false)}
+                />
+            </Suspense>
         </>
     );
 }

@@ -35,6 +35,8 @@ const TypedQuizAnswer = ({
   quiz,
   index,
   setReplyStatus,
+  score,
+  setScore,
   replyStatus,
   setIndex,
   setQuizProgress,
@@ -65,6 +67,7 @@ const TypedQuizAnswer = ({
   const onSubmit = (e) => {
     e.preventDefault();
     if (answer === wordForCheck) {
+      setScore(score + 1);
       setReplyStatus(CORRECT);
       setQuizProgress(quizProgress + 1);
       onUpdateItem(quiz[index].id);
@@ -124,7 +127,7 @@ const TypedQuizAnswer = ({
       case COMPLETE:
         return (
           <Button
-            className='col-sm-5 my-2'
+            className='col-sm-7 my-2'
             variant='primary'
             size="lg"
             type="submit"
@@ -171,7 +174,7 @@ const WordForQuestion = ({ wordForQuestion, replyStatus }) => {
   )
 }
 
-const WordForCheck = ({ wordForCheck, replyStatus }) => {
+const WordForCheck = ({ wordForCheck, replyStatus, score }) => {
   return (
     <Row style={{ "minHeight": "10vh", "maxHeight": "10vh" }}
       className="d-flex justify-content-center align-items-center">
@@ -188,7 +191,7 @@ const WordForCheck = ({ wordForCheck, replyStatus }) => {
           <Placeholder xs={7} md={7} lg={7} />
         </Placeholder>}
         {replyStatus === COMPLETE &&
-          <p className="h5 mt-5">You have got <strong>4</strong> correct answers</p>}
+          <p className="h5 mt-5">You have got <strong>{score}</strong> correct answers</p>}
       </Col>
     </Row >
   )
@@ -202,6 +205,7 @@ const Quiz = () => {
   const [replyStatus, setReplyStatus] = useState(IN_PROGRESS);
   const [isLoading, setIsLoading] = useState(false);
   const [word, setWord] = useState({});
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     setIsLoading(true);
@@ -239,10 +243,13 @@ const Quiz = () => {
             replyStatus={replyStatus} />
           <WordForCheck
             wordForCheck={word.wordForCheck}
-            replyStatus={replyStatus} />
+            replyStatus={replyStatus}
+            score={score} />
           <TypedQuizAnswer
             quiz={quiz}
             index={index}
+            score={score}
+            setScore={setScore}
             setReplyStatus={setReplyStatus}
             replyStatus={replyStatus}
             setIndex={setIndex}
