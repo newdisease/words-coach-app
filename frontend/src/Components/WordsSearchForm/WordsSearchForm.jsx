@@ -161,7 +161,7 @@ const WordsSearchForm = () => {
                             <p style={{ minHeight: "1.5em" }}
                                 className="text-danger">
                                 {errors.expression?.message}</p>
-                            <Button className={`col-sm-5 ${action === "loading" && "disabled"}`}
+                            <Button className={`col-6 ${action === "loading" && "disabled"}`}
                                 type="submit" variant="warning" size="lg">
                                 Translate
                             </Button>

@@ -1,4 +1,5 @@
-version: "3.2"
+version: '3.9'
+
 services:
 
   db:
@@ -7,59 +8,50 @@ services:
     container_name: postgres
     volumes:
       - db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
     env_file:
       - ./backend/.env
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     ports:
       - "5432:5432"
-    networks:
-      - app-net
 
   backend:
     restart: always
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    container_name: api
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn config.wsgi --bind 0.0.0.0:8000"
     env_file:
       - ./backend/.env
     build:
       context: ./backend/
       dockerfile: Dockerfile
-    container_name: django
     volumes:
       - ./backend:/app/api
     ports:
       - "8000:8000"
     depends_on:
       - db
-    networks:
-      - app-net
 
   frontend:
-    restart: always
-    command: npm start
     build:
       context: ./frontend/
       dockerfile: Dockerfile
-    container_name: react
     volumes:
-      - ./frontend:/app/frontend
-      - node_modules:/app/frontend/node_modules
+      - build:/app/frontend/build
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
     ports:
-      - "3000:3000"
-    stdin_open: true
+      - 80:8080
+    volumes:
+      - ./nginx/nginx-setup.conf:/etc/nginx/conf.d/default.conf:ro
+      - build:/var/www/react
     depends_on:
       - backend
-    networks:
-      - app-net
-
-networks:
-  app-net:
-    driver: bridge
+      - frontend
 
 volumes:
   db:
-  node_modules:
-
-
+  build:

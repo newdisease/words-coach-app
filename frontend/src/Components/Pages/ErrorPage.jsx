@@ -11,7 +11,7 @@ const ErrorPage = () => {
                         The page you are looking for was not found.</div>
                     <Button className='col-sm-5'
                         type="submit" variant="primary" size="lg" href="/" >
-                        Back to the main page</Button>
+                        To the main page</Button>
                 </Col>
             </Row>
         </>
