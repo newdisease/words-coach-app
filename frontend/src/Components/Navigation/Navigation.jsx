@@ -6,8 +6,8 @@ import { lazy, Suspense } from 'react';
 import { XLg } from 'react-bootstrap-icons'
 import logout from '../Auth/Logout';
 
-const LazyLogin = lazy(() => import('../Auth/Login'));
-const LazySignup = lazy(() => import('../Signup/Signup'));
+const LazyLogin = lazy(() => import('../Auth/LoginModal'));
+const LazySignup = lazy(() => import('../Signup/SignupModal'));
 
 const Navigation = () => {
     const { isAuthenticated } = useSelector(state => state.user);
