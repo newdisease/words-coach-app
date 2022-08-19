@@ -18,7 +18,7 @@ function MainPage() {
                 <Col xs={10} md={5} lg={3}>
                     {(isUserHasWordsInProgress) &&
                         <p className='text-success'>
-                            You must add {10 - user.words_in_progress} more word to start learning
+                            You must add {10 - user.words_in_progress} more word(s) to start learning
                         </p>}
                 </Col>
             </Row>

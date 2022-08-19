@@ -66,7 +66,7 @@ const TypedQuizAnswer = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (answer === wordForCheck) {
+    if (answer.toLowerCase() === wordForCheck) {
       setScore(score + 1);
       setReplyStatus(CORRECT);
       setQuizProgress(quizProgress + 1);

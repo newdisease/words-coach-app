@@ -150,7 +150,7 @@ const WordsSearchForm = () => {
                 </Col>
             </Row>
             <Form onSubmit={handleSubmit(getData)}>
-                <Row style={{ "minHeight": "35vh" }}
+                <Row style={{ "minHeight": "30vh" }}
                     className='d-flex justify-content-center align-items-center'>
                     <Col xs={10} md={5} lg={3}>
                         <Form.Group className="my-2">

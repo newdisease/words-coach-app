@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import Logout from '../Auth/Logout';
+import { XLg } from 'react-bootstrap-icons'
+import logout from '../Auth/Logout';
 
 const LazyLogin = lazy(() => import('../Auth/Login'));
 const LazySignup = lazy(() => import('../Signup/Signup'));
@@ -27,7 +28,9 @@ const Navigation = () => {
                 <Navbar.Toggle
                     aria-controls="basic-navbar-nav"
                     onClick={() => setExpanded(expanded ? false : "expanded")}
-                    onBlur={() => setExpanded(false)} />
+                    onBlur={() => setExpanded(false)}>
+                    {expanded && <XLg size={30} />}
+                </Navbar.Toggle>
                 <Navbar.Collapse
                     className="justify-content-end mx-3"
                     id="basic-navbar-nav">
@@ -40,26 +43,34 @@ const Navigation = () => {
                                     setExpanded(false)
                                 }
                                 }>
-                                Login</Nav.Link>
+                                Log In</Nav.Link>
                             <Nav.Link
                                 onClick={() => {
                                     setModalRegistrationShow(true)
                                     setExpanded(false)
                                 }
                                 }>
-                                Signup</Nav.Link>
+                                Sign Up</Nav.Link>
                         </Nav>
                         : <Nav
                             variant="tabs">
                             <Nav.Link
                                 as={NavLink}
                                 to="/dictionary"
-                                className={({ isActive }) => (isActive ? 'active' : '')}>
+                                className={({ isActive }) => (isActive ? 'active' : '')}
+                                onClick={() => {
+                                    setExpanded(false)
+                                }
+                                }>
                                 My dictionary
                             </Nav.Link>
                             <Nav.Link
-                                onClick={Logout}>
-                                Logout
+                                onClick={() => {
+                                    logout();
+                                    setExpanded(false)
+                                }
+                                }>
+                                Log Out
                             </Nav.Link>
                         </Nav>}
                 </Navbar.Collapse>

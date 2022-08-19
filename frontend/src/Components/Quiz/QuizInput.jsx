@@ -24,8 +24,9 @@ const InputBox = ({
         fontSize: "1.5rem",
         borderColor: color,
         borderStyle: "solid",
+        textTransform: "lowercase",
       }}
-      className="justify-content: space-between"
+      className="p-0"
       type={type}
       onKeyDown={handleKeyDown}
       onChange={handleChange}
