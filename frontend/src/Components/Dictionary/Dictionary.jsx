@@ -123,41 +123,46 @@ const DictionaryList = () => {
 
   return (
     <>
-      {isLoading && !dictionary.length && <Spinner
-        animation="border"
-        role="status">
-        <span
-          className="visually-hidden">
-          Loading...
-        </span>
-      </Spinner>}
-      <Table
-        className='mt-5'
-        striped bordered hover size="sm">
-        <thead>
-          <tr>
-            <th style={{ 'width': '45%' }}>en</th>
-            <th style={{ 'width': '45%' }}>uk</th>
-            <th style={{ 'width': '5%' }}>progress</th>
-            <th style={{ 'width': '5%' }}>
-              actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {dictionary.map(
-            item => <DictionaryItem
-              key={item.id}
-              item={item}
-              onDeleteItem={onDeleteItem}
-              onUpdateItem={onUpdateItem}
-              isLoading={isLoading}
-            />
-          )}
-        </tbody>
-      </Table>
+      {dictionary.length === 0 ? <div>
+        <p className='h5 m-3'>No words in the dictionary</p>
+      </div> :
+        <>
+          {isLoading && !dictionary.length && <Spinner
+            animation="border"
+            role="status">
+            <span
+              className="visually-hidden">
+              Loading...
+            </span>
+          </Spinner>}
+          <Table
+            className='mt-5'
+            striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th style={{ 'width': '45%' }}>en</th>
+                <th style={{ 'width': '45%' }}>uk</th>
+                <th style={{ 'width': '5%' }}>progress</th>
+                <th style={{ 'width': '5%' }}>
+                  actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {dictionary.map(
+                item => <DictionaryItem
+                  key={item.id}
+                  item={item}
+                  onDeleteItem={onDeleteItem}
+                  onUpdateItem={onUpdateItem}
+                  isLoading={isLoading}
+                />
+              )}
+            </tbody>
+          </Table>
+        </>}
       <ButtonGroup vertical="true">
-        {!isEnd && < Button
+        {(!isEnd && dictionary.length !== 0) && < Button
           className='m-2'
           variant="primary"
           size="lg"

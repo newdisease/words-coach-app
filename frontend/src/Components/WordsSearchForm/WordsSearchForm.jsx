@@ -150,7 +150,7 @@ const WordsSearchForm = () => {
                 </Col>
             </Row>
             <Form onSubmit={handleSubmit(getData)}>
-                <Row style={{ "minHeight": "35vh" }}
+                <Row style={{ "minHeight": "30vh" }}
                     className='d-flex justify-content-center align-items-center'>
                     <Col xs={10} md={5} lg={3}>
                         <Form.Group className="my-2">
@@ -161,7 +161,7 @@ const WordsSearchForm = () => {
                             <p style={{ minHeight: "1.5em" }}
                                 className="text-danger">
                                 {errors.expression?.message}</p>
-                            <Button className={`col-sm-5 ${action === "loading" && "disabled"}`}
+                            <Button className={`col-6 ${action === "loading" && "disabled"}`}
                                 type="submit" variant="warning" size="lg">
                                 Translate
                             </Button>
