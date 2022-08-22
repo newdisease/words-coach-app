@@ -2,7 +2,7 @@ FROM node:13.12.0-alpine as build
 
 WORKDIR /app/frontend
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 RUN npm install --silent
 COPY . /app/frontend
 RUN npm run build
