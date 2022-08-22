@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2'
 
 services:
 
@@ -17,6 +17,30 @@ services:
     ports:
       - "5432:5432"
 
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d
+      - ./nginx/certbot/conf/:/etc/letsencrypt/
+      - ./nginx/certbot/www:/var/www/certbot
+    depends_on:
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt/
+      - ./nginx/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
   backend:
     restart: always
     container_name: api
@@ -28,23 +52,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend:/app/api
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     depends_on:
       - db
-
-  nginx:
-    container_name: nginx
-    restart: unless-stopped
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    ports:
-      - 80:80
-    volumes:
-      - ./nginx/:/etc/nginx/conf.d
-    depends_on:
-      - backend
 
 volumes:
   db:
