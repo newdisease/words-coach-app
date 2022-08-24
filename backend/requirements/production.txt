@@ -1,3 +1,4 @@
 -r base.txt # includes the base.txt requirements file
 
 gunicorn==20.1.0
+whitenoise==6.2.0

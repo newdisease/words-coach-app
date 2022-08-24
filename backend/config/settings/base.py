@@ -56,6 +56,7 @@ DJOSER = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,7 +127,7 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 STATIC_URL = '/django_static/'
 STATIC_ROOT = BASE_DIR / 'django_static'
-STATICFILES_DIRS = [os.join(BASE_DIR, 'django_static')]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
