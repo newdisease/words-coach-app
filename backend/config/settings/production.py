@@ -8,6 +8,11 @@ ALLOWED_HOSTS = [
     'www.words-coach-app.fun',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://words-coach-app.fun',
+    'https://www.words-coach-app.fun',
+]
+
 # Apps that will work only in development mode
 INSTALLED_APPS += []
 
