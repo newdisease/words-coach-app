@@ -1,0 +1,19 @@
+@font-face {
+  font-family: "Inter";
+  src: url("./Fonts/Inter-VariableFont_slnt\,wght.ttf") format("ttf"),
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, #00123F 0%, #0D6EFD 100%);
+  min-height: 100%;
+  color: white;
+  font-family: "Inter", sans-serif;
+}
+
+.modal-dialog {
+  color: black;
+}

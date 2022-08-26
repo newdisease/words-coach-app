@@ -1,0 +1,34 @@
+@use 'sass:color';
+@use "../../Styles/Variables.scss" as *;
+
+
+$button-blue: #217BFF;
+
+.button {
+  background: transparent;
+  border: 0;
+  transition: 0.2s ease-in-out;
+
+  &--raised {
+    background-color: $yellow;
+    color: black;
+    border-radius: 50px;
+
+    &:hover {
+      background-color: $button-blue;
+      color: white;
+    }
+
+    &:disabled {
+      background-color: color.adjust($color:white, $alpha:-0.8);
+      color: color.adjust($color:white, $alpha:-0.5);
+    }
+  }
+
+  &--lg {
+    font-size: 1.25rem;
+    height: 60px;
+    min-width: 295px;
+  }
+
+}

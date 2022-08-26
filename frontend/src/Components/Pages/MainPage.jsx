@@ -1,8 +1,9 @@
-import { Button, Col, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import WordsSearchForm from '../WordsSearchForm/WordsSearchForm';
 import { useSelector } from 'react-redux';
 import GoogleAuth from '../Auth/GoogleAuth';
+import Button from '../Common/Button';
 
 
 function MainPage() {
@@ -31,7 +32,9 @@ function MainPage() {
                         variant="success"
                         size="lg"
                         to='/quiz'
-                        className={(isUserHasWordsInProgress || !isAuthenticated) && "disabled"}>
+                        raised
+                    // disabled={!isAuthenticated || isUserHasWordsInProgress}
+                    >
                         Start learning
                     </Button>
                 </Col>
