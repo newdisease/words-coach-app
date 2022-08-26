@@ -25,17 +25,40 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    # Local apps
+    "accounts",
+    'api',
     # Third-party apps
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'djoser',
-    # Local apps
-    "accounts",
-    'api',
+    'dj_rest_auth',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
+    'allauth.socialaccount.providers.google',
 ]
 
+SITE_ID = 1
+
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'accounts.serializers.CustomUserSerializer',
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+}
+
+# Allauth settings
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -45,13 +68,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-}
-
-DJOSER = {
-    "USER_ID_FIELD": "email",
-    'SERIALIZERS': {
-        'current_user': 'accounts.serializers.UserSerializer',
-    },
 }
 
 MIDDLEWARE = [
@@ -78,10 +94,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'config.wsgi.application'
 

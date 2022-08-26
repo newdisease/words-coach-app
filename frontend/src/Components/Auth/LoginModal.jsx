@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoginFormValidatorsSchema as schema } from './LoginFormValidators';
 import { useState, useEffect } from 'react';
 import login from '../Auth/Login';
+import GoogleAuth from './GoogleAuth';
 
 const LoginModal = ({ show, onHide }) => {
     const [error, setError] = useState(null);
@@ -82,9 +83,7 @@ const LoginModal = ({ show, onHide }) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
+                    <GoogleAuth onHide={onHide} setIsLogedIn={setIsLogedIn} setError={setError} />
                 </Modal.Footer>
             </Modal>
         </>

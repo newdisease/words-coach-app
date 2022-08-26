@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { SignupFormValidatorsSchema as schema } from './SignupFormValidators';
 import { useState, useEffect } from 'react';
 import login from '../Auth/Login';
+import GoogleAuth from '../Auth/GoogleAuth';
 
 
 const SignupModal = ({ show, onHide }) => {
@@ -14,6 +15,7 @@ const SignupModal = ({ show, onHide }) => {
         emailError: null,
         passwordError: null
     });
+    const [error, setError] = useState(null);
 
     const {
         register,
@@ -30,12 +32,12 @@ const SignupModal = ({ show, onHide }) => {
         }, 3000);
     }, [isLogedIn]);
 
-    const onSubmit = ({ email, password }) => {
+    const onSubmit = ({ email, password1, password2 }) => {
         setIsLoading(true);
         axios
-            .post("accounts/users/", { email, password })
+            .post("accounts/registration/", { email, password1, password2 })
             .then(() => {
-                login(email, password)
+                login(email, password1)
                     .then(() => {
                         onHide();
                         reset();
@@ -51,7 +53,7 @@ const SignupModal = ({ show, onHide }) => {
             .catch(error => {
                 setSignupError({
                     emailError: error.response.data.email,
-                    passwordError: error.response.data.password
+                    passwordError: error.response.data.password1
                 });
                 setIsLogedIn(false);
                 throw error;
@@ -90,22 +92,21 @@ const SignupModal = ({ show, onHide }) => {
                         {signupError.passwordError && <Alert variant="danger" onClose={() => setSignupError({ passwordError: null })} dismissible>{signupError.passwordError}</Alert>}
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" {...register("password")} />
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.password?.message}</p>
+                            <Form.Control type="password" placeholder="Password" {...register("password1")} />
+                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.password1?.message}</p>
 
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPasswordRepeated">
                             <Form.Label>Repeat password</Form.Label>
-                            <Form.Control type="password" placeholder="Repeat password" {...register("confirmPassword")} />
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.confirmPassword?.message}</p>
+                            <Form.Control type="password" placeholder="Repeat password" {...register("password2")} />
+                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.password2?.message}</p>
                         </Form.Group>
                         <Button className='col-sm-5 mx-auto' type="submit" variant="primary" size="lg">Create account</Button>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                    </Form.Text>
+                    {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
+                    <GoogleAuth onHide={onHide} setIsLogedIn={setIsLogedIn} setError={setError} />
                 </Modal.Footer>
             </Modal>
         </>

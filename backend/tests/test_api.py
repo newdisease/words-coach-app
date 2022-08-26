@@ -56,7 +56,7 @@ class TestApi(APITestCase):
 
     def test_delete_dictionary(self):
         response = self.client.delete(
-            reverse('dictionary-detail', args=[1]),
+            reverse('dictionary-detail', args=[self.word.id]),
         )
         self.assertEqual(response.status_code, 204)
 

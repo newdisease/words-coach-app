@@ -8,7 +8,7 @@ const logout = () => {
     localStorage.removeItem("user");
     store.dispatch(loginUnsetUser());
 
-    axios.post("accounts/token/logout/")
+    axios.post("accounts/logout/")
         .then(() => {
             axios.defaults.headers.common["Authorization"] = "";
         }
