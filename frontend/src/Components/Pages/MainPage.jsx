@@ -2,6 +2,7 @@ import { Button, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import WordsSearchForm from '../WordsSearchForm/WordsSearchForm';
 import { useSelector } from 'react-redux';
+import GoogleAuth from '../Auth/GoogleAuth';
 
 
 function MainPage() {
@@ -12,7 +13,6 @@ function MainPage() {
     return (
         <>
             <WordsSearchForm />
-
             <Row style={{ "maxHeight": "10vh", "minHeight": "10vh" }}
                 className='d-flex justify-content-center align-items-center mb-1'>
                 <Col xs={10} md={5} lg={3}>

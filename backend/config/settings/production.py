@@ -38,3 +38,5 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
