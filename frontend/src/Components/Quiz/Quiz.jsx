@@ -15,11 +15,9 @@ import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './QuizConstants';
 
 const QuizProgress = ({ quizProgress, replyStatus }) => {
   return (
-    <Row className="d-flex justify-content-center align-items-center"
-      style={{ "minHeight": "10vh" }}>
+    <Row className="d-flex justify-content-center align-items-center">
       <Col xs={11} md={11} lg={11}>
         <ProgressBar
-          style={{ "minHeight": "25px", "maxWidth": "70vh" }}
           className="my-3 mx-auto"
           now={`${quizProgress}0`}
           label={`${quizProgress}/10`}
@@ -142,7 +140,6 @@ const TypedQuizAnswer = ({
 
   return (
     <Row
-      style={{ "minHeight": "25vh" }}
       className='d-flex justify-content-center align-items-center'
     >
       <Col xs={10} md={10} lg={10}>

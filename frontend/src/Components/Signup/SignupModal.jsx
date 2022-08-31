@@ -93,13 +93,13 @@ const SignupModal = ({ show, onHide }) => {
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" {...register("password1")} />
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.password1?.message}</p>
+                            <p className="text-danger">{errors.password1?.message}</p>
 
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPasswordRepeated">
                             <Form.Label>Repeat password</Form.Label>
                             <Form.Control type="password" placeholder="Repeat password" {...register("password2")} />
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.password2?.message}</p>
+                            <p className="text-danger">{errors.password2?.message}</p>
                         </Form.Group>
                         <Button className='col-sm-5 mx-auto' type="submit" variant="primary" size="lg">Create account</Button>
                     </Form>

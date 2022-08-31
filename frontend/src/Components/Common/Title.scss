@@ -1,0 +1,19 @@
+@use "../../Styles/Variables.scss" as *;
+
+.title {
+  flex-basis: 100%;
+
+  h1 + * {
+    margin-top: 15px;
+  }
+}
+
+.title-wrapper + * {
+  margin-top: 40px;
+}
+
+.subtitle > span:not([class]) {
+  display: inline-block;
+  margin: 0 10px;
+  color: $accent-color;
+}

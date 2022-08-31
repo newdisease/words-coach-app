@@ -37,12 +37,11 @@ const DictionaryItem = ({ item, onDeleteItem, onUpdateItem, isLoading }) => {
 }
 
 
-const DictionaryList = () => {
+const DictionaryList = ({ user }) => {
   const [dictionary, setDictionary] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
-  const { user } = useSelector(state => state.user);
 
   const dispatch = useDispatch();
 

@@ -5,11 +5,12 @@ import DictionaryList from "../Dictionary/Dictionary";
 
 
 const DictionaryPage = () => {
-    const { isAuthenticated } = useSelector(state => state.user);
+    const { user, isAuthenticated } = useSelector(state => state.user);
 
     return (
         <>
-            {!isAuthenticated ? <Navigate to='/' /> : <DictionaryList />}
+            {!isAuthenticated ?
+                <Navigate to='/' /> : <DictionaryList user={user} />}
         </>
     );
 }

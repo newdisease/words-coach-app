@@ -5,12 +5,16 @@
 $button-blue: #217BFF;
 
 .button {
-  background: transparent;
-  border: 0;
   transition: 0.2s ease-in-out;
+  display: inline-block;
+  text-decoration: none;
+
+  &:disabled svg {
+    opacity: 0.2;
+  }
 
   &--raised {
-    background-color: $yellow;
+    background-color: $secondary-color;
     color: black;
     border-radius: 50px;
 
@@ -29,6 +33,30 @@ $button-blue: #217BFF;
     font-size: 1.25rem;
     height: 60px;
     min-width: 295px;
+    padding: 0.6em 1em;
   }
+
+  &--bubble {
+    position: relative;
+
+    & > .bubble {
+      position: absolute;
+      bottom: -4px;
+      left: -10px;
+      right: -10px;
+      font-size: 12px;
+      line-height: 1;
+      text-align: center;
+
+      & > span {
+        background-color: $secondary-color;
+        border-radius: 10px;
+        padding: 1px 5px;
+        color: black;
+      }
+    }
+  }
+
+  
 
 }

@@ -1,0 +1,28 @@
+@use "../../Styles/Variables.scss" as *;
+
+.alert {
+  transition: 0.2s ease-in-out;
+  position: relative;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+
+  &--error {
+    color: red;
+    background-color: white;
+    border-color: black;
+  }
+
+  &--success {
+    color: green;
+    background-color: white;
+    border-color: black;
+  }
+
+  &--info {
+    color: $dark-color;
+    background-color: white;
+    border-color: black;
+  }
+}

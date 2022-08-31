@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const WordsFormValidatorsSchema = yup.object({
+export const WordsSearchFormValidatorsSchema = yup.object({
     expression: yup.string()
         .min(2, 'must be at least 2 characters long')
         .max(15, 'an expression is too long')

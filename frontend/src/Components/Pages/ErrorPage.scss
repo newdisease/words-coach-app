@@ -1,0 +1,14 @@
+@use "../../Styles/Variables.scss" as *;
+
+.error-img {
+  padding-top: 40px;
+}
+
+.error-title {
+  padding-top: 25px;
+}
+
+.error-text {
+  padding-top: 10px;
+  color: $secondary-color;
+}

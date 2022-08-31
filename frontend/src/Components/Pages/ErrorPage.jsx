@@ -1,19 +1,27 @@
-import { Row, Col, Button } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../Common';
+import errorImg from '../../Images/img404.svg'
+import './ErrorPage.scss';
+
 
 const ErrorPage = () => {
+    const navigate = useNavigate();
     return (
         <>
-            <Row style={{ "minHeight": "50vh" }}
-                className="d-flex justify-content-center align-items-center">
-                <Col xs={10} md={9} lg={6} className="text-center">
-                    <span className="display-1 d-block">404</span>
-                    <div className="mb-4 lead">
-                        The page you are looking for was not found.</div>
-                    <Button className='col-sm-5'
-                        type="submit" variant="primary" size="lg" href="/" >
-                        To the main page</Button>
-                </Col>
-            </Row>
+            <div className='tac'>
+                <img className='error-img' src={errorImg} alt="error 404" />
+                <h1 className='error-title'>Error 404</h1>
+                <p className='error-text'>page not found</p>
+            </div>
+            <div className='tac'>
+                <Button
+                    onClick={() => navigate('/')}
+                    variant="success"
+                    btnType="lg"
+                    raised >
+                    Go to Mainpage
+                </Button>
+            </div>
         </>
     )
 }
