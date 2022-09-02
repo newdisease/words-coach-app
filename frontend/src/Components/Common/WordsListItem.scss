@@ -1,0 +1,80 @@
+@use "../../Styles/Variables.scss" as *;
+
+$border-color: #F4F7FF;
+$blue-text-color: #4590FF;
+$grey-dot-color: #DEEBFE;
+$yellow-dot-color: #FFB11B;
+
+
+.item-wrapper {
+  background-color: white;
+  border-bottom: 2px solid $border-color;
+  height: 65px;
+  align-items: center;
+  padding: 0 20px;
+
+  .item-title {
+    color: $accent-color;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .item-content {
+    color: $dark-color;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .controls-wrapper {
+    .button {
+      margin-left: 15px;
+    }
+
+  .item-progress {
+    flex-direction: column;
+    justify-content: space-between;
+    height: 31px;
+    width: 36px;
+    margin-right: 5px;
+
+    p {
+      color: #202368;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 7px;
+    }
+
+    .item-progress-bar { 
+      justify-content: space-between;
+
+      .dot {
+        height: 5px;
+        width: 5px;
+        background-color: $yellow-dot-color;
+        border-radius: 50%;
+
+        &-grey {
+          background-color: $grey-dot-color;
+        }
+
+        &-blue {
+          background-color: $accent-color;
+        }
+      }
+    }
+  }
+}
+
+.item-wrapper-blue {
+  background-color: transparent;
+
+  .item-title {
+    color: white;
+  }
+  
+  .item-content {
+    color: $blue-text-color;
+    }
+  }
+}

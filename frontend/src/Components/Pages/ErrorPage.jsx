@@ -16,7 +16,6 @@ const ErrorPage = () => {
             <div className='tac'>
                 <Button
                     onClick={() => navigate('/')}
-                    variant="success"
                     btnType="lg"
                     raised >
                     Go to Mainpage

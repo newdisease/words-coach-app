@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import './Button.scss';
 
@@ -9,11 +10,14 @@ const Button = ({
   raised,
   btnType,
   type = "button",
+  linkTo,
   bubbleCount
 }) => {
+  const navigate = useNavigate();
+
   return (
     <button
-      onClick={onClick}
+      onClick={linkTo ? () => navigate(linkTo) : onClick}
       className={classNames('button', className, {
         'button--raised': raised,
         [`button--${btnType}`]: btnType,

@@ -1,7 +1,6 @@
-import { Nav, Navbar } from 'react-bootstrap';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate, useMatch } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { XLg } from 'react-bootstrap-icons'
 import Button from '../Common/Button';
@@ -18,7 +17,6 @@ const Header = () => {
     const [modalAuthShow, setModalAuthShow] = useState(false);
     const [modalRegistrationShow, setModalRegistrationShow] = useState(false);
     const [expanded, setExpanded] = useState(false);
-    const navigate = useNavigate();
     const isMainPageRoute = useMatch('/');
 
     return (
@@ -26,7 +24,7 @@ const Header = () => {
             <ul className='nav'>
                 <li>
                     <Button
-                        onClick={() => navigate('/dictionary')}
+                        linkTo='/dictionary'
                         disabled={!isAuthenticated}
                         btnType='bubble'
                         bubbleCount={user.words_in_progress}
@@ -54,7 +52,9 @@ const Header = () => {
                             onClick={() => {
                                 logout();
                                 setExpanded(false)
-                            }}>
+                            }}
+                            btnType='icon'
+                        >
                             <LogOutIcon />
                         </Button>
                     }

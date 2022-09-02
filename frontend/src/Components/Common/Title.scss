@@ -1,5 +1,9 @@
 @use "../../Styles/Variables.scss" as *;
 
+.title-wrapper {
+  margin: 0 10px;
+}
+
 .title {
   flex-basis: 100%;
 
@@ -17,3 +21,20 @@
   margin: 0 10px;
   color: $accent-color;
 }
+
+.children-component {
+  color: $accent-color;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: right;
+
+  & > p {
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  & > span {
+    font-weight: 500;
+  }
+}
+

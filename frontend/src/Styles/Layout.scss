@@ -1,3 +1,5 @@
+@use "./Variables.scss" as *;
+
 // Reset CSS
 * {box-sizing: border-box; line-height: 1;}
 body {margin: 0;}
@@ -5,7 +7,7 @@ h1 {font-size: 2em; margin: 0; font-weight: 700;}
 p {margin: 0;}
 ul {list-style: none; margin: 0;}
 ul li {padding: 0;}
-button {border: 0; padding: 0; background: transparent;}
+button {border: 0; padding: 0; background: transparent; cursor: pointer;}
 input {padding: 0; }
 ::placeholder {color: #bacce5; font-size: 16px;}
 ::-moz-placeholder {color: #bacce5; font-size: 16px;}
@@ -16,9 +18,30 @@ html {font-size: 15px;}
 // Custom CSS
 @font-face {
   font-family: "Inter";
-  src: url("./Fonts/Inter-VariableFont_slnt\,wght.ttf") format("ttf"),
+  font-style: normal;
+  font-weight: 500;
+  src: local(""), 
+    url(./Fonts/Inter-Regular.woff2) format("woff2"), 
+    url(./Fonts/Inter-Regular.woff) format("woff");
 }
 
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  src: local(""), 
+    url(./Fonts/Inter-Medium.woff2) format("woff2"),
+    url(./Fonts/Inter-Medium.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  src: local(""), 
+    url(./Fonts/Inter-Bold.woff2) format("woff2"),
+    url(./Fonts/Inter-Bold.woff) format("woff");
+}
 
 body {
   color: white;
@@ -51,13 +74,19 @@ main {
 }
 
 input {
-  border: 0; 
+  border: 0;
+  color: $dark-color;
   font-size: 16px;
+  font-weight: 500;
   border-radius: 30px;
   height: 60px;
   padding: 4px 30px 0;
   width: 100%;
   outline: none;
+
+  &::placeholder {
+    color: #BACCE5;
+  }
 }
 
 .modal-dialog {
@@ -80,6 +109,6 @@ input {
   display: flex;
 }
 
-.flex-justify-between {
+.flex-j-b {
   justify-content: space-between;
 }

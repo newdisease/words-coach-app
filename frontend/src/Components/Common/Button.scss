@@ -3,6 +3,7 @@
 
 
 $button-blue: #217BFF;
+$red-icon-color: #FA3E3A;
 
 .button {
   transition: 0.2s ease-in-out;
@@ -24,7 +25,7 @@ $button-blue: #217BFF;
     }
 
     &:disabled {
-      background-color: color.adjust($color:white, $alpha:-0.8);
+      background-color: $button-blue;
       color: color.adjust($color:white, $alpha:-0.5);
     }
   }
@@ -34,6 +35,13 @@ $button-blue: #217BFF;
     height: 60px;
     min-width: 295px;
     padding: 0.6em 1em;
+  }
+
+  &--md {
+    font-size: 1rem;
+    height: 40px;
+    min-width: 180px;
+    padding: 0.4em 0.8em;
   }
 
   &--bubble {
@@ -57,6 +65,21 @@ $button-blue: #217BFF;
     }
   }
 
-  
+  &--icon {
+    &:hover {
+      opacity: 0.8;
+    }
 
+    svg {
+      vertical-align: middle;
+    }
+  }
+}
+
+.icon-red svg {
+  fill: $red-icon-color;
+}
+
+.icon-blue svg {
+  fill: $accent-color;
 }

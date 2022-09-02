@@ -1,5 +1,4 @@
 import { Col, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import WordsSearchWrapper from '../WordsSearchWrapper/WordsSearchWrapper';
 import { useSelector } from 'react-redux';
 import GoogleAuth from '../Auth/GoogleAuth';
@@ -9,7 +8,6 @@ import Button from '../Common/Button';
 function MainPage() {
     const { isAuthenticated, user } = useSelector(state => state.user);
     const isUserHasWordsInProgress = user.words_in_progress < 10;
-    const navigate = useNavigate();
 
     return (
         <>
@@ -24,8 +22,7 @@ function MainPage() {
                     </p>
                 }
                 <Button
-                    onClick={() => navigate('/quiz')}
-                    variant="success"
+                    linkTo='/quiz'
                     btnType="lg"
                     raised
                     disabled={!isAuthenticated || isUserHasWordsInProgress}

@@ -7,14 +7,14 @@ const Title = ({
 }) => {
 
   return (
-    <div className='flex flex-justify-between title-wrapper'>
+    <div className='flex flex-j-b title-wrapper'>
       <div className={classnames('title', { 'tac': !childrenComponent })}>
         <h1>{text}</h1>
         <p className="subtitle">
           🇬🇧&nbsp;&nbsp;English <span>/</span> Ukrainian&nbsp;&nbsp;🇺🇦
         </p>
       </div>
-      {childrenComponent && <div>{childrenComponent}</div>}
+      {childrenComponent && <div className='flex children-component'>{childrenComponent}</div>}
     </div>
   )
 }
