@@ -37,6 +37,13 @@ $red-icon-color: #FA3E3A;
     padding: 0.6em 1em;
   }
 
+  &--lg-modal {
+    font-size: 1.25rem;
+    height: 60px;
+    min-width: 227px;
+    padding: 0.6em 1em;
+  }
+
   &--md {
     font-size: 1rem;
     height: 40px;
@@ -74,6 +81,22 @@ $red-icon-color: #FA3E3A;
       vertical-align: middle;
     }
   }
+
+  &--close-btn {
+      justify-content: center;
+      align-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 0 20px;
+      background-color: $secondary-color;
+  }
+
+  &--circle {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background-color: white;
+  }
 }
 
 .icon-red svg {
@@ -82,4 +105,8 @@ $red-icon-color: #FA3E3A;
 
 .icon-blue svg {
   fill: $accent-color;
+}
+
+.icon-black svg {
+  fill: black;
 }

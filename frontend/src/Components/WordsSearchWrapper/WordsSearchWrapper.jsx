@@ -107,8 +107,9 @@ const WordsSearchForm = ({ getData, translatedWord }) => {
                         {...register("expression")}
                     />
                     <Button
-                        className="mic"
+                        className="voice-btn"
                         disabled
+                        btnType="icon"
                     >
                         <MicIcon />
                     </Button>

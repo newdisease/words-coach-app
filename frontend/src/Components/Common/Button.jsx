@@ -27,7 +27,7 @@ const Button = ({
       type={type}
     >
       {
-        bubbleCount && <span className="bubble">
+        (bubbleCount || bubbleCount === 0) && <span className="bubble">
           <span>{bubbleCount}</span>
         </span>
       }

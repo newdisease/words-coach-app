@@ -1,11 +1,12 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import { loginSetToken, loginSetUser, loginUnsetUser } from "./AuthSlice";
 import { store } from "../../Store";
+import { Button } from '../Common';
+import { GoogleIcon } from '../Common/Icons';
 
 
-function GoogleAuth({ onHide, setIsLogedIn, setError }) {
+function GoogleAuth({ onHide, setError }) {
   const login = useGoogleLogin({
     onSuccess: tokenResponse => {
       return axios.post("accounts/google/", { access_token: tokenResponse['access_token'] })
@@ -18,7 +19,6 @@ function GoogleAuth({ onHide, setIsLogedIn, setError }) {
             store.dispatch(loginSetUser(response.data));
             localStorage.setItem("user", JSON.stringify(response.data));
             onHide();
-            setIsLogedIn(true);
           })
             .catch((error) => {
               store.dispatch(loginUnsetUser());
@@ -35,8 +35,11 @@ function GoogleAuth({ onHide, setIsLogedIn, setError }) {
   })
 
   return (
-    <Button onClick={() => login()}>
-      Sign in with Google 🚀
+    <Button
+      btnType="circle"
+      onClick={() => login()}
+    >
+      <GoogleIcon />
     </Button>
   );
 }

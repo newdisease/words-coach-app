@@ -2,10 +2,10 @@ import * as yup from "yup";
 
 export const LoginFormValidatorsSchema = yup.object({
     email: yup.string()
-        .email("must be a valid email address")
+        .email('Email address must be valid')
         .required(),
     password: yup.string()
-        .min(8, 'must be at least 8 characters long')
-        .max(15, 'an expression is too long')
+        .min(8, 'The password is too short')
+        .max(15, 'The password is too long')
         .required(),
 }).required();

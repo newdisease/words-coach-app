@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useMatch } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
-import { XLg } from 'react-bootstrap-icons'
-import Button from '../Common/Button';
 import logout from '../Auth/Logout';
+
 import { DictionaryIcon, UserIcon, LogOutIcon } from '../Common/Icons';
+import { Button } from '../Common';
 
 import './Header.scss';
 
