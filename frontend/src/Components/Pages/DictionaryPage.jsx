@@ -22,6 +22,8 @@ const DictionaryPage = () => {
                         </>
                     }
                 />
+            </div>
+            <div className='bottom-content bottom-content-top'>
                 <DictionaryList user={user} />
             </div>
         </>

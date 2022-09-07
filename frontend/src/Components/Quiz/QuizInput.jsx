@@ -1,42 +1,39 @@
 import { useState, useEffect, useCallback } from 'react';
+import { CheckIcon, CloseIcon } from '../Common/Icons';
 import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './QuizConstants';
 
 const InputBox = ({
   type,
-  handleKeyDown,
   handleChange,
   handleFocus,
   name,
   inputRef,
   replyStatus
 }) => {
-  let color;
-  if (replyStatus === CORRECT) { color = 'green' }
-  else if (replyStatus === INCORRECT) { color = 'red' }
+  let answeredColorClass = ''
+  if (replyStatus === CORRECT) {
+    answeredColorClass = ' correct'
+  } else if (replyStatus === INCORRECT) {
+    answeredColorClass = ' error'
+  }
 
   return (
-    <input
-      style={{
-        width: "35px",
-        height: "35px",
-        margin: "5px",
-        textAlign: "center",
-        fontSize: "1.5rem",
-        borderColor: color,
-        borderStyle: "solid",
-        textTransform: "lowercase",
-      }}
-      className="p-0"
-      type={type}
-      onKeyDown={handleKeyDown}
-      onChange={handleChange}
-      onFocus={handleFocus}
-      maxLength='1'
-      name={name}
-      ref={inputRef}
-      readOnly={replyStatus !== IN_PROGRESS}
-      hidden={replyStatus === COMPLETE}
-    />
+    <span
+      className={`quiz-input tac${answeredColorClass}`}>
+      <input
+        className='tac'
+        type={type}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        maxLength='1'
+        name={name}
+        ref={inputRef}
+        readOnly={replyStatus !== IN_PROGRESS}
+        hidden={replyStatus === COMPLETE}
+        placeholder=' '
+      />
+      <span className='line'></span>
+    </span>
   )
 }
 
@@ -48,6 +45,14 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
     inputElements['input0']?.select()
   }, [amount])
 
+  useEffect(() => {
+    if (replyStatus === IN_PROGRESS) {
+      document.addEventListener('keydown', handleKeyDown)
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [replyStatus])
 
   const renderItems = () => {
     let items = []
@@ -56,7 +61,6 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
         <InputBox
           key={i}
           type='text'
-          handleKeyDown={handleKeyDown}
           handleChange={handleChange}
           handleFocus={handleFocus}
           name={`input${i}`}
@@ -82,8 +86,9 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
 
   const handleKeyDown = useCallback(({ target, key }) => {
     if (key === 'Backspace') {
-      if (target.value === '' && target.previousElementSibling !== null) {
-        target.previousElementSibling.value = ''
+      const el = target.parentElement.previousElementSibling?.firstChild
+      if (el && target.value === '') {
+        el.value = ''
         focusPrevChar(target)
       } else {
         target.value = ''
@@ -100,23 +105,18 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
   }, [characterArray])
 
   const handleFocus = useCallback(({ target }) => {
-    const el = target
     // In most browsers .select() does not work without the added timeout.
     setTimeout(function () {
-      el.select()
+      target.select()
     }, 0)
   }, [])
 
   const focusPrevChar = useCallback((target) => {
-    if (target.previousElementSibling !== null) {
-      target.previousElementSibling.focus()
-    }
+    target.parentElement.previousElementSibling?.firstChild?.focus()
   }, [])
 
   const focusNextChar = useCallback((target) => {
-    if (target.nextElementSibling !== null) {
-      target.nextElementSibling.focus()
-    }
+    target.parentElement.nextElementSibling?.firstChild?.focus()
   }, [])
 
   const setModuleOutput = useCallback(() => {
@@ -128,9 +128,23 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
     setCharacterArray(updatedCharacters)
   }, [amount, characterArray, inputElements])
 
+  const icons = {
+    CORRECT: { renderClass: 'success', renderIcon: <CheckIcon /> },
+    INCORRECT: { renderClass: 'error', renderIcon: <CloseIcon /> }
+  }
+
+  const { renderClass, renderIcon } = icons[replyStatus] || {}
+
   return (
-    <div style={{ "minHeight": "15vh" }} className="my-2">
-      <div>{renderItems()}</div>
+    <div className='expression-wrap flex'>
+      <div
+        className='expression'
+      >
+        {renderItems()}
+      </div>
+      <div className={`icon ${renderClass}`}>
+        {renderIcon}
+      </div>
     </div>
   )
 }

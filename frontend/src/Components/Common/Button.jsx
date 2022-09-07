@@ -7,6 +7,7 @@ const Button = ({
   onClick,
   className,
   disabled,
+  form,
   raised,
   btnType,
   type = "button",
@@ -25,6 +26,7 @@ const Button = ({
       }
       disabled={disabled}
       type={type}
+      form={form}
     >
       {
         (bubbleCount || bubbleCount === 0) && <span className="bubble">

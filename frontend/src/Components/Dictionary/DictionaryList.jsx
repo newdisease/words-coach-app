@@ -25,7 +25,7 @@ const DictionaryList = ({ user }) => {
 
   const dispatch = useDispatch();
 
-  const limit = 8;
+  const limit = 5;
   const wordsInProgress = user.words_in_progress;
 
   const onRequest = () => {

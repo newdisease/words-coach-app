@@ -60,17 +60,44 @@ body {
   }
 }
 
+.app {
+  display: block;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 100px 10px 0;
+}
+
 main {
   min-height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 50px;
+  padding-bottom: 40px;
 
   & > div {
     width: 100%;
   }
+}
+
+.top-content {
+  margin-bottom: 20px;
+}
+
+.bottom-content-full {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+
+   .button {
+    align-self: center;
+   }
+}
+
+.bottom-content-top {
+  flex-grow: 1;
 }
 
 input {
@@ -91,14 +118,6 @@ input {
 
 .modal-dialog {
   color: black;
-}
-
-.app {
-  display: block;
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100vh;
-  padding: 100px 10px 0;
 }
 
 .tac {
