@@ -19,6 +19,12 @@ const WordsListItem = ({
   isBlue,
 }) => {
   const { id, en_word, uk_word, progress } = item;
+  const handleCardSubmit = (id) => {
+    setTimeout(() => {
+      onDeleteItem(id);
+    }, 500);
+  }
+
   return (
     <div className={classnames('flex flex-j-b item-wrapper', { 'item-wrapper-blue': isBlue })}>
       <div className='item'>
@@ -51,7 +57,10 @@ const WordsListItem = ({
         <Button
           className='icon-red'
           btnType='icon'
-          onClick={() => onDeleteItem(id)}
+          onClick={(e) => {
+            handleCardSubmit(id);
+            e.target.closest('.item-wrapper').classList.add('deleted');
+          }}
         >
           <TrashIcon />
         </Button>

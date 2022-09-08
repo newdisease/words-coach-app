@@ -6,10 +6,11 @@ import QuizWrapper from "../Quiz/QuizWrapper";
 
 
 const QuizPage = () => {
-    const { isAuthenticated } = useSelector(state => state.user);
+    const { isAuthenticated, user } = useSelector(state => state.user);
+    console.log(user.words_in_progress)
     return (
         <>
-            {!isAuthenticated && <Navigate to="/" />}
+            {!isAuthenticated || user.words_in_progress < 10 && <Navigate to="/" />}
             <div className="top-content">
                 <Title
                     text={"Test your knowledge"}

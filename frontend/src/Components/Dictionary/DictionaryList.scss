@@ -3,14 +3,19 @@
 $border-color: #F4F7FF;
 
 .dict-search {
-  border-radius: 20px 20px 0 0;
+  border-radius: 0;
   border-bottom: 2px solid $border-color;
 }
 
 .dict-control {
   justify-content: center;
   background-color: white;
-  border-radius: 0 0 20px 20px;
   height: 60px;
   align-items: center;
+}
+
+.dictionary-wrap {
+  background-color: white;
+  border-radius: 20px;
+  overflow: hidden;
 }

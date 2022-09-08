@@ -108,30 +108,31 @@ const DictionaryList = ({ user }) => {
           Loading...
         </span>
       </Spinner>}
+      <div
+        className='dictionary-wrap'>
+        <SeacrhDictionaryWords />
 
-      <SeacrhDictionaryWords />
+        {dictionary.map(
+          item => <WordsListItem
+            key={item.id}
+            item={item}
+            onDeleteItem={onDeleteItem}
+            onUpdateItem={onUpdateItem}
+            isLoading={isLoading}
+          />
+        )}
 
-      {dictionary.map(
-        item => <WordsListItem
-          key={item.id}
-          item={item}
-          onDeleteItem={onDeleteItem}
-          onUpdateItem={onUpdateItem}
-          isLoading={isLoading}
-        />
-      )}
-
-      <div className='flex dict-control'>
-        <Button
-          className="tac"
-          btnType="md"
-          raised
-          onClick={onRequest}
-          disabled={(isLoading || isEnd || dictionary.length === 0)}>
-          Load more
-        </Button>
+        <div className='flex dict-control'>
+          <Button
+            className="tac"
+            btnType="md"
+            raised
+            onClick={onRequest}
+            disabled={(isLoading || isEnd || dictionary.length === 0)}>
+            Load more
+          </Button>
+        </div>
       </div>
-
     </>
   )
 }

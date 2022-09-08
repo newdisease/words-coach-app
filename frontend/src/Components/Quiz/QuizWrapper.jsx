@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +10,7 @@ import { CorrectIcon, WrongIcon } from "../Common/Icons";
 
 import './Quiz.scss';
 
-const QuizButton = ({ replyStatus, onClick, onSubmit }) => {
+const QuizButton = ({ replyStatus, onClick, onSubmit, onRestart }) => {
 
   let status
   if (replyStatus === IN_PROGRESS) {
@@ -41,13 +40,12 @@ const QuizButton = ({ replyStatus, onClick, onSubmit }) => {
     },
     'complete': {
       renderButton: <Button
-        size='lg'
+        btnType='lg'
         raised
-        linkTo='/quiz'>
+        onClick={(e) => onRestart(e)}>
         Restart</Button>
     }
   }
-
   return (
     <>
       {buttons[status].renderButton}
@@ -65,7 +63,7 @@ const QuizProgress = ({ quizProgress, replyStatus }) => {
 
   return (
     <div
-      className="progress-wrap"
+      className={`progress-wrap ${replyStatus === INCORRECT ? 'error' : ''}`}
       style={{
         "--num": quizProgress * 10,
       }}
@@ -74,13 +72,12 @@ const QuizProgress = ({ quizProgress, replyStatus }) => {
         className="dot"
       >
       </div>
-      <svg className="circle">
+      <svg className={`circle ${replyStatus === COMPLETE ? 'complete' : ''}`}>
         <circle cx="90" cy="90" r="85"></circle>
       </svg>
       <div className="progress-content">
-        {replyStatus === IN_PROGRESS ? <>{quizProgress} / 10</> :
-          <span className={`status-icon flex ${renderClass}`}>{renderIcon}</span>
-        }
+        <>{quizProgress} / 10</>
+        <span className={`status-icon flex ${renderClass ? renderClass : ''}`}>{renderIcon}</span>
       </div>
     </div >
   )
@@ -131,6 +128,15 @@ const WordForQuestion = ({
   )
 }
 
+const QuizResult = ({ score }) => {
+  return (
+    <div className='quiz-result'>
+      <p className='result-text'>You have got <br /> <span className='result-score'>{score} correct</span> answers</p>
+    </div>
+  )
+}
+
+
 const QuizWrapper = () => {
   const [quiz, setQuiz] = useState([]);
   const [index, setIndex] = useState(0);
@@ -150,7 +156,7 @@ const QuizWrapper = () => {
       setQuiz(res.data);
       setIsLoading(false);
     });
-  }, []);
+  }, [quiz.length === 0]);
 
   useEffect(() => {
     if (index < 10) {
@@ -219,27 +225,41 @@ const QuizWrapper = () => {
     setReplyStatus(IN_PROGRESS);
   }
 
+  const onRestart = (e) => {
+    e.preventDefault();
+    setQuiz([]);
+    setIndex(0);
+    setQuizProgress(0);
+    setReplyStatus(IN_PROGRESS);
+    setScore(0);
+  }
+
   return (
     <>
       <div>
         <QuizProgress
           quizProgress={quizProgress}
           replyStatus={replyStatus} />
-        <WordForQuestion
-          word={word}
-          replyStatus={replyStatus}
-          score={score}
-          isLoading={isLoading} />
-        <TypedQuizAnswer
-          onSubmit={onSubmit}
-          setAnswer={setAnswer}
-          replyStatus={replyStatus}
-          wordForCheck={word.wordForCheck} />
+        {replyStatus === COMPLETE ? <QuizResult score={score} /> :
+          <>
+            <WordForQuestion
+              word={word}
+              replyStatus={replyStatus}
+              score={score}
+              isLoading={isLoading} />
+            <TypedQuizAnswer
+              onSubmit={onSubmit}
+              setAnswer={setAnswer}
+              replyStatus={replyStatus}
+              wordForCheck={word.wordForCheck} />
+          </>
+        }
       </div>
       <QuizButton
         replyStatus={replyStatus}
         onClick={onClick}
-        onSubmit={onSubmit} />
+        onSubmit={onSubmit}
+        onRestart={onRestart} />
     </>
   )
 }
