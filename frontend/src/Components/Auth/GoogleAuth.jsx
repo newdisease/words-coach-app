@@ -28,7 +28,7 @@ function GoogleAuth({ onHide, setError }) {
             );
         })
         .catch((error) => {
-          setError("This email is already in use. Try to login with your email and password.");
+          setError("This email is already in use");
         }
         );
     }

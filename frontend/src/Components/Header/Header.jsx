@@ -66,14 +66,20 @@ const Header = () => {
                     modalRegistrationShow && <LazySignup
                         show={modalRegistrationShow}
                         onHide={() => setModalRegistrationShow(false)}
-                    />
+                        onLogin={() => {
+                            setModalRegistrationShow(false);
+                            setModalAuthShow(true);
+                        }} />
                 }
 
                 {
                     modalAuthShow && <LazyLogin
                         show={modalAuthShow}
                         onHide={() => setModalAuthShow(false)}
-                    />
+                        onRegistrationClick={() => {
+                            setModalRegistrationShow(true);
+                            setModalAuthShow(false);
+                        }} />
                 }
             </Suspense>
         </header >

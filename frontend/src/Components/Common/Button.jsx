@@ -9,6 +9,7 @@ const Button = ({
   disabled,
   form,
   raised,
+  outline,
   btnType,
   type = "button",
   linkTo,
@@ -21,6 +22,7 @@ const Button = ({
       onClick={linkTo ? () => navigate(linkTo) : onClick}
       className={classNames('button', className, {
         'button--raised': raised,
+        'button--outline': outline,
         [`button--${btnType}`]: btnType,
       })
       }

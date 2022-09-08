@@ -30,6 +30,19 @@ $red-icon-color: #FA3E3A;
     }
   }
 
+  &--outline {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: transparent;
+      color: $secondary-color;
+      border-color: $secondary-color;
+    }
+  }
+
   &--lg {
     font-size: 1.25rem;
     height: 60px;
@@ -49,6 +62,18 @@ $red-icon-color: #FA3E3A;
     height: 40px;
     min-width: 180px;
     padding: 0.4em 0.8em;
+  }
+
+  &--sm-modal {
+    font-size: 16px;
+    height: 25px;
+    padding: 0 0.4em;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: transparent;
+      color: white;
+    }
   }
 
   &--bubble {
