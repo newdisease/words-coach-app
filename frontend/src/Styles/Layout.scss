@@ -75,6 +75,7 @@ main {
   justify-content: space-between;
   align-items: center;
   padding-bottom: 40px;
+  position: relative;
 
   & > div {
     width: 100%;
@@ -83,6 +84,19 @@ main {
 
 .top-content {
   margin-bottom: 25px;
+}
+
+.bottom-content {
+  .bottom-content-words {
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+
+    p.words-text {
+      margin-right: 10px;
+    }
+  }
 }
 
 .bottom-content-full {

@@ -15,12 +15,16 @@ function MainPage() {
                 <WordsSearchWrapper />
             </div>
             <div className='bottom-content tac'>
-                {
-                    (isUserHasWordsInProgress) &&
-                    <p>
-                        You must add {10 - user.words_in_progress} more word(s) to start learning
+                <div className='bottom-content-words flex'>
+                    <p className='words-text'>
+                        {isUserHasWordsInProgress ? `Add min ${10 - user.words_in_progress} word(s) or select` : 'You can also learn words from'}
                     </p>
-                }
+                    <Button
+                        btnType='sm'
+                        outline
+                        disabled
+                    >Collection</Button>
+                </div>
                 <Button
                     linkTo='/quiz'
                     btnType="lg"

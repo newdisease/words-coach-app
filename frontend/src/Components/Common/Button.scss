@@ -14,35 +14,6 @@ $red-icon-color: #FA3E3A;
     opacity: 0.2;
   }
 
-  &--raised {
-    background-color: $secondary-color;
-    color: black;
-    border-radius: 50px;
-
-    &:hover {
-      background-color: $button-blue;
-      color: white;
-    }
-
-    &:disabled {
-      background-color: $button-blue;
-      color: color.adjust($color:white, $alpha:-0.5);
-    }
-  }
-
-  &--outline {
-    background-color: transparent;
-    color: white;
-    border: 1px solid white;
-    border-radius: 4px;
-
-    &:hover {
-      background-color: transparent;
-      color: $secondary-color;
-      border-color: $secondary-color;
-    }
-  }
-
   &--lg {
     font-size: 1.25rem;
     height: 60px;
@@ -74,6 +45,12 @@ $red-icon-color: #FA3E3A;
       background-color: transparent;
       color: white;
     }
+  }
+
+  &--sm {
+    font-size: 16px;
+    height: 25px;
+    padding: 0 0.4em;
   }
 
   &--bubble {
@@ -121,6 +98,41 @@ $red-icon-color: #FA3E3A;
     height: 58px;
     border-radius: 50%;
     background-color: white;
+  }
+
+  &-raised {
+    background-color: $secondary-color;
+    color: black;
+    border-radius: 50px;
+
+    &:hover {
+      background-color: $button-blue;
+      color: white;
+    }
+
+    &:disabled {
+      background-color: $button-blue;
+      color: color.adjust($color:white, $alpha:-0.5);
+    }
+  }
+
+  &-outline {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: transparent;
+      color: $secondary-color;
+      border-color: $secondary-color;
+    }
+
+    &:disabled {
+      background-color: transparent;
+      color: color.adjust($color:white, $alpha:-0.5);
+      border-color: color.adjust($color:white, $alpha:-0.5);
+    }
   }
 }
 
