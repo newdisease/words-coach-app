@@ -4,7 +4,7 @@ const Spinner = ({
   let size;
 
   if (spinnerSize === "small") {
-    size = "50px";
+    size = "60px";
   } else if (spinnerSize === "medium") {
     size = "100px";
   } else if (spinnerSize === "large") {

@@ -1,28 +1,63 @@
 @use "../../Styles/Variables.scss" as *;
 
 .alert {
-  transition: 0.2s ease-in-out;
-  position: relative;
-  padding: 1rem 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid transparent;
-  border-radius: 0.25rem;
+  width: calc(100% - 40px);
+  margin: auto;
+  box-shadow: 0 7px 15px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
+  position: absolute;
+  bottom: 20px;
+  animation-duration: 0.5s;
+  animation-name: showalert;
+  transition: 0.5s;
 
-  &--error {
-    color: red;
-    background-color: white;
-    border-color: black;
+  &.deleted {
+    opacity: 0;
+    transform: translateX(-100%);
   }
 
-  &--success {
-    color: green;
-    background-color: white;
-    border-color: black;
-  }
-
-  &--info {
+  .alert--content {
+    align-items: center;
+    height: 60px;
+    padding: 0 20px;
     color: $dark-color;
-    background-color: white;
-    border-color: black;
   }
+
+  .alert--progress {
+    span.colorized-line {
+      &:before {
+        content: '';
+        display: block;
+        height: 4px;
+        background-color: #FFB11B;
+        animation-duration: var(--sec);
+        animation-iteration-count: 1;
+        animation-name: slideout;
+      }
+    }
+
+    @keyframes slideout {
+      from {
+        width: 100%;
+      }
+      to {
+        width: 0%;
+      }
+    }
+
+    @keyframes showalert {
+      from {
+        opacity: 0;
+        transform: translateX(-100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  }
+
+
 }

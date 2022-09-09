@@ -1,6 +1,5 @@
 import { CloseIcon } from './Icons';
 import { Button } from '../Common';
-import classNames from 'classnames';
 
 import './Modal.scss';
 

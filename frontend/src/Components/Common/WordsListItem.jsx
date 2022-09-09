@@ -19,6 +19,7 @@ const WordsListItem = ({
   isBlue,
 }) => {
   const { id, en_word, uk_word, progress } = item;
+
   const handleCardSubmit = (id) => {
     setTimeout(() => {
       onDeleteItem(id);
@@ -26,7 +27,7 @@ const WordsListItem = ({
   }
 
   return (
-    <div className={classnames('flex flex-j-b item-wrapper', { 'item-wrapper-blue': isBlue })}>
+    <li className={classnames('flex flex-j-b item-wrapper', { 'item-wrapper-blue': isBlue })}>
       <div className='item'>
         <p className='item-title'>{capitalizeFirstLetter(uk_word)}</p>
         <p className='item-content'>{en_word}</p>
@@ -65,7 +66,7 @@ const WordsListItem = ({
           <TrashIcon />
         </Button>
       </div>
-    </div>
+    </li>
   )
 }
 

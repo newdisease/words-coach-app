@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
-import { Alert, Button, Spinner, Title, WordsListItem } from '../Common';
+import { Button, Spinner, WordsListItem } from '../Common';
 
 import './DictionaryList.scss';
 
@@ -40,6 +40,7 @@ const DictionaryList = ({ user }) => {
 
   useEffect(() => {
     onRequest();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onDictionaryLoaded = (newItems) => {
@@ -67,7 +68,7 @@ const DictionaryList = ({ user }) => {
           dictionary.map(item => item.id === id ? res.data : item));
         setIsLoading(false);
         if (prevProgress > 2) {
-          localStorage.setItem("user", JSON.stringify({ ...user, wordsInProgress: wordsInProgress + 1 }));
+          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: wordsInProgress + 1 }));
           dispatch(changeCountOfWordsInProgress(
             wordsInProgress + 1
           ));
@@ -111,17 +112,17 @@ const DictionaryList = ({ user }) => {
       <div
         className='dictionary-wrap'>
         <SeacrhDictionaryWords />
-
-        {dictionary.map(
-          item => <WordsListItem
-            key={item.id}
-            item={item}
-            onDeleteItem={onDeleteItem}
-            onUpdateItem={onUpdateItem}
-            isLoading={isLoading}
-          />
-        )}
-
+        <ul>
+          {dictionary.map(
+            item => <WordsListItem
+              key={item.id}
+              item={item}
+              onDeleteItem={onDeleteItem}
+              onUpdateItem={onUpdateItem}
+              isLoading={isLoading}
+            />
+          )}
+        </ul>
         <div className='flex dict-control'>
           <Button
             className="tac"

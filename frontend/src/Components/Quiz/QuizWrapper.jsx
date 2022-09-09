@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import QuizInput from './QuizInput';
 import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './QuizConstants';
@@ -10,7 +11,7 @@ import { CorrectIcon, WrongIcon } from "../Common/Icons";
 
 import './Quiz.scss';
 
-const QuizButton = ({ replyStatus, onClick, onSubmit, onRestart }) => {
+const QuizButton = ({ replyStatus, onClick, onSubmit, onRestart, user }) => {
 
   let status
   if (replyStatus === IN_PROGRESS) {
@@ -42,6 +43,7 @@ const QuizButton = ({ replyStatus, onClick, onSubmit, onRestart }) => {
       renderButton: <Button
         btnType='lg'
         raised
+        disabled={user.words_in_progress < 10}
         onClick={(e) => onRestart(e)}>
         Restart</Button>
     }
@@ -148,14 +150,19 @@ const QuizWrapper = () => {
   const [answer, setAnswer] = useState("");
   const { user } = useSelector(state => state.user);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsLoading(true);
-    axios.get("/quiz/").then(res => {
-      setQuiz(res.data);
-      setIsLoading(false);
-    });
+    if (user.words_in_progress < 10) {
+      navigate('/');
+    } else {
+      setIsLoading(true);
+      axios.get("/quiz/").then(res => {
+        setQuiz(res.data);
+        setIsLoading(false);
+      });
+    }
   }, [quiz.length === 0]);
 
   useEffect(() => {
@@ -259,7 +266,8 @@ const QuizWrapper = () => {
         replyStatus={replyStatus}
         onClick={onClick}
         onSubmit={onSubmit}
-        onRestart={onRestart} />
+        onRestart={onRestart}
+        user={user} />
     </>
   )
 }

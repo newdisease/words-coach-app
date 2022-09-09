@@ -20,15 +20,15 @@ const ActionsWithTranslatedResult = ({ result }) => {
 
     const dispatch = useDispatch();
 
-    const words_in_progress = user.words_in_progress;
+    const wordsInProgress = user.words_in_progress;
 
     const addWordToDB = () => {
         setStatus("loading");
         axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
             .then(() => {
                 setStatus("success");
-                localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: words_in_progress + 1 }));
-                dispatch(changeCountOfWordsInProgress(words_in_progress + 1));
+                localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: wordsInProgress + 1 }));
+                dispatch(changeCountOfWordsInProgress(wordsInProgress + 1));
             })
             .catch(error => {
                 setStatus("error");
@@ -38,16 +38,13 @@ const ActionsWithTranslatedResult = ({ result }) => {
     const showResult = (status) => {
         switch (status) {
             case "loading":
-                return
-                <Spinner spinnerSize="large" />;
+                return <Spinner spinnerSize="small" />;
             case "success":
-                return
-                <Alert
+                return <Alert
                     type="success"
                     message="The word added to dictionary" />;
             case "error":
-                return
-                <Alert
+                return <Alert
                     type="error"
                     message="The word is already in the dictionary" />
             default:
@@ -92,6 +89,7 @@ const WordsSearchForm = ({ getData, translatedWord }) => {
 
     useEffect(() => {
         reset();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [translatedWord]);
 
     return (
@@ -139,7 +137,7 @@ const WordsSearchWrapper = () => {
     const showResult = (action) => {
         switch (action) {
             case "loading":
-                return <Spinner spinnerSize='medium' />;
+                return <Spinner spinnerSize='small' />;
             case "success":
                 return <TranslatedResult result={translatedWord} />;
             case "error":
