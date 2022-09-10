@@ -14,7 +14,7 @@ const DictionaryPage = () => {
 
             <div className="top-content">
                 <Title
-                    text="My dictionary"
+                    title="My dictionary"
                     childrenComponent={
                         <>
                             <p>{user.words_in_progress}</p>

@@ -6,80 +6,58 @@ import { WordsSearchFormValidatorsSchema as schema } from './WordsSearchFormVali
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
 import getTranslate from '../../Services/TranslatorService';
-import { MicIcon, TranslateIcon } from '../Common/Icons';
+import { MicIcon, TranslateIcon, AddDictionaryIcon, CorrectIcon, WrongIcon } from '../Common/Icons';
 import { Alert, Button, Spinner, Title } from '../Common';
+import { capitalizeFirstLetter } from '../Common/utils'
 
+import classnames from 'classnames';
 import './WordsSearchWrapper.scss';
 
 
-const ActionsWithTranslatedResult = ({ result }) => {
+const ADD_BUTTON_STATE_SUCCESS = 'success';
+const ADD_BUTTON_STATE_ERROR = 'error';
+const ADD_BUTTON_STATE_LOADING = 'loading';
+const TITLE_STATE_SUCCESS = 'success';
+const TITLE_STATE_ERROR = 'error';
+const TITLE_STATE_LOADING = 'loading';
 
-    const { isAuthenticated, user } = useSelector(state => state.user);
-    const [status, setStatus] = useState(null);
-    const { ukWord, enWord } = result;
+const AddToDictionaryButton = ({
+    buttonAddState,
+    addWordToDB,
+    errorMessage,
+    isAuthenticated
+}) => {
 
-    const dispatch = useDispatch();
-
-    const wordsInProgress = user.words_in_progress;
-
-    const addWordToDB = () => {
-        setStatus("loading");
-        axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
-            .then(() => {
-                setStatus("success");
-                localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: wordsInProgress + 1 }));
-                dispatch(changeCountOfWordsInProgress(wordsInProgress + 1));
-            })
-            .catch(error => {
-                setStatus("error");
-            });
+    const icons = {
+        [ADD_BUTTON_STATE_SUCCESS]: { renderClass: 'success', renderIcon: <CorrectIcon /> },
+        [ADD_BUTTON_STATE_ERROR]: { renderClass: 'error', renderIcon: <WrongIcon /> },
     }
+    const { renderClass, renderIcon } = icons[buttonAddState] || {}
 
-    const showResult = (status) => {
-        switch (status) {
-            case "loading":
-                return <Spinner spinnerSize="small" />;
-            case "success":
-                return <Alert
-                    type="success"
-                    message="The word added to dictionary" />;
-            case "error":
-                return <Alert
-                    type="error"
-                    message="The word is already in the dictionary" />
-            default:
-                return <Button
-                    disabled={!isAuthenticated}
-                    onClick={addWordToDB}
-                >
-                    add to dictionary
-                </Button>;
-        }
+    let buttonErrorMsg;
+    if (!isAuthenticated) {
+        buttonErrorMsg = 'You must be logged in to add a word';
+    } else if (buttonAddState) {
+        buttonErrorMsg = 'Please, add another word';
     }
 
     return (
         <>
-            {showResult(status)}
+            <div className='add-word-icon-wrap flex'>
+                <Button
+                    className={classnames('icon-dark-blue add-word-button', renderClass)}
+                    btnType='circle'
+                    disabled={!isAuthenticated || buttonAddState}
+                    onClick={addWordToDB}
+                >
+                    {renderIcon || <AddDictionaryIcon />}
+                </Button>
+                {buttonErrorMsg && <span className='btn-error-msg'>{buttonErrorMsg}</span>}
+            </div>
+            {buttonAddState === ADD_BUTTON_STATE_ERROR &&
+                <Alert message={errorMessage} />}
         </>
     )
-}
-
-
-const TranslatedResult = ({ result }) => {
-    if (result) {
-        return (
-            <>
-                {result.language === 'en' ?
-                    <p className='h4'>
-                        {result.enWord} - <strong><mark>{result.ukWord}
-                        </mark></strong></p> :
-                    <p className='h4'>
-                        {result.ukWord} - <strong><mark>{result.enWord}
-                        </mark></strong></p>}
-                <ActionsWithTranslatedResult result={result} />
-            </>
-        )
-    }
 }
 
 const WordsSearchForm = ({ getData, translatedWord }) => {
@@ -131,21 +109,56 @@ const WordsSearchForm = ({ getData, translatedWord }) => {
 
 const WordsSearchWrapper = () => {
     const [translatedWord, setTranslatedWord] = useState(null);
-    const [action, setAction] = useState(null);
-    const [error, setError] = useState(null);
+    const [buttonAddState, setButtonAddState] = useState(null);
+    const [titleState, setTitleState] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
-    const showResult = (action) => {
-        switch (action) {
-            case "loading":
+    const { isAuthenticated, user } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
+    const { language, ukWord, enWord } = translatedWord || {};
+    const wordsInProgress = user.words_in_progress;
+
+    const addWordToDB = () => {
+        setButtonAddState(ADD_BUTTON_STATE_LOADING);
+        axios.post("dictionary/", { uk_word: ukWord, en_word: enWord })
+            .then(() => {
+                setButtonAddState(ADD_BUTTON_STATE_SUCCESS);
+                localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: wordsInProgress + 1 }));
+                dispatch(changeCountOfWordsInProgress(wordsInProgress + 1));
+            })
+            .catch(error => {
+                setButtonAddState(ADD_BUTTON_STATE_ERROR);
+                setErrorMessage('This word already exists');
+            });
+    }
+
+    const showResult = (titleState) => {
+        switch (titleState) {
+            case TITLE_STATE_LOADING:
                 return <Spinner spinnerSize='small' />;
-            case "success":
-                return <TranslatedResult result={translatedWord} />;
-            case "error":
+            case TITLE_STATE_SUCCESS:
+                return <>
+                    <Title
+                        title={language === 'en' ?
+                            capitalizeFirstLetter(ukWord) :
+                            capitalizeFirstLetter(enWord)}
+                        subtitle={language === 'en' ?
+                            <>🇬🇧&nbsp;&nbsp;{enWord}</> :
+                            <>🇺🇦&nbsp;&nbsp;{ukWord}</>}
+                        className='main-title'
+                        childrenComponent={
+                            <AddToDictionaryButton
+                                buttonAddState={buttonAddState}
+                                addWordToDB={addWordToDB}
+                                errorMessage={errorMessage}
+                                isAuthenticated={isAuthenticated} />
+                        } />
+                </>;
+            case TITLE_STATE_ERROR:
                 return <>
                     <Title />
-                    <Alert
-                        type="error"
-                        message={error} />
+                    <Alert message={errorMessage} />
                 </>;
             default:
                 return <Title />;
@@ -153,21 +166,22 @@ const WordsSearchWrapper = () => {
     }
 
     const getData = async ({ expression }) => {
-        setError(null);
-        setAction("loading");
+        setButtonAddState(null);
+        setErrorMessage(null);
+        setTitleState(TITLE_STATE_LOADING);
         const data = await getTranslate(expression);
         if (data.language === 'This language is not supported') {
-            setError(data.language);
-            setAction("error");
+            setErrorMessage(data.language);
+            setTitleState(TITLE_STATE_ERROR);
         } else {
             setTranslatedWord(data);
-            setAction("success");
+            setTitleState(TITLE_STATE_SUCCESS);
         }
     }
 
     return (
         <>
-            {showResult(action)}
+            {showResult(titleState)}
             <WordsSearchForm
                 getData={getData}
                 translatedWord={translatedWord} />

@@ -2,6 +2,10 @@
 
 .title-wrapper {
   margin: 0 10px;
+
+  &.main-title {
+    margin-right: 0;
+  }
 }
 
 .title {

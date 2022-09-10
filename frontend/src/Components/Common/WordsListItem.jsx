@@ -1,13 +1,10 @@
 import { Button } from '../Common';
 import { TrashIcon, ResetIcon } from './Icons';
+import { capitalizeFirstLetter } from './utils';
 
 import classnames from 'classnames';
 import './WordsListItem.scss';
 
-
-const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
 
 const MAX_PROGRESS = 3;
 

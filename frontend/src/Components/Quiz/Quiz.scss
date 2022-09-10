@@ -116,7 +116,7 @@ $secondary-word-color: #4590FF;
     }
 
     &.success {
-      background: $succes-color;
+      background: $success-color;
       opacity: 1;
       top: 30px;
     }
@@ -169,7 +169,7 @@ $secondary-word-color: #4590FF;
 
       &.success {
         svg {
-          fill: $succes-color;
+          fill: $success-color;
         }
       }
     }
@@ -228,7 +228,7 @@ $secondary-word-color: #4590FF;
 
   &.correct {
     input {
-      color: $succes-color;
+      color: $success-color;
     }
   }
 }

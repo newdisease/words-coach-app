@@ -10,8 +10,12 @@ $red-icon-color: #FA3E3A;
   display: inline-block;
   text-decoration: none;
 
-  &:disabled svg {
-    opacity: 0.2;
+  &:disabled {
+    cursor: default;
+
+    svg {
+      opacity: 0.2;
+    }
   }
 
   &--lg {
@@ -94,8 +98,8 @@ $red-icon-color: #FA3E3A;
   }
 
   &--circle {
-    width: 58px;
-    height: 58px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background-color: white;
   }
@@ -146,4 +150,8 @@ $red-icon-color: #FA3E3A;
 
 .icon-black svg {
   fill: black;
+}
+
+.icon-dark-blue svg {
+  fill: #202368;
 }
