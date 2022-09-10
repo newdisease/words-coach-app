@@ -1,0 +1,40 @@
+@use "../../Styles/Variables.scss" as *;
+
+.title-wrapper {
+  margin: 0 10px;
+
+  &.main-title {
+    margin-right: 0;
+  }
+}
+
+.title {
+  flex-basis: 100%;
+
+  h1 + * {
+    margin-top: 15px;
+  }
+}
+
+.subtitle > span:not([class]) {
+  display: inline-block;
+  margin: 0 10px;
+  color: $accent-color;
+}
+
+.children-component {
+  color: $accent-color;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: right;
+
+  & > p {
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  & > span {
+    font-weight: 500;
+  }
+}
+

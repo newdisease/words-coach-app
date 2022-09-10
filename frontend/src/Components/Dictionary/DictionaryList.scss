@@ -1,0 +1,21 @@
+@use "../../Styles/Variables.scss" as *;
+
+$border-color: #F4F7FF;
+
+.dict-search {
+  border-radius: 0;
+  border-bottom: 2px solid $border-color;
+}
+
+.dict-control {
+  justify-content: center;
+  background-color: white;
+  height: 60px;
+  align-items: center;
+}
+
+.dictionary-wrap {
+  background-color: white;
+  border-radius: 20px;
+  overflow: hidden;
+}

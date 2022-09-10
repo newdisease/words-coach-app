@@ -1,0 +1,114 @@
+@use 'sass:color';
+@use "../../Styles/Variables.scss" as *;
+
+.search-wrap {
+  display: flex;
+  background-color: $accent-color;
+  height: 60px;
+  border-radius: 30px;
+  overflow: hidden;
+  margin-top: 40px;
+
+  & + .validation-msg {
+    margin: 15px 30px 0;
+    color: $secondary-color;
+  }
+
+  & button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+  }
+
+  & > button svg {
+    fill: white;
+    margin-right: 5px;
+  }
+}
+
+.search {
+  display: flex;
+  background-color: white;
+  height: 100%;
+  border-radius: 30px;
+  width: calc(100% - 60px);
+
+  & input {
+    width: calc(100% - 60px);
+  }
+}
+
+.add-word-button {
+  background-color: $secondary-color;
+  box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.9);
+  transition: background-color 0.2s;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  &.error {
+    background-color: $error-color;
+  }
+
+  &.success {
+    background-color: $success-color;
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.8);
+  }
+
+  &:focus {
+    animation: alphashadow 0.5s 1;
+  }
+
+  &:disabled {
+    svg {
+      opacity: 1;
+    }
+    &:hover {
+      box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.9);
+    }
+  }
+
+  @keyframes alphashadow {
+    from {
+      box-shadow: 0 0 0 20px color.adjust($color: $accent-color, $alpha:-0.9);
+    }
+    to {
+      box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.9);
+    }
+  }
+}
+
+.add-word-icon-wrap {
+  position: relative;
+  
+  &:hover {
+    .btn-error-msg {
+      transition-delay: 1s;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .btn-error-msg {
+    position: absolute;
+    bottom: -20px;
+    background: white;
+    font-size: 12px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    right: 0;
+    border-radius: 4px;
+    color: $dark-color;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+  }
+}

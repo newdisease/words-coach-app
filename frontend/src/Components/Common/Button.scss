@@ -1,0 +1,157 @@
+@use 'sass:color';
+@use "../../Styles/Variables.scss" as *;
+
+
+$button-blue: #217BFF;
+$red-icon-color: #FA3E3A;
+
+.button {
+  transition: 0.2s ease-in-out;
+  display: inline-block;
+  text-decoration: none;
+
+  &:disabled {
+    cursor: default;
+
+    svg {
+      opacity: 0.2;
+    }
+  }
+
+  &--lg {
+    font-size: 1.25rem;
+    height: 60px;
+    min-width: 295px;
+    padding: 0.6em 1em;
+  }
+
+  &--lg-modal {
+    font-size: 1.25rem;
+    height: 60px;
+    min-width: 227px;
+    padding: 0.6em 1em;
+  }
+
+  &--md {
+    font-size: 1rem;
+    height: 40px;
+    min-width: 180px;
+    padding: 0.4em 0.8em;
+  }
+
+  &--sm-modal {
+    font-size: 16px;
+    height: 25px;
+    padding: 0 0.4em;
+    color: $secondary-color;
+
+    &:hover {
+      background-color: transparent;
+      color: white;
+    }
+  }
+
+  &--sm {
+    font-size: 16px;
+    height: 25px;
+    padding: 0 0.4em;
+  }
+
+  &--bubble {
+    position: relative;
+
+    & > .bubble {
+      position: absolute;
+      bottom: -4px;
+      left: -10px;
+      right: -10px;
+      font-size: 12px;
+      line-height: 1;
+      text-align: center;
+
+      & > span {
+        background-color: $secondary-color;
+        border-radius: 10px;
+        padding: 1px 5px;
+        color: black;
+      }
+    }
+  }
+
+  &--icon {
+    &:hover {
+      opacity: 0.8;
+    }
+
+    svg {
+      vertical-align: middle;
+    }
+  }
+
+  &--close-btn {
+      justify-content: center;
+      align-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 0 20px;
+      background-color: $secondary-color;
+  }
+
+  &--circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: white;
+  }
+
+  &-raised {
+    background-color: $secondary-color;
+    color: black;
+    border-radius: 50px;
+
+    &:hover {
+      background-color: $button-blue;
+      color: white;
+    }
+
+    &:disabled {
+      background-color: $button-blue;
+      color: color.adjust($color:white, $alpha:-0.5);
+    }
+  }
+
+  &-outline {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: transparent;
+      color: $secondary-color;
+      border-color: $secondary-color;
+    }
+
+    &:disabled {
+      background-color: transparent;
+      color: color.adjust($color:white, $alpha:-0.5);
+      border-color: color.adjust($color:white, $alpha:-0.5);
+    }
+  }
+}
+
+.icon-red svg {
+  fill: $red-icon-color;
+}
+
+.icon-blue svg {
+  fill: $accent-color;
+}
+
+.icon-black svg {
+  fill: black;
+}
+
+.icon-dark-blue svg {
+  fill: #202368;
+}

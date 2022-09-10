@@ -1,20 +1,17 @@
-import { Button, Modal, Form, Alert } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
-import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
+import axios from 'axios';
 import { SignupFormValidatorsSchema as schema } from './SignupFormValidators';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import login from '../Auth/Login';
 import GoogleAuth from '../Auth/GoogleAuth';
+import { Button, Modal } from '../Common';
+import { ValidationIcon } from '../Common/Icons';
 
 
-const SignupModal = ({ show, onHide }) => {
-    const [isLogedIn, setIsLogedIn] = useState(false);
+const SignupModal = ({ show, onHide, onLogin }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [signupError, setSignupError] = useState({
-        emailError: null,
-        passwordError: null
-    });
+    const [signupError, setSignupError] = useState(null);
     const [error, setError] = useState(null);
 
     const {
@@ -26,11 +23,7 @@ const SignupModal = ({ show, onHide }) => {
         resolver: yupResolver(schema)
     });
 
-    useEffect(() => {
-        setTimeout(() => {
-            setIsLogedIn(false);
-        }, 3000);
-    }, [isLogedIn]);
+    const setOfErrors = Object.values(errors);
 
     const onSubmit = ({ email, password1, password2 }) => {
         setIsLoading(true);
@@ -41,75 +34,94 @@ const SignupModal = ({ show, onHide }) => {
                     .then(() => {
                         onHide();
                         reset();
-                        setIsLogedIn(true);
                         setIsLoading(false);
                     })
                     .catch(error => {
                         setIsLoading(false);
-                        setIsLogedIn(false);
                         throw error;
                     })
             })
             .catch(error => {
-                setSignupError({
-                    emailError: error.response.data.email,
-                    passwordError: error.response.data.password1
-                });
-                setIsLogedIn(false);
+                const errorEmail = error.response.data.email;
+                const errorPassword = error.response.data.password1;
+                if (errorEmail) {
+                    setSignupError('email already exists');
+                }
+                if (errorPassword) {
+                    setSignupError('too common password');
+                }
+                setIsLoading(false);
                 throw error;
             })
     }
 
     return (
-        <>
-            {<Alert
-                variant="success"
-                style={{ position: "absolute", top: "0", left: "0", width: "100%", zIndex: "1" }}
-                className='d-flex justify-content-center mx-auto'
-                show={isLogedIn}>
-                You are logged in!
-            </Alert>}
-            <Modal
-                show={show}
-                onHide={onHide}
-                size="lg"
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
-                        Registration
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={handleSubmit(onSubmit)} disabled={isLoading}>
-                        {signupError.emailError && <Alert variant="danger" onClose={() => setSignupError({ emailError: null })} dismissible>{signupError.emailError}</Alert>}
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" {...register("email")} />
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.email?.message}</p>
-                        </Form.Group>
-                        {signupError.passwordError && <Alert variant="danger" onClose={() => setSignupError({ passwordError: null })} dismissible>{signupError.passwordError}</Alert>}
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" {...register("password1")} />
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.password1?.message}</p>
-
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPasswordRepeated">
-                            <Form.Label>Repeat password</Form.Label>
-                            <Form.Control type="password" placeholder="Repeat password" {...register("password2")} />
-                            <p style={{ minHeight: "1.5em" }} className="text-danger">{errors.password2?.message}</p>
-                        </Form.Group>
-                        <Button className='col-sm-5 mx-auto' type="submit" variant="primary" size="lg">Create account</Button>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    {error && <Alert variant="danger" onClose={() => setError(null)} dismissible>{error}</Alert>}
-                    <GoogleAuth onHide={onHide} setIsLogedIn={setIsLogedIn} setError={setError} />
-                </Modal.Footer>
-            </Modal>
-        </>
+        <Modal
+            show={show}
+            onHide={onHide}
+            title='Sign up'>
+            <div>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    id='login-form'
+                    disabled={isLoading}>
+                    <input
+                        className={(signupError || errors.email) ? "error" : ""}
+                        type="email"
+                        placeholder="Email"
+                        {...register("email")}
+                        onFocus={() => {
+                            setSignupError(null);
+                            setError(null);
+                        }} />
+                    <input
+                        className={(signupError || errors.password1) ? "error" : ""}
+                        type="password"
+                        placeholder="Password"
+                        {...register("password1")}
+                        onFocus={() => {
+                            setSignupError(null)
+                        }} />
+                    <input
+                        className={(signupError || errors.password2) ? "error" : ""}
+                        type="password"
+                        placeholder="Repeat password"
+                        {...register("password2")}
+                        onFocus={() => {
+                            setSignupError(null)
+                        }} />
+                </form>
+                <div className="modal--validation-wrapper">
+                    {setOfErrors[0]?.message && <div className="flex"><ValidationIcon /> {setOfErrors[0]?.message}</div>}
+                    {signupError && <div className="flex"><ValidationIcon /> {signupError}</div>}
+                    {error && <div className="flex"><ValidationIcon /> {error}</div>}
+                </div>
+            </div>
+            <div className='modal--controls flex flex-j-b'>
+                <GoogleAuth
+                    onHide={onHide}
+                    setError={setError} />
+                <Button
+                    form='login-form'
+                    type='submit'
+                    btnType='lg-modal'
+                    raised
+                    onClick={handleSubmit(onSubmit)}
+                    disabled={isLoading || setOfErrors.length > 0 || signupError}>
+                    Log In
+                </Button>
+            </div>
+            <p className="link-out tac">
+                Already have an accout?
+                <Button
+                    btnType='sm-modal'
+                    onClick={() => {
+                        onLogin();
+                        reset();
+                    }}>
+                    Log in</Button>
+            </p>
+        </Modal >
     )
 }
 

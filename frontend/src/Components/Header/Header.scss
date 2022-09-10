@@ -1,0 +1,66 @@
+@use "../../Styles/Variables.scss" as *;
+
+header {
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: calc(50% - 50%);
+  max-width: 480px;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    display: block;
+    width: 750px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: $accent-color;
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 375px);
+    z-index: 2;
+  }
+
+  & > ul.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: calc(100% - 10px);
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+  }
+
+  & svg {
+    fill: white;
+
+  };
+
+  @media (min-width: 480px) {
+    height: 50px;
+    border-radius: 0 0 20px 20px;
+    background-color: $accent-color;
+    left: calc(50% - 240px);
+
+    & > ul.nav {
+      height: calc(100% - 5px);
+    }
+
+    &::before {
+      width: 456px;
+      height: 18px;
+      bottom: -7px;
+      left: 12px;
+    }
+  }
+}
+
+.nav--logo {
+  display: block;
+  color: white;
+  font-weight: 700;
+  font-size: 2em;
+  text-decoration: none;
+  padding-top: 5px;
+}
