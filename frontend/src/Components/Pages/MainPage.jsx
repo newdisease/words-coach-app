@@ -1,7 +1,5 @@
-import { Col, Row } from 'react-bootstrap';
 import WordsSearchWrapper from '../WordsSearchWrapper/WordsSearchWrapper';
 import { useSelector } from 'react-redux';
-import GoogleAuth from '../Auth/GoogleAuth';
 import Button from '../Common/Button';
 
 
