@@ -86,7 +86,7 @@ const DictionaryList = ({ user }) => {
         setIsLoading(false);
         setOffset(offset => offset - 1);
         if (prevProgress < 3) {
-          localStorage.setItem("user", JSON.stringify({ ...user, wordsInProgress: wordsInProgress - 1 }));
+          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: user.words_in_progress - 1 }));
           dispatch(changeCountOfWordsInProgress(
             wordsInProgress - 1
           ));
