@@ -29,7 +29,7 @@ $error-color: #FA3E3A;
     min-height: 400px;
     background: linear-gradient(180deg, #00123F 0%, #0D6EFD 100%);
     border-radius: 20px;
-    outline: 2px solid color.adjust($color:#0D6EFD, $alpha:-0.3);
+    border: 2px solid #0D6EFD;
     align-items: center;
     justify-content: center;
     position: absolute;

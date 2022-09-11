@@ -56,8 +56,8 @@ const WordsListItem = ({
           className='icon-red'
           btnType='icon'
           onClick={(e) => {
-            handleCardSubmit(id);
             e.target.closest('.item-wrapper').classList.add('deleted');
+            handleCardSubmit(id);
           }}
         >
           <TrashIcon />
