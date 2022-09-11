@@ -7,18 +7,32 @@ import { Button, Spinner, WordsListItem } from '../Common';
 import './DictionaryList.scss';
 
 
-const SeacrhDictionaryWords = () => {
-  // todo: add search functionality
+const SeacrhDictionaryWords = ({ setSearchWords }) => {
+
+  const handleOnChange = (e) => {
+    const { value } = e.target;
+    if (value.length > 1) {
+      axios.get(`/dictionary/?search=${e.target.value}`)
+        .then(res => setSearchWords(res.data))
+        .catch(err => console.log(err));
+    } else {
+      setSearchWords(null);
+    }
+  }
+
   return (
     <input
       className='dict-search'
       type="text"
-      placeholder='Search...' />
+      placeholder='Search...'
+      onChange={(e) => handleOnChange(e)}
+    />
   )
 }
 
 const DictionaryList = ({ user }) => {
   const [dictionary, setDictionary] = useState([]);
+  const [searchWords, setSearchWords] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const [isEnd, setIsEnd] = useState(false);
@@ -83,6 +97,7 @@ const DictionaryList = ({ user }) => {
     axios.delete(`/dictionary/${id}/`)
       .then(() => {
         setDictionary(dictionary.filter(item => item.id !== id));
+        setSearchWords(searchWords ? searchWords.filter(item => item.id !== id) : null);
         setIsLoading(false);
         setOffset(offset => offset - 1);
         if (prevProgress < 3) {
@@ -111,27 +126,37 @@ const DictionaryList = ({ user }) => {
       </Spinner>}
       <div
         className='dictionary-wrap'>
-        <SeacrhDictionaryWords />
+        <SeacrhDictionaryWords setSearchWords={setSearchWords} />
         <ul>
-          {dictionary.map(
-            item => <WordsListItem
-              key={item.id}
-              item={item}
-              onDeleteItem={onDeleteItem}
-              onUpdateItem={onUpdateItem}
-              isLoading={isLoading}
-            />
-          )}
+          {searchWords ?
+            searchWords.map(
+              item => <WordsListItem
+                key={item.id}
+                item={item}
+                onDeleteItem={onDeleteItem}
+                onUpdateItem={onUpdateItem}
+                isLoading={isLoading} />
+            ) :
+            dictionary.map(
+              item => <WordsListItem
+                key={item.id}
+                item={item}
+                onDeleteItem={onDeleteItem}
+                onUpdateItem={onUpdateItem}
+                isLoading={isLoading}
+              />
+            )
+          }
         </ul>
         <div className='flex dict-control'>
-          <Button
+          {!searchWords && <Button
             className="tac"
             btnType="md"
             raised
             onClick={onRequest}
             disabled={(isLoading || isEnd || dictionary.length === 0)}>
             Load more
-          </Button>
+          </Button>}
         </div>
       </div>
     </>

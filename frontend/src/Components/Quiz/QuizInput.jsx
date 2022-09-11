@@ -76,7 +76,7 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
   }
 
   const handleChange = useCallback(({ target }) => {
-    if (target.value.match(/^[а-яА-ЯіІїЇa-zA-Z\s' ]+$/)) {
+    if (target.value.match(/^[а-яА-ЯіІїЇa-zA-Z\s'` ]+$/)) {
       focusNextChar(target)
       setModuleOutput(target)
     } else {
