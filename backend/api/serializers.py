@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Dictionary
 
+import re
+
 
 class DictionarySerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
@@ -27,4 +29,14 @@ class DictionarySerializer(serializers.Serializer):
             uk_word=uk_word, en_word=en_word, user_id=user_id
         ).exists():
             raise serializers.ValidationError('This word already exists.')
+        return data
+
+
+class TranslationSerializer(serializers.Serializer):
+    word = serializers.CharField(max_length=15)
+
+    def validate(self, data):
+        word = data.get('word')
+        if not re.match(r"^[а-яА-ЯіІїЇa-zA-Z\s'` ]+$", word):
+            raise serializers.ValidationError('This word is not valid.')
         return data

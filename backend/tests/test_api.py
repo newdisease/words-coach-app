@@ -69,3 +69,12 @@ class TestApi(APITestCase):
         response = self.client.get(reverse('quiz-list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
+
+    def test_post_translation(self):
+        response = self.client.post(
+            reverse('translation'),
+            {
+                'word': 'test',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
