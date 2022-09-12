@@ -51,13 +51,15 @@ const LoginModal = ({ show, onHide, onRegistrationClick }) => {
                         type="email"
                         placeholder="Email"
                         {...register("email")}
-                        onFocus={() => setError(null)} />
+                        onFocus={() => setError(null)}
+                        onBlur={() => setError(null)} />
                     <input
                         className={(error || errors.password) ? "error" : ""}
                         type="password"
                         placeholder="Password"
                         {...register("password")}
-                        onFocus={() => setError(null)} />
+                        onFocus={() => setError(null)}
+                        onBlur={() => setError(null)} />
                 </form>
                 <div className="modal--validation-wrapper">
                     {setOfErrors[0]?.message && <div className="flex"><ValidationIcon /> {setOfErrors[0]?.message}</div>}

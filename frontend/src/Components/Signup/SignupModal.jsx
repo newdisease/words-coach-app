@@ -73,7 +73,8 @@ const SignupModal = ({ show, onHide, onLogin }) => {
                         onFocus={() => {
                             setSignupError(null);
                             setError(null);
-                        }} />
+                        }}
+                        onBlur={() => setSignupError(null)} />
                     <input
                         className={(signupError || errors.password1) ? "error" : ""}
                         type="password"
@@ -81,7 +82,8 @@ const SignupModal = ({ show, onHide, onLogin }) => {
                         {...register("password1")}
                         onFocus={() => {
                             setSignupError(null)
-                        }} />
+                        }}
+                        onBlur={() => setSignupError(null)} />
                     <input
                         className={(signupError || errors.password2) ? "error" : ""}
                         type="password"
@@ -89,7 +91,8 @@ const SignupModal = ({ show, onHide, onLogin }) => {
                         {...register("password2")}
                         onFocus={() => {
                             setSignupError(null)
-                        }} />
+                        }}
+                        onBlur={() => setSignupError(null)} />
                 </form>
                 <div className="modal--validation-wrapper">
                     {setOfErrors[0]?.message && <div className="flex"><ValidationIcon /> {setOfErrors[0]?.message}</div>}

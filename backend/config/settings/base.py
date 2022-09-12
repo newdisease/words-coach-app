@@ -16,6 +16,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
+# Translation API key
+DEEPL_AUTH_KEY = env('DEEPL_AUTH_KEY')
+
 # Application definition
 
 INSTALLED_APPS = [

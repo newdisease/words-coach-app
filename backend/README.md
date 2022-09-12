@@ -17,17 +17,11 @@
             "password": string
         }
 
-
-
-## Be authenticated is required for all other endpoints
-***
-
-
 - Token Logout Endpoint (POST): `/api/accounts/token/logout/`
 
 
 
-### Dictionary Endpoints
+### Dictionary Endpoints (Be authenticated is required)
 
 - Add a word in the dictionary (POST): `/api/dictionary/`
 
@@ -53,7 +47,7 @@
 - Renew the progress of some word (PATCH): `/api/dictionary/{id}/`
 
 
-## Quiz Endpoints
+## Quiz Endpoints (Be authenticated is required)
 
 
 - Change the progress of the word (PATCH): `/api/dictionary/{id}/`
@@ -64,3 +58,18 @@
 
 - Get random 10 words where progress < 3 for learning (GET): `/api/quiz/`
 
+
+## Transtalion Endpoints (AllowAny)
+
+- Translate Endpoint (POST): `/api/translate/`
+
+        {
+            "text": string,
+        }
+
+        # example of returning data
+        {
+            "language": string,
+            "uk_word": string,
+            "en_word": string,
+        }

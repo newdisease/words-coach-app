@@ -5,10 +5,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { WordsSearchFormValidatorsSchema as schema } from './WordsSearchFormValidators';
 import { useSelector, useDispatch } from 'react-redux';
 import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
-import getTranslate from '../../Services/TranslatorService';
 import { MicIcon, TranslateIcon, AddDictionaryIcon, CorrectIcon, WrongIcon } from '../Common/Icons';
 import { Alert, Button, Spinner, Title } from '../Common';
-import { capitalizeFirstLetter } from '../Common/utils'
+import { capitalizeFirstLetter } from '../Common/utils';
 
 import classnames from 'classnames';
 import './WordsSearchWrapper.scss';
@@ -140,10 +139,10 @@ const WordsSearchWrapper = () => {
             case TITLE_STATE_SUCCESS:
                 return <>
                     <Title
-                        title={language === 'en' ?
+                        title={language === 'EN' ?
                             capitalizeFirstLetter(ukWord) :
                             capitalizeFirstLetter(enWord)}
-                        subtitle={language === 'en' ?
+                        subtitle={language === 'EN' ?
                             <>🇬🇧&nbsp;&nbsp;{enWord}</> :
                             <>🇺🇦&nbsp;&nbsp;{ukWord}</>}
                         className='main-title'
@@ -165,18 +164,21 @@ const WordsSearchWrapper = () => {
         }
     }
 
-    const getData = async ({ expression }) => {
+    const transtateWord = (expression) => {
+        return axios.post("translate/", { word: expression }).then(response => {
+            setTranslatedWord(response.data);
+            setTitleState(TITLE_STATE_SUCCESS);
+        }).catch(error => {
+            setErrorMessage('This language is not supported');
+            setTitleState(TITLE_STATE_ERROR);
+        });
+    }
+
+    const getData = ({ expression }) => {
         setButtonAddState(null);
         setErrorMessage(null);
         setTitleState(TITLE_STATE_LOADING);
-        const data = await getTranslate(expression);
-        if (data.language === 'This language is not supported') {
-            setErrorMessage(data.language);
-            setTitleState(TITLE_STATE_ERROR);
-        } else {
-            setTranslatedWord(data);
-            setTitleState(TITLE_STATE_SUCCESS);
-        }
+        transtateWord(expression);
     }
 
     return (

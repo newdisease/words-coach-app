@@ -2,7 +2,6 @@ import WordsSearchWrapper from '../WordsSearchWrapper/WordsSearchWrapper';
 import { useSelector } from 'react-redux';
 import Button from '../Common/Button';
 
-
 function MainPage() {
     const { isAuthenticated, user } = useSelector(state => state.user);
     const isUserHasWordsInProgress = user.words_in_progress < 10;
