@@ -1,56 +1,60 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
-import { Button, Spinner, WordsListItem } from '../Common';
+import {
+  changeCountOfWordsInDictionary,
+  changeCountOfWordsInProgress,
+  DEC,
+  INC,
+} from "../Auth/AuthSlice";
+import { Button, Spinner, WordsListItem } from "../Common";
 
-import './DictionaryList.scss';
-
+import "./DictionaryList.scss";
 
 const SeacrhDictionaryWords = ({ setSearchWords }) => {
-
   const handleOnChange = (e) => {
     const { value } = e.target;
     if (value.length > 1) {
-      axios.get(`/dictionary/?search=${e.target.value}`)
-        .then(res => setSearchWords(res.data))
-        .catch(err => console.log(err));
+      axios
+        .get(`/dictionary/?search=${e.target.value}`)
+        .then((res) => setSearchWords(res.data))
+        .catch((err) => console.log(err));
     } else {
       setSearchWords(null);
     }
-  }
+  };
 
   return (
     <input
-      className='dict-search'
+      className="dict-search"
       type="text"
-      placeholder='Search...'
+      placeholder="Search..."
       onChange={(e) => handleOnChange(e)}
     />
-  )
-}
+  );
+};
 
 const DictionaryList = ({ user }) => {
   const [dictionary, setDictionary] = useState([]);
   const [searchWords, setSearchWords] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
-  const [isEnd, setIsEnd] = useState(false);
+  const wordsInDictionary = user.words_in_dictionary;
 
   const dispatch = useDispatch();
 
   const limit = 5;
-  const wordsInProgress = user.words_in_progress;
 
   const onRequest = () => {
     setIsLoading(true);
-    axios.get(`/dictionary/?limit=${limit}&offset=${offset}`)
-      .then(res => {
+    axios
+      .get(`/dictionary/?limit=${limit}&offset=${offset}`)
+      .then((res) => {
         onDictionaryLoaded(res.data.results);
         setIsLoading(false);
       })
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     onRequest();
@@ -58,109 +62,101 @@ const DictionaryList = ({ user }) => {
   }, []);
 
   const onDictionaryLoaded = (newItems) => {
-    if (newItems.length < limit) {
-      setDictionary([...dictionary, ...newItems]);
-      setOffset(offset => limit);
-      setIsEnd(true);
-    } else if (newItems.length === 0) {
-      setIsEnd(true);
-    }
-    else {
-      setDictionary([...dictionary, ...newItems]);
-      setOffset(offset => offset + limit);
-    }
-  }
+    setDictionary([...dictionary, ...newItems]);
+    setOffset(offset + limit);
+  };
 
   const onUpdateItem = (id) => {
-    const prevProgress = dictionary.find(item => item.id === id).progress;
+    const prevProgress = dictionary.find((item) => item.id === id).progress;
     setIsLoading(true);
-    axios.patch(`/dictionary/${id}/`, {
-      progress: 0
-    })
-      .then(res => {
+    axios
+      .patch(`/dictionary/${id}/`, {
+        progress: 0,
+      })
+      .then((res) => {
         setDictionary(
-          dictionary.map(item => item.id === id ? res.data : item));
+          dictionary.map((item) => (item.id === id ? res.data : item))
+        );
         setIsLoading(false);
         if (prevProgress > 2) {
-          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: wordsInProgress + 1 }));
-          dispatch(changeCountOfWordsInProgress(
-            wordsInProgress + 1
-          ));
+          dispatch(changeCountOfWordsInProgress(INC));
         }
       })
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+  };
 
   const onDeleteItem = (id) => {
-    const prevProgress = dictionary.find(item => item.id === id).progress;
+    const prevProgress = dictionary.find((item) => item.id === id).progress;
     setIsLoading(true);
-    axios.delete(`/dictionary/${id}/`)
+    axios
+      .delete(`/dictionary/${id}/`)
       .then(() => {
-        setDictionary(dictionary.filter(item => item.id !== id));
-        setSearchWords(searchWords ? searchWords.filter(item => item.id !== id) : null);
+        setDictionary(dictionary.filter((item) => item.id !== id));
+        setSearchWords(
+          searchWords ? searchWords.filter((item) => item.id !== id) : null
+        );
         setIsLoading(false);
-        setOffset(offset => offset - 1);
+        setOffset((offset) => offset - 1);
         if (prevProgress < 3) {
-          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: user.words_in_progress - 1 }));
-          dispatch(changeCountOfWordsInProgress(
-            wordsInProgress - 1
-          ));
+          dispatch(changeCountOfWordsInProgress(DEC));
         }
-      }
-      )
-      .catch(err => {
+        dispatch(changeCountOfWordsInDictionary(DEC));
+      })
+      .catch((err) => {
         console.log(err);
-      }
-      );
-  }
+      });
+  };
 
   return (
     <>
-      {isLoading && !dictionary.length && <Spinner
-        animation="border"
-        role="status">
-        <span
-          className="visually-hidden">
-          Loading...
-        </span>
-      </Spinner>}
-      <div
-        className='dictionary-wrap'>
+      {isLoading && !dictionary.length && (
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      )}
+      <div className="dictionary-wrap">
         <SeacrhDictionaryWords setSearchWords={setSearchWords} />
         <ul>
-          {searchWords ?
-            searchWords.map(
-              item => <WordsListItem
-                key={item.id}
-                item={item}
-                onDeleteItem={onDeleteItem}
-                onUpdateItem={onUpdateItem}
-                isLoading={isLoading} />
-            ) :
-            dictionary.map(
-              item => <WordsListItem
-                key={item.id}
-                item={item}
-                onDeleteItem={onDeleteItem}
-                onUpdateItem={onUpdateItem}
-                isLoading={isLoading}
-              />
-            )
-          }
+          {searchWords
+            ? searchWords.map((item) => (
+                <WordsListItem
+                  key={item.id}
+                  item={item}
+                  onDeleteItem={onDeleteItem}
+                  onUpdateItem={onUpdateItem}
+                  isLoading={isLoading}
+                />
+              ))
+            : dictionary.map((item) => (
+                <WordsListItem
+                  key={item.id}
+                  item={item}
+                  onDeleteItem={onDeleteItem}
+                  onUpdateItem={onUpdateItem}
+                  isLoading={isLoading}
+                />
+              ))}
         </ul>
-        <div className='flex dict-control'>
-          {!searchWords && <Button
-            className="tac"
-            btnType="md"
-            raised
-            onClick={onRequest}
-            disabled={(isLoading || isEnd || dictionary.length === 0)}>
-            Load more
-          </Button>}
+        <div className="flex dict-control">
+          {!searchWords && (
+            <Button
+              className="tac"
+              btnType="md"
+              raised
+              onClick={onRequest}
+              disabled={
+                isLoading ||
+                dictionary.length === wordsInDictionary ||
+                dictionary.length === 0
+              }
+            >
+              Load more
+            </Button>
+          )}
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default DictionaryList;

@@ -1,11 +1,8 @@
-from django.contrib.auth import get_user_model
 from api.models import Dictionary
-from rest_framework.authtoken.models import Token
-from rest_framework.test import APITestCase
-from rest_framework.test import APIClient
-
+from django.contrib.auth import get_user_model
 from django.urls import reverse
-
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient, APITestCase
 
 User = get_user_model()
 
@@ -27,13 +24,13 @@ class TestApi(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
 
     def test_get_dictionary(self):
-        response = self.client.get(reverse('dictionary-list'))
+        response = self.client.get(reverse('api:dictionary-list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
     def test_patch_dictionary(self):
         response = self.client.patch(
-            reverse('dictionary-detail', args=[self.word.id]),
+            reverse('api:dictionary-detail', args=[self.word.id]),
             {
                 'progress': 1,
             },
@@ -43,7 +40,7 @@ class TestApi(APITestCase):
 
     def test_post_dictionary(self):
         response = self.client.post(
-            reverse('dictionary-list'),
+            reverse('api:dictionary-list'),
             {
                 'uk_word': 'тест1',
                 'en_word': 'test1',
@@ -56,23 +53,23 @@ class TestApi(APITestCase):
 
     def test_delete_dictionary(self):
         response = self.client.delete(
-            reverse('dictionary-detail', args=[self.word.id]),
+            reverse('api:dictionary-detail', args=[self.word.id]),
         )
         self.assertEqual(response.status_code, 204)
 
     def test_get_dictionary_anonymous(self):
         self.client.logout()
-        response = self.client.get(reverse('dictionary-list'))
+        response = self.client.get(reverse('api:dictionary-list'))
         self.assertEqual(response.status_code, 401)
 
     def test_get_words_for_quiz(self):
-        response = self.client.get(reverse('quiz-list'))
+        response = self.client.get(reverse('api:quiz-list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
     def test_post_translation(self):
         response = self.client.post(
-            reverse('translation'),
+            reverse('api:translate'),
             {
                 'word': 'test',
             },

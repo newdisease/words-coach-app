@@ -1,15 +1,18 @@
-from rest_framework import serializers
-from dj_rest_auth.registration.serializers import RegisterSerializer
-
 from api.models import Dictionary
+from dj_rest_auth.registration.serializers import RegisterSerializer
+from rest_framework import serializers
 
 
 class CustomUserSerializer(serializers.Serializer):
     email = serializers.EmailField()
     words_in_progress = serializers.SerializerMethodField()
+    words_in_dictionary = serializers.SerializerMethodField()
 
     def get_words_in_progress(self, obj):
         return Dictionary.objects.filter(user_id=obj.id, progress__lt=3).count()
+
+    def get_words_in_dictionary(self, obj):
+        return Dictionary.objects.filter(user_id=obj.id).count()
 
 
 class CustomRegisterSerializer(RegisterSerializer):
