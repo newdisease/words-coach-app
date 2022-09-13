@@ -4,12 +4,11 @@ on:
     branches:
       - master
 
-jobs: 
-
+jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy WCA  
+      - name: Deploy WCA
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.SSH_HOST}}
@@ -18,9 +17,7 @@ jobs:
 
           script: |
             git pull origin master
-            docker exec -it api bash python manage.py dumpdata > data.json
             docker-compose down
             docker-compose up --build -d
             docker image rm $(docker image ls -f 'dangling=true' -q)
-            docker volume prune -f
             echo "Done"
