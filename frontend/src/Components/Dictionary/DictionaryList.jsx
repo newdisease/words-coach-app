@@ -12,24 +12,32 @@ import { Button, Spinner, WordsListItem } from "../Common";
 import "./DictionaryList.scss";
 
 const SeacrhDictionaryWords = ({ setSearchWords }) => {
-  const handleOnChange = (e) => {
-    const { value } = e.target;
-    if (value.length > 1) {
-      axios
-        .get(`/dictionary/?search=${e.target.value}`)
-        .then((res) => setSearchWords(res.data))
-        .catch((err) => console.log(err));
-    } else {
-      setSearchWords(null);
-    }
-  };
+  const [output, setOutput] = useState("");
 
+  useEffect(() => {
+    const getData = setTimeout(() => {
+      if (output.length >= 1) {
+        axios
+          .get(`/dictionary/?search=${output}`)
+          .then((res) => {
+            setSearchWords(res.data);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        setSearchWords(null);
+      }
+    }, 500);
+    return () => clearTimeout(getData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [output]);
+
+  console.log(output);
   return (
     <input
       className="dict-search"
       type="text"
       placeholder="Search..."
-      onChange={(e) => handleOnChange(e)}
+      onChange={(e) => setOutput(e.target.value)}
     />
   );
 };
