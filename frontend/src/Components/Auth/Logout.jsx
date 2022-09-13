@@ -5,7 +5,6 @@ import { store } from "../../Store";
 
 const logout = () => {
     localStorage.removeItem("authTokens");
-    localStorage.removeItem("user");
     store.dispatch(loginUnsetUser());
 
     axios.post("accounts/logout/")

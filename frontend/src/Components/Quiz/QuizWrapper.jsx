@@ -1,143 +1,139 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
-import axios from 'axios';
-import { changeCountOfWordsInProgress } from '../Auth/AuthSlice';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { changeCountOfWordsInProgress, DEC } from "../Auth/AuthSlice";
 
-import QuizInput from './QuizInput';
-import { CORRECT, INCORRECT, IN_PROGRESS, COMPLETE } from './QuizConstants';
-import { Button, Spinner } from '../Common'
+import { Button, Spinner } from "../Common";
 import { CorrectIcon, WrongIcon } from "../Common/Icons";
+import { COMPLETE, CORRECT, INCORRECT, IN_PROGRESS } from "./QuizConstants";
+import QuizInput from "./QuizInput";
 
-import './Quiz.scss';
+import "./Quiz.scss";
 
 const QuizButton = ({ replyStatus, onClick, onSubmit, onRestart, user }) => {
-
-  let status
+  let status;
   if (replyStatus === IN_PROGRESS) {
-    status = 'check'
+    status = "check";
   } else if (replyStatus === COMPLETE) {
-    status = 'complete'
+    status = "complete";
   } else {
-    status = 'next'
+    status = "next";
   }
 
   const buttons = {
-    'next': {
-      renderButton: <Button
-        btnType='lg'
-        raised
-        onClick={onClick}>
-        Next</Button>
+    next: {
+      renderButton: (
+        <Button btnType="lg" raised onClick={onClick}>
+          Next
+        </Button>
+      ),
     },
-    'check': {
-      renderButton: <Button
-        type="submit"
-        form="quiz-form"
-        btnType='lg'
-        raised
-        onClick={onSubmit}>
-        Check</Button>
+    check: {
+      renderButton: (
+        <Button
+          type="submit"
+          form="quiz-form"
+          btnType="lg"
+          raised
+          onClick={onSubmit}
+        >
+          Check
+        </Button>
+      ),
     },
-    'complete': {
-      renderButton: <Button
-        btnType='lg'
-        raised
-        disabled={user.words_in_progress < 10}
-        onClick={(e) => onRestart(e)}>
-        Restart</Button>
-    }
-  }
-  return (
-    <>
-      {buttons[status].renderButton}
-    </>
-  )
-}
+    complete: {
+      renderButton: (
+        <Button
+          btnType="lg"
+          raised
+          disabled={user.words_in_progress < 10}
+          onClick={(e) => onRestart(e)}
+        >
+          Restart
+        </Button>
+      ),
+    },
+  };
+  return <>{buttons[status].renderButton}</>;
+};
 
 const QuizProgress = ({ quizProgress, replyStatus }) => {
-
   const icons = {
-    CORRECT: { renderClass: 'success', renderIcon: <CorrectIcon /> },
-    INCORRECT: { renderClass: 'error', renderIcon: <WrongIcon /> },
-  }
-  const { renderClass, renderIcon } = icons[replyStatus] || {}
+    CORRECT: { renderClass: "success", renderIcon: <CorrectIcon /> },
+    INCORRECT: { renderClass: "error", renderIcon: <WrongIcon /> },
+  };
+  const { renderClass, renderIcon } = icons[replyStatus] || {};
 
   return (
     <div
-      className={`progress-wrap ${replyStatus === INCORRECT ? 'error' : ''}`}
+      className={`progress-wrap ${replyStatus === INCORRECT ? "error" : ""}`}
       style={{
         "--num": quizProgress * 10,
       }}
     >
-      <div
-        className="dot"
-      >
-      </div>
-      <svg className={`circle ${replyStatus === COMPLETE ? 'complete' : ''}`}>
+      <div className="dot"></div>
+      <svg className={`circle ${replyStatus === COMPLETE ? "complete" : ""}`}>
         <circle cx="90" cy="90" r="85"></circle>
       </svg>
       <div className="progress-content">
         <>{quizProgress} / 10</>
-        <span className={`status-icon flex ${renderClass ? renderClass : ''}`}>{renderIcon}</span>
+        <span className={`status-icon flex ${renderClass ? renderClass : ""}`}>
+          {renderIcon}
+        </span>
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-const TypedQuizAnswer = ({
-  setAnswer,
-  replyStatus,
-  wordForCheck
-}) => {
-  if (!wordForCheck) { return null }
+const TypedQuizAnswer = ({ setAnswer, replyStatus, wordForCheck }) => {
+  if (!wordForCheck) {
+    return null;
+  }
   return (
-    <form
-      id='quiz-form'
-      className='quiz-form flex flex-j-b'>
+    <form id="quiz-form" className="quiz-form flex flex-j-b">
       <QuizInput
         setAnswer={setAnswer}
         amount={wordForCheck.length}
         replyStatus={replyStatus}
       />
     </form>
-  )
-}
+  );
+};
 
-const WordForQuestion = ({
-  word,
-  replyStatus,
-  score,
-  isLoading
-}) => {
-  if (!word) { return null }
+const WordForQuestion = ({ word, replyStatus, score, isLoading }) => {
+  if (!word) {
+    return null;
+  }
   const { wordForCheck, wordForQuestion } = word;
   return (
     <>
-      {
-        isLoading ? <Spinner /> :
-          <div
-            className='question-word-wrap flex flex-j-b'>
-            <p className='question-word-top'>
-              {replyStatus === INCORRECT && wordForQuestion}
-            </p>
-            <p className='question-word-bottom'>
-              {replyStatus !== INCORRECT ? wordForQuestion : wordForCheck}
-            </p>
-          </div>
-      }
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="question-word-wrap flex flex-j-b">
+          <p className="question-word-top">
+            {replyStatus === INCORRECT && wordForQuestion}
+          </p>
+          <p className="question-word-bottom">
+            {replyStatus !== INCORRECT ? wordForQuestion : wordForCheck}
+          </p>
+        </div>
+      )}
     </>
-  )
-}
+  );
+};
 
 const QuizResult = ({ score }) => {
   return (
-    <div className='quiz-result'>
-      <p className='result-text'>You have got <br /> <span className='result-score'>{score} correct</span> answers</p>
+    <div className="quiz-result">
+      <p className="result-text">
+        You have got <br />{" "}
+        <span className="result-score">{score} correct</span> answers
+      </p>
     </div>
-  )
-}
-
+  );
+};
 
 const QuizWrapper = () => {
   const [quiz, setQuiz] = useState([]);
@@ -148,33 +144,38 @@ const QuizWrapper = () => {
   const [word, setWord] = useState({});
   const [score, setScore] = useState(0);
   const [answer, setAnswer] = useState("");
-  const { user } = useSelector(state => state.user);
+  const { user } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (user.words_in_progress < 10) {
-      navigate('/');
+      navigate("/");
     } else {
       setIsLoading(true);
-      axios.get("/quiz/").then(res => {
+      axios.get("/quiz/").then((res) => {
         setQuiz(res.data);
         setIsLoading(false);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quiz.length === 0]);
 
   useEffect(() => {
     if (index < 10) {
       const task = quiz[index] || {};
-      setWord(Math.floor(Math.random() * 2) ? {
-        wordForQuestion: task.uk_word,
-        wordForCheck: task.en_word
-      } : {
-        wordForQuestion: task.en_word,
-        wordForCheck: task.uk_word
-      });
+      setWord(
+        Math.floor(Math.random() * 2)
+          ? {
+              wordForQuestion: task.uk_word,
+              wordForCheck: task.en_word,
+            }
+          : {
+              wordForQuestion: task.en_word,
+              wordForCheck: task.uk_word,
+            }
+      );
     } else {
       setReplyStatus(COMPLETE);
     }
@@ -183,33 +184,32 @@ const QuizWrapper = () => {
   useEffect(() => {
     // click on Next if Enter is pressed
     if (replyStatus === CORRECT || replyStatus === INCORRECT) {
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener("keydown", handleKeyDown);
       return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      }
+        document.removeEventListener("keydown", handleKeyDown);
+      };
     }
-  }, [replyStatus])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [replyStatus]);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       onClick(e);
     }
-  }
+  };
 
   const onUpdateItem = (id) => {
     setIsLoading(true);
-    axios.patch(`/dictionary/${id}/`, { progress: quiz[index].progress + 1 })
-      .then(res => {
+    axios
+      .patch(`/dictionary/${id}/`, { progress: quiz[index].progress + 1 })
+      .then((res) => {
         if (res.data.progress > 2) {
-          dispatch(changeCountOfWordsInProgress(
-            user.words_in_progress - 1
-          ));
-          localStorage.setItem("user", JSON.stringify({ ...user, words_in_progress: user.words_in_progress - 1 }));
+          dispatch(changeCountOfWordsInProgress(DEC));
         }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
     setIsLoading(false);
-  }
+  };
 
   const onSubmit = (e) => {
     if (answer.toLowerCase() === word.wordForCheck) {
@@ -220,17 +220,17 @@ const QuizWrapper = () => {
       setReplyStatus(INCORRECT);
     }
     setQuizProgress(quizProgress + 1);
-  }
+  };
 
   const onClick = (e) => {
     e.preventDefault();
     Array.from(document.querySelectorAll("input")).forEach(
-      input => (input.value = "")
+      (input) => (input.value = "")
     );
-    setIndex(prevIndex => prevIndex + 1);
+    setIndex((prevIndex) => prevIndex + 1);
     setAnswer("");
     setReplyStatus(IN_PROGRESS);
-  }
+  };
 
   const onRestart = (e) => {
     e.preventDefault();
@@ -239,37 +239,40 @@ const QuizWrapper = () => {
     setQuizProgress(0);
     setReplyStatus(IN_PROGRESS);
     setScore(0);
-  }
+  };
 
   return (
     <>
       <div>
-        <QuizProgress
-          quizProgress={quizProgress}
-          replyStatus={replyStatus} />
-        {replyStatus === COMPLETE ? <QuizResult score={score} /> :
+        <QuizProgress quizProgress={quizProgress} replyStatus={replyStatus} />
+        {replyStatus === COMPLETE ? (
+          <QuizResult score={score} />
+        ) : (
           <>
             <WordForQuestion
               word={word}
               replyStatus={replyStatus}
               score={score}
-              isLoading={isLoading} />
+              isLoading={isLoading}
+            />
             <TypedQuizAnswer
               onSubmit={onSubmit}
               setAnswer={setAnswer}
               replyStatus={replyStatus}
-              wordForCheck={word.wordForCheck} />
+              wordForCheck={word.wordForCheck}
+            />
           </>
-        }
+        )}
       </div>
       <QuizButton
         replyStatus={replyStatus}
         onClick={onClick}
         onSubmit={onSubmit}
         onRestart={onRestart}
-        user={user} />
+        user={user}
+      />
     </>
-  )
-}
+  );
+};
 
 export default QuizWrapper;

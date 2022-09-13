@@ -1,16 +1,23 @@
-import { Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "../Store";
-import axios from "axios";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import axios from "axios";
+import { useEffect } from "react";
+import { Provider } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import { store } from "../Store";
+import { fetchUserInfo } from "./Auth/AuthSlice";
 
 import Header from "./Header/Header";
-import { MainPage, QuizPage, DictionaryPage, ErrorPage } from "./Pages";
+import { DictionaryPage, ErrorPage, MainPage, QuizPage } from "./Pages";
 
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 function App() {
+
+  useEffect(() => {
+    store.dispatch(fetchUserInfo());
+  }, []);
+
   return (
     <Provider store={store}>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
