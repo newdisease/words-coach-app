@@ -1,0 +1,18 @@
+@use "../../Styles/Variables.scss" as *;
+
+.added-words-wrap {
+  position: relative;
+
+  .expand-btn {
+    position: absolute;
+    bottom: -10px;
+    right: calc(50% - 12px);
+    height: 24px;
+    width: 24px;
+    background-color: #3b76d1;
+
+    svg {
+      fill: white;
+    }
+  }
+}

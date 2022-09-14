@@ -1,5 +1,9 @@
-@use 'sass:color';
+@use "sass:color";
 @use "../../Styles/Variables.scss" as *;
+
+form {
+  min-height: 90px;
+}
 
 .search-wrap {
   display: flex;
@@ -43,7 +47,7 @@
 
 .add-word-button {
   background-color: $secondary-color;
-  box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.9);
+  box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha: -0.9);
   transition: background-color 0.2s;
 
   svg {
@@ -60,7 +64,7 @@
   }
 
   &:hover {
-    box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.8);
+    box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha: -0.8);
   }
 
   &:focus {
@@ -72,23 +76,23 @@
       opacity: 1;
     }
     &:hover {
-      box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.9);
+      box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha: -0.9);
     }
   }
 
   @keyframes alphashadow {
     from {
-      box-shadow: 0 0 0 20px color.adjust($color: $accent-color, $alpha:-0.9);
+      box-shadow: 0 0 0 20px color.adjust($color: $accent-color, $alpha: -0.9);
     }
     to {
-      box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha:-0.9);
+      box-shadow: 0 0 0 30px color.adjust($color: $accent-color, $alpha: -0.9);
     }
   }
 }
 
 .add-word-icon-wrap {
   position: relative;
-  
+
   &:hover {
     .btn-error-msg {
       transition-delay: 1s;

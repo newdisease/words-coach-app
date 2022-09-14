@@ -7,7 +7,7 @@ import {
   changeCountOfWordsInDictionary,
   changeCountOfWordsInProgress,
   INC,
-} from "../Auth/AuthSlice";
+} from "../../Reducers/AuthSlice";
 import { Alert, Button, Spinner, Title } from "../Common";
 import {
   AddDictionaryIcon,
@@ -17,6 +17,7 @@ import {
   WrongIcon,
 } from "../Common/Icons";
 import { capitalizeFirstLetter } from "../Common/utils";
+import { dictSetWord } from "../../Reducers/DictSlice";
 import { WordsSearchFormValidatorsSchema as schema } from "./WordsSearchFormValidators";
 
 import classnames from "classnames";
@@ -113,9 +114,11 @@ const WordsSearchForm = ({ getData, translatedWord }) => {
           <TranslateIcon />
         </Button>
       </div>
-      {errors.expression && (
-        <p className="validation-msg">{errors.expression.message}</p>
-      )}
+      {
+        <p className="validation-msg">
+          {errors.expression && errors.expression.message}
+        </p>
+      }
     </form>
   );
 };
@@ -135,10 +138,11 @@ const WordsSearchWrapper = () => {
     setButtonAddState(ADD_BUTTON_STATE_LOADING);
     axios
       .post("dictionary/", { uk_word: ukWord, en_word: enWord })
-      .then(() => {
+      .then((res) => {
         setButtonAddState(ADD_BUTTON_STATE_SUCCESS);
         dispatch(changeCountOfWordsInProgress(INC));
         dispatch(changeCountOfWordsInDictionary(INC));
+        dispatch(dictSetWord(res.data));
       })
       .catch((error) => {
         setButtonAddState(ADD_BUTTON_STATE_ERROR);

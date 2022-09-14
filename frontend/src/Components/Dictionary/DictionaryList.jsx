@@ -6,7 +6,7 @@ import {
   changeCountOfWordsInProgress,
   DEC,
   INC,
-} from "../Auth/AuthSlice";
+} from "../../Reducers/AuthSlice";
 import { Button, Spinner, WordsListItem } from "../Common";
 
 import "./DictionaryList.scss";
@@ -31,7 +31,6 @@ const SeacrhDictionaryWords = ({ setSearchWords }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [output]);
 
-  console.log(output);
   return (
     <input
       className="dict-search"
@@ -117,34 +116,35 @@ const DictionaryList = ({ user }) => {
 
   return (
     <>
-      {isLoading && !dictionary.length && (
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      )}
       <div className="dictionary-wrap">
         <SeacrhDictionaryWords setSearchWords={setSearchWords} />
-        <ul>
-          {searchWords
-            ? searchWords.map((item) => (
-                <WordsListItem
-                  key={item.id}
-                  item={item}
-                  onDeleteItem={onDeleteItem}
-                  onUpdateItem={onUpdateItem}
-                  isLoading={isLoading}
-                />
-              ))
-            : dictionary.map((item) => (
-                <WordsListItem
-                  key={item.id}
-                  item={item}
-                  onDeleteItem={onDeleteItem}
-                  onUpdateItem={onUpdateItem}
-                  isLoading={isLoading}
-                />
-              ))}
-        </ul>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <ul>
+            {searchWords
+              ? searchWords.map((item) => (
+                  <WordsListItem
+                    key={item.id}
+                    item={item}
+                    onDeleteItem={onDeleteItem}
+                    onUpdateItem={onUpdateItem}
+                    isProgress
+                    isLoading={isLoading}
+                  />
+                ))
+              : dictionary.map((item) => (
+                  <WordsListItem
+                    key={item.id}
+                    item={item}
+                    onDeleteItem={onDeleteItem}
+                    onUpdateItem={onUpdateItem}
+                    isProgress
+                    isLoading={isLoading}
+                  />
+                ))}
+          </ul>
+        )}
         <div className="flex dict-control">
           {!searchWords && (
             <Button

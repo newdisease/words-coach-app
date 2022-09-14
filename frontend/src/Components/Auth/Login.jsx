@@ -1,6 +1,10 @@
 import axios from "axios";
 import { store } from "../../Store";
-import { loginSetToken, loginSetUser, loginUnsetUser } from "./AuthSlice";
+import {
+  loginSetToken,
+  loginSetUser,
+  loginUnsetUser,
+} from "../../Reducers/AuthSlice";
 
 const login = (email, password) =>
   axios

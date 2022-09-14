@@ -1,14 +1,14 @@
 @use "../../Styles/Variables.scss" as *;
 
-$border-color: #F4F7FF;
-$blue-text-color: #4590FF;
-$grey-dot-color: #DEEBFE;
-$yellow-dot-color: #FFB11B;
-
+$border-color-white: #f4f7ff;
+$border-color-blue: #3b76d1;
+$blue-text-color: #4590ff;
+$grey-dot-color: #deebfe;
+$yellow-dot-color: #ffb11b;
 
 .item-wrapper {
   background-color: white;
-  border-bottom: 2px solid $border-color;
+  border-bottom: 2px solid $border-color-white;
   height: 65px;
   align-items: center;
   padding: 0 20px;
@@ -38,50 +38,54 @@ $yellow-dot-color: #FFB11B;
       margin-left: 15px;
     }
 
-  .item-progress {
-    flex-direction: column;
-    justify-content: space-between;
-    height: 31px;
-    width: 36px;
-    margin-right: 5px;
-
-    p {
-      color: #202368;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 7px;
-    }
-
-    .item-progress-bar { 
+    .item-progress {
+      flex-direction: column;
       justify-content: space-between;
+      height: 31px;
+      width: 36px;
+      margin-right: 5px;
 
-      .dot {
-        height: 5px;
-        width: 5px;
-        background-color: $yellow-dot-color;
-        border-radius: 50%;
+      p {
+        color: #202368;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 7px;
+      }
 
-        &-grey {
-          background-color: $grey-dot-color;
-        }
+      .item-progress-bar {
+        justify-content: space-between;
 
-        &-blue {
-          background-color: $accent-color;
+        .dot {
+          height: 5px;
+          width: 5px;
+          background-color: $yellow-dot-color;
+          border-radius: 50%;
+
+          &-grey {
+            background-color: $grey-dot-color;
+          }
+
+          &-blue {
+            background-color: $accent-color;
+          }
         }
       }
     }
   }
-}
 
-.item-wrapper-blue {
-  background-color: transparent;
+  &.item-wrapper-blue {
+    background-color: transparent;
+    border-bottom: 2px solid $border-color-blue;
 
-  .item-title {
-    color: white;
-  }
-  
-  .item-content {
-    color: $blue-text-color;
+    .item-title {
+      color: white;
+    }
+
+    .item-content {
+      color: $blue-text-color;
+    }
+    .icon-red svg {
+      fill: $blue-text-color;
     }
   }
 }
