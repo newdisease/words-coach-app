@@ -3,7 +3,11 @@ import axios from "axios";
 import { store } from "../../Store";
 import { Button } from "../Common";
 import { GoogleIcon } from "../Common/Icons";
-import { loginSetToken, loginSetUser, loginUnsetUser } from "./AuthSlice";
+import {
+  loginSetToken,
+  loginSetUser,
+  loginUnsetUser,
+} from "../../Reducers/AuthSlice";
 
 function GoogleAuth({ onHide, setError }) {
   const login = useGoogleLogin({

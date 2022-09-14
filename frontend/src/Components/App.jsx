@@ -1,19 +1,17 @@
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import { store } from "../Store";
-import { fetchUserInfo } from "./Auth/AuthSlice";
+import { fetchUserInfo } from "../Reducers/AuthSlice";
 
 import Header from "./Header/Header";
 import { DictionaryPage, ErrorPage, MainPage, QuizPage } from "./Pages";
 
-
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
 
 function App() {
-
   useEffect(() => {
     store.dispatch(fetchUserInfo());
   }, []);
@@ -30,10 +28,10 @@ function App() {
               <Route path="/quiz" element={<QuizPage />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
-          </main >
+          </main>
         </div>
       </GoogleOAuthProvider>
-    </Provider >
+    </Provider>
   );
 }
 

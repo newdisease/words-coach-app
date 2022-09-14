@@ -1,10 +1,10 @@
 @use "../../Styles/Variables.scss" as *;
 
-$border-color: #F4F7FF;
+$border-color-white: #f4f7ff;
 
 .dict-search {
   border-radius: 0;
-  border-bottom: 2px solid $border-color;
+  border-bottom: 2px solid $border-color-white;
 }
 
 .dict-control {

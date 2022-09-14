@@ -1,14 +1,14 @@
-from rest_framework.mixins import (
-    ListModelMixin,
-    CreateModelMixin,
-    UpdateModelMixin,
-    DestroyModelMixin,
-)
-from rest_framework.viewsets import GenericViewSet
-from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny
 from django.db.models import Q
+from rest_framework.generics import CreateAPIView
+from rest_framework.mixins import (
+    CreateModelMixin,
+    DestroyModelMixin,
+    ListModelMixin,
+    UpdateModelMixin,
+)
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 from .models import Dictionary
 from .serializers import DictionarySerializer, TranslationSerializer
@@ -25,7 +25,9 @@ class DictionaryCreateListViewSet(
     serializer_class = DictionarySerializer
 
     def get_queryset(self):
-        queryset = Dictionary.objects.filter(user_id=self.request.user.id)
+        queryset = Dictionary.objects.filter(
+            user_id=self.request.user.id
+        ).order_by('id')
         query_params = self.request.query_params.get('search')
         if query_params:
             return queryset.filter(

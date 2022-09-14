@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { changeCountOfWordsInProgress, DEC } from "../Auth/AuthSlice";
+import { changeCountOfWordsInProgress, DEC } from "../../Reducers/AuthSlice";
 
 import { Button, Spinner } from "../Common";
 import { CorrectIcon, WrongIcon } from "../Common/Icons";
@@ -86,18 +86,29 @@ const QuizProgress = ({ quizProgress, replyStatus }) => {
   );
 };
 
-const TypedQuizAnswer = ({ setAnswer, replyStatus, wordForCheck }) => {
+const TypedQuizAnswer = ({
+  setAnswer,
+  replyStatus,
+  wordForCheck,
+  isLoading,
+}) => {
   if (!wordForCheck) {
     return null;
   }
   return (
-    <form id="quiz-form" className="quiz-form flex flex-j-b">
-      <QuizInput
-        setAnswer={setAnswer}
-        amount={wordForCheck.length}
-        replyStatus={replyStatus}
-      />
-    </form>
+    <>
+      {isLoading ? (
+        <Spinner spinnerSize="x-small" />
+      ) : (
+        <form id="quiz-form" className="quiz-form flex flex-j-b">
+          <QuizInput
+            setAnswer={setAnswer}
+            amount={wordForCheck.length}
+            replyStatus={replyStatus}
+          />
+        </form>
+      )}
+    </>
   );
 };
 
@@ -107,20 +118,18 @@ const WordForQuestion = ({ word, replyStatus, score, isLoading }) => {
   }
   const { wordForCheck, wordForQuestion } = word;
   return (
-    <>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className="question-word-wrap flex flex-j-b">
-          <p className="question-word-top">
-            {replyStatus === INCORRECT && wordForQuestion}
-          </p>
-          <p className="question-word-bottom">
-            {replyStatus !== INCORRECT ? wordForQuestion : wordForCheck}
-          </p>
-        </div>
-      )}
-    </>
+    <div className="question-word-wrap flex flex-j-b">
+      <p className="question-word-top">
+        {replyStatus === INCORRECT && wordForQuestion}
+      </p>
+      <p className="question-word-bottom">
+        {isLoading ? (
+          <Spinner spinnerSize="x-small" />
+        ) : (
+          <>{replyStatus !== INCORRECT ? wordForQuestion : wordForCheck}</>
+        )}
+      </p>
+    </div>
   );
 };
 
@@ -260,6 +269,7 @@ const QuizWrapper = () => {
               setAnswer={setAnswer}
               replyStatus={replyStatus}
               wordForCheck={word.wordForCheck}
+              isLoading={isLoading}
             />
           </>
         )}
