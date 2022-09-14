@@ -118,7 +118,7 @@ const DictionaryList = ({ user }) => {
     <>
       <div className="dictionary-wrap">
         <SeacrhDictionaryWords setSearchWords={setSearchWords} />
-        {isLoading ? (
+        {isLoading && dictionary.length === 0 ? (
           <Spinner />
         ) : (
           <ul>
