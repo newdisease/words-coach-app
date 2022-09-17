@@ -3,8 +3,8 @@ import axios from "axios";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { Route, Routes } from "react-router-dom";
-import { store } from "../Store";
 import { fetchUserInfo } from "../Reducers/AuthSlice";
+import { store } from "../Store";
 
 import Header from "./Header/Header";
 import { DictionaryPage, ErrorPage, MainPage, QuizPage } from "./Pages";

@@ -12,9 +12,13 @@ export const DictReducer = createSlice({
         (item) => item.id !== action.payload
       );
     },
+    dictResetWords: (state) => {
+      state.addedWords = [];
+    },
   },
 });
 
-export const { dictSetWord, dictUnsetWord } = DictReducer.actions;
+export const { dictSetWord, dictUnsetWord, dictResetWords } =
+  DictReducer.actions;
 
 export default DictReducer.reducer;

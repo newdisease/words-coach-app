@@ -1,7 +1,7 @@
-@use 'sass:color';
+@use "sass:color";
 @use "../../Styles/Variables.scss" as *;
 
-$error-color: #FA3E3A;
+$error-color: #fa3e3a;
 
 .modal {
   position: fixed;
@@ -26,10 +26,10 @@ $error-color: #FA3E3A;
   &--content {
     width: 100%;
     max-width: 355px;
-    min-height: 400px;
-    background: linear-gradient(180deg, #00123F 0%, #0D6EFD 100%);
+    min-height: 200px;
+    background: linear-gradient(180deg, #00123f 0%, #0d6efd 100%);
     border-radius: 20px;
-    border: 2px solid #0D6EFD;
+    border: 2px solid #0d6efd;
     align-items: center;
     justify-content: center;
     position: absolute;
@@ -43,7 +43,7 @@ $error-color: #FA3E3A;
     top: -2px;
     right: -2px;
   }
-  
+
   &--title {
     font-size: 25px;
     font-weight: 700;
@@ -66,16 +66,23 @@ $error-color: #FA3E3A;
 
   &--validation-wrapper {
     height: 20px;
-    color: #4590FF;
+    color: #4590ff;
 
     & > div {
       align-items: center;
       justify-content: center;
 
-       svg {
+      svg {
         margin-right: 10px;
-       }
+      }
     }
   }
 
+  .initial-word {
+    font-size: 25px;
+    font-weight: 700;
+    color: $secondary-color;
+    margin-bottom: 25px;
+    margin-top: -15px;
+  }
 }

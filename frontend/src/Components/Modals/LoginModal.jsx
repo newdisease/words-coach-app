@@ -1,11 +1,23 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import GoogleAuth from "../Auth/GoogleAuth";
 import login from "../Auth/Login";
 import { Button, Modal } from "../Common";
 import { ValidationIcon } from "../Common/Icons";
-import GoogleAuth from "./GoogleAuth";
-import { LoginFormValidatorsSchema as schema } from "./LoginFormValidators";
+
+import * as yup from "yup";
+
+const schema = yup
+  .object({
+    email: yup.string().email("email address must be valid").required(),
+    password: yup
+      .string()
+      .min(8, "the password is too short")
+      .max(15)
+      .required(),
+  })
+  .required();
 
 const LoginModal = ({ show, onHide, onRegistrationClick }) => {
   const [error, setError] = useState(null);
