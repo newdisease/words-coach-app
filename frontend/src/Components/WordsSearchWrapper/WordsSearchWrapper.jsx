@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,16 +8,17 @@ import {
   changeCountOfWordsInProgress,
   INC,
 } from "../../Reducers/AuthSlice";
+import { dictSetWord } from "../../Reducers/DictSlice";
 import { Alert, Button, Spinner, Title } from "../Common";
 import {
   AddDictionaryIcon,
   CorrectIcon,
   MicIcon,
   TranslateIcon,
+  VolumeUpIcon,
   WrongIcon,
 } from "../Common/Icons";
-import { capitalizeFirstLetter } from "../Common/utils";
-import { dictSetWord } from "../../Reducers/DictSlice";
+import { capitalizeFirstLetter, spellTranslatedWord } from "../Common/utils";
 import { WordsSearchFormValidatorsSchema as schema } from "./WordsSearchFormValidators";
 
 import classnames from "classnames";
@@ -29,6 +30,8 @@ const ADD_BUTTON_STATE_LOADING = "loading";
 const TITLE_STATE_SUCCESS = "success";
 const TITLE_STATE_ERROR = "error";
 const TITLE_STATE_LOADING = "loading";
+
+const LazyEditTranslate = lazy(() => import("../Modals/EditTranslateModal"));
 
 const AddToDictionaryButton = ({
   buttonAddState,
@@ -128,6 +131,7 @@ const WordsSearchWrapper = () => {
   const [buttonAddState, setButtonAddState] = useState(null);
   const [titleState, setTitleState] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [showTranslateModal, setShowTranslateModal] = useState(false);
 
   const { isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -159,16 +163,41 @@ const WordsSearchWrapper = () => {
           <>
             <Title
               title={
-                language === "EN"
-                  ? capitalizeFirstLetter(ukWord)
-                  : capitalizeFirstLetter(enWord)
+                language === "EN" ? (
+                  capitalizeFirstLetter(ukWord)
+                ) : (
+                  <>
+                    {capitalizeFirstLetter(enWord)}{" "}
+                    <Button
+                      className="icon-blue"
+                      btnType="icon"
+                      onClick={() => spellTranslatedWord(enWord)}
+                    >
+                      <VolumeUpIcon />
+                    </Button>
+                  </>
+                )
               }
               subtitle={
-                language === "EN" ? (
-                  <>🇬🇧&nbsp;&nbsp;{enWord}</>
-                ) : (
-                  <>🇺🇦&nbsp;&nbsp;{ukWord}</>
-                )
+                <>
+                  {language === "EN" ? (
+                    <>🇬🇧&nbsp;&nbsp;{enWord}</>
+                  ) : (
+                    <>🇺🇦&nbsp;&nbsp;{ukWord}</>
+                  )}{" "}
+                  {buttonAddState === null && (
+                    <>
+                      <span>/</span>
+                      <Button
+                        btnType="link"
+                        onClick={() => setShowTranslateModal(true)}
+                        disabled={!isAuthenticated || buttonAddState !== null}
+                      >
+                        edit
+                      </Button>
+                    </>
+                  )}
+                </>
               }
               className="main-title"
               childrenComponent={
@@ -217,6 +246,17 @@ const WordsSearchWrapper = () => {
     <>
       {showResult(titleState)}
       <WordsSearchForm getData={getData} translatedWord={translatedWord} />
+      <Suspense fallback={<span>Loading...</span>}>
+        {showTranslateModal && (
+          <LazyEditTranslate
+            show={showTranslateModal}
+            onHide={() => setShowTranslateModal(false)}
+            translatedWord={translatedWord}
+            setTranslatedWord={setTranslatedWord}
+            language={language}
+          />
+        )}
+      </Suspense>
     </>
   );
 };
