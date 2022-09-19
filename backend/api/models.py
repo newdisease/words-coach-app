@@ -35,8 +35,13 @@ class WordsSet(TimeStampedModel):
     def __str__(self):
         return self.name
 
-    def save(self):
-        self.name = self.name.title()
+    def save(
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+    ):
+        self.name = self.name.lower()
         super().save()
 
     class Meta:
@@ -53,7 +58,12 @@ class WordInSet(TimeStampedModel):
     def __str__(self):
         return self.uk_word + ' - ' + self.en_word
 
-    def save(self):
+    def save(
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+    ):
         self.en_word = self.en_word.lower()
         self.uk_word = self.uk_word.lower()
         super().save()
