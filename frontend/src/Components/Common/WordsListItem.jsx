@@ -61,6 +61,7 @@ const WordsListItem = ({
             className="icon-blue"
             btnType="icon"
             onClick={() => onUpdateItem(id)}
+            disabled={isLoading || progress === 0}
           >
             <ResetIcon />
           </Button>
@@ -72,6 +73,7 @@ const WordsListItem = ({
             e.target.closest(".item-wrapper").classList.add("deleted");
             handleCardSubmit(id);
           }}
+          disabled={isLoading}
         >
           <TrashIcon />
         </Button>
