@@ -27,3 +27,38 @@ class Dictionary(TimeStampedModel):
         verbose_name_plural = 'Dictionary'
         unique_together = ('uk_word', 'en_word', 'user_id')
         ordering = ('progress', '-created_at')
+
+
+class WordsSet(TimeStampedModel):
+    name = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self):
+        self.name = self.name.title()
+        super().save()
+
+    class Meta:
+        verbose_name_plural = 'Words sets'
+
+
+class WordInSet(TimeStampedModel):
+    en_word = models.CharField(max_length=20)
+    uk_word = models.CharField(max_length=20)
+    words_set = models.ForeignKey(
+        WordsSet, related_name='words', on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.uk_word + ' - ' + self.en_word
+
+    def save(self):
+        self.en_word = self.en_word.lower()
+        self.uk_word = self.uk_word.lower()
+        super().save()
+
+    class Meta:
+        verbose_name_plural = 'Words in sets'
+        unique_together = ('en_word', 'uk_word', 'words_set_id')
+        ordering = ('-created_at',)
