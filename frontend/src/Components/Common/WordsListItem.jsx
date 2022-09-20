@@ -15,7 +15,7 @@ const WordsListItem = ({
   isProgress,
   isBlue,
 }) => {
-  const { id, en_word, uk_word, progress } = item;
+  const { id, en_word, uk_word, progress, itemTitle } = item;
 
   const handleCardSubmit = (id) => {
     setTimeout(() => {
@@ -30,8 +30,12 @@ const WordsListItem = ({
       })}
     >
       <div className="item">
-        <p className="item-title">{capitalizeFirstLetter(uk_word)}</p>
-        <p className="item-content">{en_word}</p>
+        <p className="item-title">
+          {uk_word
+            ? capitalizeFirstLetter(uk_word)
+            : capitalizeFirstLetter(itemTitle)}
+        </p>
+        <p className="item-content">{en_word || "collection"}</p>
       </div>
       <div className="flex controls-wrapper">
         {isProgress && (

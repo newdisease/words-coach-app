@@ -36,7 +36,10 @@ class AddWordsInUserDictionaryView(CreateAPIView):
                 count += 1
         if count == 0:
             return Response(
-                {'message': f'All words from set {set_of_words} are exists.'}
+                {
+                    'message': 'All words from set are exists.',
+                    'words_set': set_of_words,
+                }
             )
 
         else:

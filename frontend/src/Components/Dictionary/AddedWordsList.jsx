@@ -7,14 +7,19 @@ import {
   changeCountOfWordsInProgress,
   DEC,
 } from "../../Reducers/AuthSlice";
-import { dictUnsetWord } from "../../Reducers/DictSlice";
+import {
+  dictUnsetWord,
+  dictUnsetWordFromCollection,
+} from "../../Reducers/DictSlice";
 import { Button, WordsListItem } from "../Common";
 import { ArrowDropDownIcon, ArrowDropUpIcon } from "../Common/Icons";
 import "./AddedWordsList.scss";
 
 const AddedWordsList = () => {
   const [isShown, setIsShown] = useState(false);
-  const { addedWords } = useSelector((state) => state.dict);
+  const { addedWords, wordsFromAddedCollections } = useSelector(
+    (state) => state.dict
+  );
   const dispatch = useDispatch();
 
   let listAddedWords = [...addedWords]?.reverse();
@@ -22,15 +27,49 @@ const AddedWordsList = () => {
     listAddedWords = listAddedWords.slice(0, 3);
   }
 
-  const onDeleteItem = (id) =>
-    axios
-      .delete(`/dictionary/${id}/`)
-      .then(() => {
-        dispatch(changeCountOfWordsInDictionary(DEC));
-        dispatch(changeCountOfWordsInProgress(DEC));
+  const onDeleteItem = (id) => {
+    if (typeof id === "number") {
+      axios
+        .delete(`/dictionary/${id}/`)
+        .then(() => {
+          dispatch(changeCountOfWordsInDictionary(DEC));
+          dispatch(changeCountOfWordsInProgress(DEC));
+          dispatch(dictUnsetWord(id));
+        })
+        .catch((e) => console.log(e));
+    } else {
+      axios.get("/dictionary/").then((res) => {
+        const idsForDel = [];
+        const wordsInDictionary = res.data;
+        const addedWords = wordsFromAddedCollections.find(
+          (item) => item.set_of_words === id
+        ).added_words;
+        addedWords.forEach((word) => {
+          const { uk_word, en_word } = word;
+          const wordInDictionary = wordsInDictionary.find(
+            (item) => item.uk_word === uk_word && item.en_word === en_word
+          );
+          idsForDel.push(wordInDictionary.id);
+        });
+        idsForDel.forEach((id) => {
+          axios
+            .delete(`/dictionary/${id}/`)
+            .then(() => {
+              dispatch(changeCountOfWordsInDictionary(DEC));
+              if (
+                wordsInDictionary.find((item) => item.id === id).progress < 3
+              ) {
+                dispatch(changeCountOfWordsInProgress(DEC));
+              }
+              dispatch(dictUnsetWord(id));
+            })
+            .catch((e) => console.log(e));
+        });
+        dispatch(dictUnsetWordFromCollection(id));
         dispatch(dictUnsetWord(id));
-      })
-      .catch((e) => console.log(e));
+      });
+    }
+  };
 
   return (
     <div className="added-words-wrap">

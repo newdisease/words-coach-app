@@ -1,14 +1,22 @@
+import { lazy, Suspense, useState } from "react";
 import { useSelector } from "react-redux";
-import Button from "../Common/Button";
+import { Alert, Button } from "../Common";
 import AddedWordsList from "../Dictionary/AddedWordsList";
 import WordsSearchWrapper from "../WordsSearchWrapper/WordsSearchWrapper";
 
+const LazyCollections = lazy(() => import("../Modals/ColletcionModal"));
+
 function MainPage() {
+  const [modalCollectionShow, setModalCollectionShow] = useState(false);
+  const [errorMsgs, setErrorMsgs] = useState([]);
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const isUserHasWordsInProgress = user.words_in_progress < 10;
 
   return (
     <>
+      {errorMsgs.length > 0 && (
+        <Alert message={`${errorMsgs.toString()}: words already exist`} />
+      )}
       <div className="top-content">
         <WordsSearchWrapper />
         <AddedWordsList />
@@ -20,7 +28,12 @@ function MainPage() {
               ? `Add min ${10 - user.words_in_progress} word(s) or select`
               : "You can also learn words from"}
           </p>
-          <Button btnType="sm" outline disabled>
+          <Button
+            btnType="sm"
+            outline
+            disabled={!isAuthenticated}
+            onClick={() => setModalCollectionShow(true)}
+          >
             Collection
           </Button>
         </div>
@@ -33,6 +46,16 @@ function MainPage() {
           Start learning
         </Button>
       </div>
+
+      <Suspense fallback={<span>Loading...</span>}>
+        {modalCollectionShow && (
+          <LazyCollections
+            show={modalCollectionShow}
+            onHide={() => setModalCollectionShow(false)}
+            setErrorMsgs={setErrorMsgs}
+          />
+        )}
+      </Suspense>
     </>
   );
 }

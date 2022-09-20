@@ -1,8 +1,5 @@
 @use "../../Styles/Variables.scss" as *;
 
-$main-word-color: #FFDA1B;
-$secondary-word-color: #4590FF;
-
 .progress-wrap {
   display: block;
   width: 180px;
@@ -17,11 +14,21 @@ $secondary-word-color: #4590FF;
   }
 
   @keyframes shake {
-    from {transform: translateX(0);}
-    25% {transform: translateX(5px);}
-    50% {transform: translateX(-5px);}
-    75% {transform: translateX(5px);}
-    to {transform: translateX(0);}
+    from {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(5px);
+    }
+    50% {
+      transform: translateX(-5px);
+    }
+    75% {
+      transform: translateX(5px);
+    }
+    to {
+      transform: translateX(0);
+    }
   }
 
   &::before {
@@ -46,7 +53,7 @@ $secondary-word-color: #4590FF;
     z-index: 2;
     transform: rotateZ(calc(3.6deg * var(--num)));
     transition: ease-in 1s;
-    
+
     &::before {
       content: "";
       display: block;
@@ -129,7 +136,7 @@ $secondary-word-color: #4590FF;
   margin-bottom: 20px;
 
   .question-word-top {
-    color: $secondary-word-color;
+    color: $secondary-color;
     font-size: 15px;
     font-weight: 500;
   }
@@ -138,7 +145,6 @@ $secondary-word-color: #4590FF;
     color: $main-word-color;
     font-size: 30px;
     font-weight: 700;
-
   }
 }
 
@@ -191,11 +197,9 @@ $secondary-word-color: #4590FF;
     padding: 0;
     text-transform: uppercase;
     background-color: transparent;
-
-    
   }
 
-  input:focus + .line:after, 
+  input:focus + .line:after,
   input:not(:placeholder-shown) + .line:after {
     opacity: 0;
   }
@@ -217,7 +221,7 @@ $secondary-word-color: #4590FF;
 
       & + .line:after,
       &:focus + .line:after,
-      &:not(:placeholder-shown) + .line:after  {
+      &:not(:placeholder-shown) + .line:after {
         background-color: $error-color;
         left: 0;
         right: 0;
@@ -236,7 +240,7 @@ $secondary-word-color: #4590FF;
 .quiz-result {
   font-size: 30px;
   font-weight: 700;
-  
+
   .result-score {
     color: $secondary-color;
   }
