@@ -1,20 +1,33 @@
-from rest_framework import routers
 from django.urls import path
-from api.views import (
-    DictionaryCreateListViewSet,
-    DictionaryRandomViewSet,
-    TranslationCreateView,
-)
+from rest_framework import routers
+
+from api.views import dictionary_views, translate_views, wordssets_views
 
 app_name = 'api'
 
 router = routers.SimpleRouter()
 
-router.register(r'dictionary', DictionaryCreateListViewSet, 'dictionary')
-router.register(r'quiz', DictionaryRandomViewSet, 'quiz')
+router.register(
+    r'dictionary', dictionary_views.DictionaryCreateListViewSet, 'dictionary'
+)
+router.register(r'quiz', dictionary_views.DictionaryRandomViewSet, 'quiz')
 
 urlpatterns = [
-    path('translate/', TranslationCreateView.as_view(), name='translate'),
+    path(
+        'translate/',
+        translate_views.TranslationCreateView.as_view(),
+        name='translate',
+    ),
+    path(
+        'wordssets/',
+        wordssets_views.ListOfWordsSetsView.as_view(),
+        name='wordssets',
+    ),
+    path(
+        'wordssets/<int:pk>/',
+        wordssets_views.AddWordsInUserDictionaryView.as_view(),
+        name='addwords',
+    ),
 ]
 
 

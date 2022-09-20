@@ -69,7 +69,7 @@ const DictionaryList = ({ user }) => {
   }, []);
 
   const onDictionaryLoaded = (newItems) => {
-    setDictionary([...dictionary, ...newItems]);
+    setDictionary((prevDictionary) => [...prevDictionary, ...newItems]);
     setOffset(offset + limit);
   };
 
@@ -98,12 +98,16 @@ const DictionaryList = ({ user }) => {
     axios
       .delete(`/dictionary/${id}/`)
       .then(() => {
-        setDictionary(dictionary.filter((item) => item.id !== id));
+        const filteredDictionary = dictionary.filter((item) => item.id !== id);
+        setDictionary(filteredDictionary);
+        setOffset((offset) => offset - 1);
         setSearchWords(
           searchWords ? searchWords.filter((item) => item.id !== id) : null
         );
         setIsLoading(false);
-        setOffset((offset) => offset - 1);
+        if (filteredDictionary.length === 0) {
+          onRequest();
+        }
         if (prevProgress < 3) {
           dispatch(changeCountOfWordsInProgress(DEC));
         }

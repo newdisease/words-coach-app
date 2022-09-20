@@ -1,7 +1,8 @@
-from rest_framework import serializers
-from .models import Dictionary
-
 import re
+
+from rest_framework import serializers
+
+from .models import Dictionary
 
 
 class DictionarySerializer(serializers.Serializer):
@@ -40,3 +41,12 @@ class TranslationSerializer(serializers.Serializer):
         if not re.match(r"^[а-яА-ЯіІїЇa-zA-Z\s'` ]+$", word):
             raise serializers.ValidationError('This word is not valid.')
         return data
+
+
+class ListOfWordsSetsSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=20, read_only=True)
+    word_count = serializers.SerializerMethodField()
+
+    def get_word_count(self, obj):
+        return obj.words.count()

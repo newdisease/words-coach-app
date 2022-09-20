@@ -1,4 +1,4 @@
-from api.models import Dictionary
+from api.models import Dictionary, WordInSet, WordsSet
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.authtoken.models import Token
@@ -17,6 +17,14 @@ class TestApi(APITestCase):
             uk_word='тест',
             en_word='test',
             user=self.user,
+        )
+
+        self.words_set = WordsSet.objects.create(
+            name='test_set',
+        )
+
+        self.word_in_set = WordInSet.objects.create(
+            uk_word='тестест', en_word='testtest', words_set=self.words_set
         )
 
         self.token = Token.objects.create(user=self.user)
@@ -75,3 +83,19 @@ class TestApi(APITestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_words_sets(self):
+        response = self.client.get(reverse('api:wordssets'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_add_words_in_user_dictionary(self):
+        response = self.client.post(reverse('api:addwords', args=[1]))
+        self.assertEqual(
+            response.data,
+            {
+                'set_of_words': 'test_set',
+                'added_words': [{'uk_word': 'тестест', 'en_word': 'testtest'}],
+                'count': 1,
+            },
+        )
