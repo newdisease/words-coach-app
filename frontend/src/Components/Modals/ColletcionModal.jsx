@@ -6,7 +6,7 @@ import {
   dictSetWord,
   dictSetWordsFromCollection,
 } from "../../Reducers/DictSlice";
-import { Button, Modal } from "../Common";
+import { Button, Modal, Spinner } from "../Common";
 import { CheckIcon } from "../Common/Icons";
 import { capitalizeFirstLetter } from "../Common/utils";
 
@@ -14,12 +14,15 @@ const CollectionModal = ({ show, onHide, setErrorMsgs }) => {
   const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState([]);
   const [loadedCollections, setLoadedCollections] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    setIsLoading(true);
     axios.get("wordssets/").then((res) => {
       setCollections(res.data);
+      setIsLoading(false);
     });
   }, []);
 
@@ -75,25 +78,31 @@ const CollectionModal = ({ show, onHide, setErrorMsgs }) => {
       <Modal show={show} onHide={onHide} title="Select Collection">
         <div className="checkbox-form-wrap">
           <form className="checkbox-form" id="collections-form">
-            {collections.map((collection) => (
-              <div className="collection flex" key={collection.id}>
-                <input
-                  className="collection-checkbox-input"
-                  id={collection.id}
-                  type="checkbox"
-                  name={collection.name}
-                  value={collection.id}
-                  onChange={(e) => handleOnChange(e)}
-                />
-                <CheckIcon />
-                <div className="collection-checkbox">
-                  <label htmlFor={collection.id}>
-                    {capitalizeFirstLetter(collection.name)}
-                  </label>
-                  <p>{collection.word_count} words</p>
-                </div>
-              </div>
-            ))}
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <>
+                {collections.map((collection) => (
+                  <div className="collection flex" key={collection.id}>
+                    <input
+                      className="collection-checkbox-input"
+                      id={collection.id}
+                      type="checkbox"
+                      name={collection.name}
+                      value={collection.id}
+                      onChange={(e) => handleOnChange(e)}
+                    />
+                    <CheckIcon />
+                    <div className="collection-checkbox">
+                      <label htmlFor={collection.id}>
+                        {capitalizeFirstLetter(collection.name)}
+                      </label>
+                      <p>{collection.word_count} words</p>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </form>
         </div>
         <div className="modal--controls tac">
