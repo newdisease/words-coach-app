@@ -20,7 +20,7 @@ export const DictReducer = createSlice({
     },
     dictUnsetWordFromCollection: (state, action) => {
       state.wordsFromAddedCollections = state.wordsFromAddedCollections.filter(
-        (collection) => collection.set_of_words !== action.payload
+        (item) => item.set_of_words !== action.payload
       );
     },
   },

@@ -6,6 +6,8 @@ import {
   changeCountOfWordsInDictionary,
   changeCountOfWordsInProgress,
   DEC,
+  removeWordsFromCollectionInDict,
+  removeWordsFromCollectionInProgress,
 } from "../../Reducers/AuthSlice";
 import {
   dictUnsetWord,
@@ -33,12 +35,15 @@ const AddedWordsList = () => {
         .delete(`/dictionary/${id}/`)
         .then(() => {
           dispatch(changeCountOfWordsInDictionary(DEC));
-          dispatch(changeCountOfWordsInProgress(DEC));
+          if (addedWords.find((item) => item.id === id).progress < 3) {
+            dispatch(changeCountOfWordsInProgress(DEC));
+          }
           dispatch(dictUnsetWord(id));
         })
         .catch((e) => console.log(e));
     } else {
       axios.get("/dictionary/").then((res) => {
+        let finishedWordsCount = 0;
         const idsForDel = [];
         const wordsInDictionary = res.data;
         const addedWords = wordsFromAddedCollections.find(
@@ -46,27 +51,29 @@ const AddedWordsList = () => {
         ).added_words;
         addedWords.forEach((word) => {
           const { uk_word, en_word } = word;
+
           const wordInDictionary = wordsInDictionary.find(
             (item) => item.uk_word === uk_word && item.en_word === en_word
           );
-          idsForDel.push(wordInDictionary.id);
+          if (wordInDictionary) {
+            idsForDel.push(wordInDictionary.id);
+          }
         });
         idsForDel.forEach((id) => {
-          axios
-            .delete(`/dictionary/${id}/`)
-            .then(() => {
-              dispatch(changeCountOfWordsInDictionary(DEC));
-              if (
-                wordsInDictionary.find((item) => item.id === id).progress < 3
-              ) {
-                dispatch(changeCountOfWordsInProgress(DEC));
-              }
-              dispatch(dictUnsetWord(id));
-            })
-            .catch((e) => console.log(e));
+          axios.delete(`/dictionary/${id}/`).then(() => {
+            if (wordsInDictionary.find((item) => item.id === id).progress < 3) {
+              finishedWordsCount += 1;
+            }
+          });
         });
         dispatch(dictUnsetWordFromCollection(id));
         dispatch(dictUnsetWord(id));
+        dispatch(removeWordsFromCollectionInDict(idsForDel.length));
+        dispatch(
+          removeWordsFromCollectionInProgress(
+            idsForDel.length - finishedWordsCount
+          )
+        );
       });
     }
   };

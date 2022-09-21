@@ -73,8 +73,10 @@ export const UserReducer = createSlice({
       state.user.words_in_dictionary += action.payload;
       state.user.words_in_progress += action.payload;
     },
-    removeWordsFromCollection: (state, action) => {
+    removeWordsFromCollectionInDict: (state, action) => {
       state.user.words_in_dictionary -= action.payload;
+    },
+    removeWordsFromCollectionInProgress: (state, action) => {
       state.user.words_in_progress -= action.payload;
     },
   },
@@ -97,7 +99,8 @@ export const {
   changeCountOfWordsInProgress,
   changeCountOfWordsInDictionary,
   addWordsFromCollection,
-  removeWordsFromCollection,
+  removeWordsFromCollectionInDict,
+  removeWordsFromCollectionInProgress,
 } = UserReducer.actions;
 
 export default UserReducer.reducer;

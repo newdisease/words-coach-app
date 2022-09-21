@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   changeCountOfWordsInDictionary,
   changeCountOfWordsInProgress,
   DEC,
   INC,
 } from "../../Reducers/AuthSlice";
+import { dictUnsetWord } from "../../Reducers/DictSlice";
 import { Button, Spinner, WordsListItem } from "../Common";
 
 import "./DictionaryList.scss";
@@ -46,6 +47,7 @@ const DictionaryList = ({ user }) => {
   const [searchWords, setSearchWords] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
+  const { addedWords } = useSelector((state) => state.dict);
   const wordsInDictionary = user.words_in_dictionary;
 
   const dispatch = useDispatch();
@@ -112,6 +114,9 @@ const DictionaryList = ({ user }) => {
           dispatch(changeCountOfWordsInProgress(DEC));
         }
         dispatch(changeCountOfWordsInDictionary(DEC));
+        if (addedWords.find((item) => item.id === id)) {
+          dispatch(dictUnsetWord(id));
+        }
       })
       .catch((err) => {
         console.log(err);
