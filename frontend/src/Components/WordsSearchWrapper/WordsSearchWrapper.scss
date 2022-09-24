@@ -90,6 +90,17 @@ form {
   }
 }
 
+.voice-btn {
+  &.active {
+    svg {
+      fill: #fa3e3a;
+    }
+    &:hover {
+      background-color: color.adjust($color: #fa3e3a, $alpha: -0.9);
+    }
+  }
+}
+
 .add-word-icon-wrap {
   position: relative;
 

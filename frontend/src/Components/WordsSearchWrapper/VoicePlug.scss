@@ -1,0 +1,25 @@
+@use "../../Styles/Variables.scss" as *;
+
+@keyframes voice {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: calc(100% - 972px);
+  }
+}
+
+.voice-plug {
+  overflow: hidden;
+  position: relative;
+  height: 60px;
+  left: 0;
+  svg {
+    max-height: 100%;
+    position: relative;
+    animation-name: voice;
+    animation-duration: 3s;
+    animation-timing-function: cubic-bezier(0.44, 0.38, 0.42, 0.61);
+    animation-iteration-count: infinite;
+  }
+}
