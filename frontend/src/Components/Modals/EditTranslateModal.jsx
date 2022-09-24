@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Button, Modal } from "../Common";
 import { ValidationIcon } from "../Common/Icons";
+import { capitalizeFirstLetter } from "../Common/utils";
 
 import * as yup from "yup";
 
@@ -46,7 +47,7 @@ const EditTranslateModal = ({
   const onSubmit = ({ expression }) => {
     setTranslatedWord({
       ...translatedWord,
-      [wordKey]: expression.toLowerCase(),
+      [wordKey]: capitalizeFirstLetter(expression.toLowerCase()),
     });
     reset();
     onHide();

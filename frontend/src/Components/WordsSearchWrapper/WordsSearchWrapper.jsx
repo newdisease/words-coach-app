@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
 import axios from "axios";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -80,6 +81,11 @@ const AddToDictionaryButton = ({
   );
 };
 
+// Speechly API for speech recognition polyfill
+const appId = process.env.REACT_APP_SPEECHLY_ID;
+const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
+SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
+
 const WordsSearchForm = ({
   getData,
   translatedWord,
@@ -124,9 +130,16 @@ const WordsSearchForm = ({
     setTitleState(prevState);
   };
 
+  const handleMouseLeave = (e) => {
+    // triggers only when mouse key is pressed
+    if (e.buttons === 1) {
+      handleOnClikOrTapEnd();
+    }
+  };
+
   useEffect(() => {
     if (transcript) {
-      setValue("expression", transcript);
+      setValue("expression", transcript.toLowerCase());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcript]);
@@ -150,7 +163,7 @@ const WordsSearchForm = ({
             onMouseDown={handleOnClikOrTapStart}
             onTouchStart={handleOnClikOrTapStart}
             onTouchEnd={handleOnClikOrTapEnd}
-            onMouseLeave={handleOnClikOrTapEnd}
+            onMouseLeave={(e) => handleMouseLeave(e)}
             disabled={!browserSupportsSpeechRecognition}
           >
             <MicIcon />
