@@ -1,8 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
 import axios from "axios";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 import {
   changeCountOfWordsInDictionary,
   changeCountOfWordsInProgress,
@@ -19,17 +23,16 @@ import {
   WrongIcon,
 } from "../Common/Icons";
 import { capitalizeFirstLetter, spellTranslatedWord } from "../Common/utils";
+import VoicePlug from "./VoicePlug";
 import { WordsSearchFormValidatorsSchema as schema } from "./WordsSearchFormValidators";
 
 import classnames from "classnames";
 import "./WordsSearchWrapper.scss";
 
-const ADD_BUTTON_STATE_SUCCESS = "success";
-const ADD_BUTTON_STATE_ERROR = "error";
-const ADD_BUTTON_STATE_LOADING = "loading";
-const TITLE_STATE_SUCCESS = "success";
-const TITLE_STATE_ERROR = "error";
-const TITLE_STATE_LOADING = "loading";
+const STATE_SUCCESS = "success";
+const STATE_ERROR = "error";
+const STATE_LOADING = "loading";
+const STATE_VOICE = "voice";
 
 const LazyEditTranslate = lazy(() => import("../Modals/EditTranslateModal"));
 
@@ -40,11 +43,11 @@ const AddToDictionaryButton = ({
   isAuthenticated,
 }) => {
   const icons = {
-    [ADD_BUTTON_STATE_SUCCESS]: {
+    [STATE_SUCCESS]: {
       renderClass: "success",
       renderIcon: <CorrectIcon />,
     },
-    [ADD_BUTTON_STATE_ERROR]: {
+    [STATE_ERROR]: {
       renderClass: "error",
       renderIcon: <WrongIcon />,
     },
@@ -73,27 +76,73 @@ const AddToDictionaryButton = ({
           <span className="btn-error-msg">{buttonErrorMsg}</span>
         )}
       </div>
-      {buttonAddState === ADD_BUTTON_STATE_ERROR && (
-        <Alert message={errorMessage} />
-      )}
+      {buttonAddState === STATE_ERROR && <Alert message={errorMessage} />}
     </>
   );
 };
 
-const WordsSearchForm = ({ getData, translatedWord }) => {
+// Speechly API for speech recognition polyfill
+const appId = process.env.REACT_APP_SPEECHLY_ID;
+const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
+SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
+
+const WordsSearchForm = ({
+  getData,
+  translatedWord,
+  setTitleState,
+  titleState,
+}) => {
+  const [isMicActive, setIsMicActive] = useState(false);
+  const [prevState, setPrevState] = useState(null);
   const {
     register,
+    setValue,
     formState: { errors },
     handleSubmit,
     reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
 
   useEffect(() => {
     reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translatedWord]);
+
+  const handleOnClikOrTapStart = () => {
+    setPrevState(titleState);
+    if (browserSupportsSpeechRecognition) {
+      resetTranscript();
+      setIsMicActive(true);
+      setTitleState(STATE_VOICE);
+      SpeechRecognition.startListening({
+        continuous: true,
+        language: "en-US",
+      });
+    }
+  };
+
+  const handleOnClikOrTapEnd = () => {
+    SpeechRecognition.stopListening();
+    setIsMicActive(false);
+    setTitleState(prevState);
+  };
+
+  const handleMouseLeave = (e) => {
+    // triggers only when mouse key is pressed
+    if (e.buttons === 1) {
+      handleOnClikOrTapEnd();
+    }
+  };
+
+  useEffect(() => {
+    if (transcript) {
+      setValue("expression", transcript.toLowerCase());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transcript]);
 
   return (
     <form onSubmit={handleSubmit(getData)}>
@@ -105,7 +154,18 @@ const WordsSearchForm = ({ getData, translatedWord }) => {
             placeholder="Add a word..."
             {...register("expression")}
           />
-          <Button className="voice-btn" disabled btnType="icon">
+          <Button
+            className={classnames("voice-btn", {
+              active: isMicActive,
+            })}
+            btnType="icon"
+            onMouseUp={handleOnClikOrTapEnd}
+            onMouseDown={handleOnClikOrTapStart}
+            onTouchStart={handleOnClikOrTapStart}
+            onTouchEnd={handleOnClikOrTapEnd}
+            onMouseLeave={(e) => handleMouseLeave(e)}
+            disabled={!browserSupportsSpeechRecognition}
+          >
             <MicIcon />
           </Button>
         </div>
@@ -139,26 +199,26 @@ const WordsSearchWrapper = () => {
   const { language, ukWord, enWord } = translatedWord || {};
 
   const addWordToDB = () => {
-    setButtonAddState(ADD_BUTTON_STATE_LOADING);
+    setButtonAddState(STATE_LOADING);
     axios
       .post("dictionary/", { uk_word: ukWord, en_word: enWord })
       .then((res) => {
-        setButtonAddState(ADD_BUTTON_STATE_SUCCESS);
+        setButtonAddState(STATE_SUCCESS);
         dispatch(changeCountOfWordsInProgress(INC));
         dispatch(changeCountOfWordsInDictionary(INC));
         dispatch(dictSetWord(res.data));
       })
       .catch((error) => {
-        setButtonAddState(ADD_BUTTON_STATE_ERROR);
+        setButtonAddState(STATE_ERROR);
         setErrorMessage("This word already exists");
       });
   };
 
   const showResult = (titleState) => {
     switch (titleState) {
-      case TITLE_STATE_LOADING:
+      case STATE_LOADING:
         return <Spinner spinnerSize="small" />;
-      case TITLE_STATE_SUCCESS:
+      case STATE_SUCCESS:
         return (
           <>
             <Title
@@ -211,13 +271,15 @@ const WordsSearchWrapper = () => {
             />
           </>
         );
-      case TITLE_STATE_ERROR:
+      case STATE_ERROR:
         return (
           <>
             <Title />
             <Alert message={errorMessage} />
           </>
         );
+      case STATE_VOICE:
+        return <VoicePlug />;
       default:
         return <Title />;
     }
@@ -228,24 +290,29 @@ const WordsSearchWrapper = () => {
       .post("translate/", { word: expression })
       .then((response) => {
         setTranslatedWord(response.data);
-        setTitleState(TITLE_STATE_SUCCESS);
+        setTitleState(STATE_SUCCESS);
       })
       .catch((error) => {
         setErrorMessage("This language is not supported");
-        setTitleState(TITLE_STATE_ERROR);
+        setTitleState(STATE_ERROR);
       });
 
   const getData = ({ expression }) => {
     setButtonAddState(null);
     setErrorMessage(null);
-    setTitleState(TITLE_STATE_LOADING);
+    setTitleState(STATE_LOADING);
     transtateWord(expression);
   };
 
   return (
     <>
       {showResult(titleState)}
-      <WordsSearchForm getData={getData} translatedWord={translatedWord} />
+      <WordsSearchForm
+        getData={getData}
+        translatedWord={translatedWord}
+        titleState={titleState}
+        setTitleState={setTitleState}
+      />
       <Suspense fallback={<span>Loading...</span>}>
         {showTranslateModal && (
           <LazyEditTranslate
