@@ -88,6 +88,7 @@ export const UserReducer = createSlice({
       state.token = "";
       state.isAuthenticated = false;
       state.user = {};
+      localStorage.removeItem("authTokens");
     },
   },
 });

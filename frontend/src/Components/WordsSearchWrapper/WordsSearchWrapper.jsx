@@ -92,7 +92,6 @@ const WordsSearchForm = ({
   setTitleState,
   titleState,
 }) => {
-  const [isMicActive, setIsMicActive] = useState(false);
   const [prevState, setPrevState] = useState(null);
   const {
     register,
@@ -103,39 +102,26 @@ const WordsSearchForm = ({
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
+  const {
+    transcript,
+    resetTranscript,
+    listening,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
 
   useEffect(() => {
     reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translatedWord]);
 
-  const handleOnClikOrTapStart = () => {
-    setPrevState(titleState);
-    if (browserSupportsSpeechRecognition) {
-      resetTranscript();
-      setIsMicActive(true);
-      setTitleState(STATE_VOICE);
-      SpeechRecognition.startListening({
-        continuous: true,
-        language: "en-US",
-      });
+  useEffect(() => {
+    console.log(listening);
+    if (!listening) {
+      SpeechRecognition.stopListening();
+      setTitleState(prevState);
     }
-  };
-
-  const handleOnClikOrTapEnd = () => {
-    SpeechRecognition.stopListening();
-    setIsMicActive(false);
-    setTitleState(prevState);
-  };
-
-  const handleMouseLeave = (e) => {
-    // triggers only when mouse key is pressed
-    if (e.buttons === 1) {
-      handleOnClikOrTapEnd();
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listening]);
 
   useEffect(() => {
     if (transcript) {
@@ -143,6 +129,17 @@ const WordsSearchForm = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcript]);
+
+  const handleOnClikOrTapStart = () => {
+    setPrevState(titleState);
+    if (browserSupportsSpeechRecognition) {
+      resetTranscript();
+      setTitleState(STATE_VOICE);
+      SpeechRecognition.startListening({
+        language: "en-US",
+      });
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(getData)}>
@@ -156,14 +153,11 @@ const WordsSearchForm = ({
           />
           <Button
             className={classnames("voice-btn", {
-              active: isMicActive,
+              active: listening,
             })}
             btnType="icon"
-            onMouseUp={handleOnClikOrTapEnd}
             onMouseDown={handleOnClikOrTapStart}
             onTouchStart={handleOnClikOrTapStart}
-            onTouchEnd={handleOnClikOrTapEnd}
-            onMouseLeave={(e) => handleMouseLeave(e)}
             disabled={!browserSupportsSpeechRecognition}
           >
             <MicIcon />

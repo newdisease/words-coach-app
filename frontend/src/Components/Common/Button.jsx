@@ -12,7 +12,7 @@ const Button = ({
   type = "button",
   linkTo,
   bubbleCount,
-  ...rest
+  ...props
 }) => {
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const Button = ({
         [`button--${btnType}`]: btnType,
       })}
       type={type}
-      {...rest}
+      {...props}
     >
       {(bubbleCount || bubbleCount === 0) && (
         <span className="bubble">
