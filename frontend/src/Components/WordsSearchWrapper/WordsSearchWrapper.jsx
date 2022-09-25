@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
+// import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
 import axios from "axios";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -81,10 +81,10 @@ const AddToDictionaryButton = ({
   );
 };
 
-// Speechly API for speech recognition polyfill
-const appId = process.env.REACT_APP_SPEECHLY_ID;
-const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
-SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
+// // Speechly API for speech recognition polyfill
+// const appId = process.env.REACT_APP_SPEECHLY_ID;
+// const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
+// SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
 
 const WordsSearchForm = ({
   getData,

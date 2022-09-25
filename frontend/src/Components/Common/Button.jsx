@@ -6,7 +6,6 @@ const Button = ({
   children,
   onClick,
   className,
-  form,
   raised,
   outline,
   btnType,
@@ -26,7 +25,6 @@ const Button = ({
         [`button--${btnType}`]: btnType,
       })}
       type={type}
-      form={form}
       {...rest}
     >
       {(bubbleCount || bubbleCount === 0) && (
