@@ -98,6 +98,18 @@ form {
     &:hover {
       background-color: color.adjust($color: #fa3e3a, $alpha: -0.9);
     }
+    &:disabled {
+      svg {
+        opacity: 1;
+      }
+      background-color: color.adjust($color: #fa3e3a, $alpha: -0.9);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .search-wrap & {
+      display: none;
+    }
   }
 }
 

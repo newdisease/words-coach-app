@@ -106,6 +106,7 @@ const WordsSearchForm = ({
     transcript,
     resetTranscript,
     listening,
+    isMicrophoneAvailable,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
@@ -157,7 +158,11 @@ const WordsSearchForm = ({
             btnType="icon"
             onMouseDown={handleOnClikOrTapStart}
             onTouchStart={handleOnClikOrTapStart}
-            disabled={!browserSupportsSpeechRecognition}
+            disabled={
+              !browserSupportsSpeechRecognition ||
+              listening ||
+              !isMicrophoneAvailable
+            }
           >
             <MicIcon />
           </Button>
