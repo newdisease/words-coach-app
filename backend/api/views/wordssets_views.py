@@ -75,7 +75,7 @@ class DeleteWordsFromUserDictionaryView(CreateAPIView):
                 obj = queryset.get(
                     uk_word=word['uk_word'], en_word=word['en_word']
                 )
-                if obj.progress > 2:
+                if obj.progress < 3:
                     deleted_words_in_progress_count += 1
                 deleted_words_count += 1
                 obj.delete()

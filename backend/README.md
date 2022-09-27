@@ -42,6 +42,24 @@
 
 - Renew the progress of some word (PATCH): `/api/dictionary/{id}/`
 
+- Delete words from the dictionary (POST): `/api/dictionary/delete/`
+
+        #example of request data
+        {
+            "words": [
+                {
+                    "uk_word": string,
+                    "en_word": string
+                },
+            ]
+        }
+
+        #example of returning data
+        {
+            "deleted_words": number,
+            "deleted_words_in_progress": number,
+        }
+
 ## Quiz Endpoints (Be authenticated is required)
 
 - Change the progress of the word (PATCH): `/api/dictionary/{id}/`
