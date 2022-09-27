@@ -3,9 +3,6 @@ import classnames from "classnames";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  changeCountOfWordsInDictionary,
-  changeCountOfWordsInProgress,
-  DEC,
   removeWordsFromCollectionInDict,
   removeWordsFromCollectionInProgress,
 } from "../../Reducers/AuthSlice";
@@ -31,50 +28,46 @@ const AddedWordsList = () => {
 
   const onDeleteItem = (id) => {
     if (typeof id === "number") {
+      const word = addedWords.find((item) => item.id === id);
       axios
-        .delete(`/dictionary/${id}/`)
-        .then(() => {
-          dispatch(changeCountOfWordsInDictionary(DEC));
-          if (addedWords.find((item) => item.id === id).progress < 3) {
-            dispatch(changeCountOfWordsInProgress(DEC));
-          }
+        .post("/dictionary/delete/", {
+          words: [word],
+        })
+        .then((res) => {
           dispatch(dictUnsetWord(id));
+          dispatch(removeWordsFromCollectionInDict(res.data.deleted_words));
+          dispatch(
+            removeWordsFromCollectionInProgress(
+              res.data.deleted_words_in_progress
+            )
+          );
         })
         .catch((e) => console.log(e));
     } else {
-      axios.get("/dictionary/").then((res) => {
-        let finishedWordsCount = 0;
-        const idsForDel = [];
-        const wordsInDictionary = res.data;
-        const addedWords = wordsFromAddedCollections.find(
-          (item) => item.set_of_words === id
-        ).added_words;
-        addedWords.forEach((word) => {
-          const { uk_word, en_word } = word;
-
-          const wordInDictionary = wordsInDictionary.find(
-            (item) => item.uk_word === uk_word && item.en_word === en_word
-          );
-          if (wordInDictionary) {
-            idsForDel.push(wordInDictionary.id);
+      const wordsSet = wordsFromAddedCollections.find(
+        (item) => item.set_of_words === id
+      );
+      axios
+        .post("/dictionary/delete/", {
+          words: wordsSet.added_words,
+        })
+        .then((res) => {
+          if (!res.data.message) {
+            dispatch(removeWordsFromCollectionInDict(res.data.deleted_words));
+            dispatch(
+              removeWordsFromCollectionInProgress(
+                res.data.deleted_words_in_progress
+              )
+            );
+            dispatch(dictUnsetWordFromCollection(id));
+            dispatch(dictUnsetWord(id));
+          } else {
+            console.log(res.data.message);
+            dispatch(dictUnsetWordFromCollection(id));
+            dispatch(dictUnsetWord(id));
           }
-        });
-        idsForDel.forEach((id) => {
-          axios.delete(`/dictionary/${id}/`).then(() => {
-            if (wordsInDictionary.find((item) => item.id === id).progress < 3) {
-              finishedWordsCount += 1;
-            }
-          });
-        });
-        dispatch(dictUnsetWordFromCollection(id));
-        dispatch(dictUnsetWord(id));
-        dispatch(removeWordsFromCollectionInDict(idsForDel.length));
-        dispatch(
-          removeWordsFromCollectionInProgress(
-            idsForDel.length - finishedWordsCount
-          )
-        );
-      });
+        })
+        .catch((e) => console.log(e));
     }
   };
 
