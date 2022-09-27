@@ -99,3 +99,17 @@ class TestApi(APITestCase):
                 'count': 1,
             },
         )
+
+    def test_delete_words_from_user_dictionary(self):
+        data = dict(uk_word='тестест', en_word='testtest')
+        Dictionary.objects.create(**data, user=self.user)
+        response = self.client.post(
+            reverse('api:deletewords'), data={'words': [data]}, format='json'
+        )
+        self.assertEqual(
+            response.data,
+            {
+                'deleted_words': 1,
+                'deleted_words_in_progress': 1,
+            },
+        )

@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from ..serializers import TranslationSerializer
-from ..utils import detect_language, translate_text
+from ..services import detect_language, translate_text
 
 
 class TranslationCreateView(CreateAPIView):

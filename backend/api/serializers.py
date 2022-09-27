@@ -50,3 +50,7 @@ class ListOfWordsSetsSerializer(serializers.Serializer):
 
     def get_word_count(self, obj):
         return obj.words.count()
+
+
+class DeleteListOfWordsSetsSerializer(serializers.Serializer):
+    words = serializers.ListField(child=serializers.DictField())

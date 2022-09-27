@@ -19,6 +19,11 @@ urlpatterns = [
         name='translate',
     ),
     path(
+        'dictionary/delete/',
+        wordssets_views.DeleteWordsFromUserDictionaryView.as_view(),
+        name='deletewords',
+    ),
+    path(
         'wordssets/',
         wordssets_views.ListOfWordsSetsView.as_view(),
         name='wordssets',

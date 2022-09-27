@@ -2,7 +2,10 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 
 from ..models import Dictionary, WordInSet, WordsSet
-from ..serializers import ListOfWordsSetsSerializer
+from ..serializers import (
+    DeleteListOfWordsSetsSerializer,
+    ListOfWordsSetsSerializer,
+)
 
 
 class ListOfWordsSetsView(ListAPIView):
@@ -48,5 +51,42 @@ class AddWordsInUserDictionaryView(CreateAPIView):
                     'set_of_words': set_of_words,
                     'added_words': added_words,
                     'count': count,
+                }
+            )
+
+
+class DeleteWordsFromUserDictionaryView(CreateAPIView):
+    serializer_class = DeleteListOfWordsSetsSerializer
+
+    def get_queryset(self):
+        return Dictionary.objects.filter(user_id=self.request.user.id)
+
+    def create(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        words = serializer.validated_data['words']
+        deleted_words_count = 0
+        deleted_words_in_progress_count = 0
+        for word in words:
+            if queryset.filter(
+                uk_word=word['uk_word'], en_word=word['en_word']
+            ).exists():
+                obj = queryset.get(
+                    uk_word=word['uk_word'], en_word=word['en_word']
+                )
+                if obj.progress < 3:
+                    deleted_words_in_progress_count += 1
+                deleted_words_count += 1
+                obj.delete()
+        if deleted_words_count == 0:
+            return Response(
+                {'message': 'Words are not found in your dictionary.'}
+            )
+        else:
+            return Response(
+                {
+                    'deleted_words': deleted_words_count,
+                    'deleted_words_in_progress': deleted_words_in_progress_count,
                 }
             )
