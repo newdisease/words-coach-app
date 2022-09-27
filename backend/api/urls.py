@@ -28,6 +28,11 @@ urlpatterns = [
         wordssets_views.AddWordsInUserDictionaryView.as_view(),
         name='addwords',
     ),
+    path(
+        'wordssets/delete/',
+        wordssets_views.DeleteWordsFromUserDictionaryView.as_view(),
+        name='deletewords',
+    ),
 ]
 
 
