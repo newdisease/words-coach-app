@@ -13,6 +13,7 @@ import {
   INC,
 } from "../../Reducers/AuthSlice";
 import { dictSetWord } from "../../Reducers/DictSlice";
+import { textToSpeech } from "../../Services/TextToSpeech";
 import { Alert, Button, Spinner, Title } from "../Common";
 import {
   AddDictionaryIcon,
@@ -22,7 +23,7 @@ import {
   VolumeUpIcon,
   WrongIcon,
 } from "../Common/Icons";
-import { capitalizeFirstLetter, spellTranslatedWord } from "../Common/utils";
+import { capitalizeFirstLetter } from "../Common/utils";
 import VoicePlug from "./VoicePlug";
 import { WordsSearchFormValidatorsSchema as schema } from "./WordsSearchFormValidators";
 
@@ -229,7 +230,7 @@ const WordsSearchWrapper = () => {
                     <Button
                       className="icon-blue"
                       btnType="icon"
-                      onClick={() => spellTranslatedWord(enWord)}
+                      onClick={() => textToSpeech(enWord)}
                     >
                       <VolumeUpIcon />
                     </Button>
