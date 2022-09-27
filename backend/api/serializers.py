@@ -53,20 +53,4 @@ class ListOfWordsSetsSerializer(serializers.Serializer):
 
 
 class DeleteListOfWordsSetsSerializer(serializers.Serializer):
-    '''
-    example of request:
-    {
-        "words": [
-            {
-                "uk_word": "word",
-                "en_word": "word"
-            },
-            {
-                "uk_word": "word",
-                "en_word": "word"
-            }
-        ]
-    }
-    '''
-
     words = serializers.ListField(child=serializers.DictField())
