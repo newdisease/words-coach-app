@@ -1,46 +1,81 @@
 @use "./Variables.scss" as *;
 
 // Reset CSS
-* {box-sizing: border-box; line-height: 1;}
-body {margin: 0;}
-h1 {font-size: 2em; margin: 0; font-weight: 700;}
-p {margin: 0;}
-ul {list-style: none; margin: 0; padding: 0;}
-ul li {padding: 0;}
-button {border: 0; padding: 0; background: transparent; cursor: pointer;}
-input {padding: 0; }
-::placeholder {color: #bacce5; font-size: 16px;}
-::-moz-placeholder {color: #bacce5; font-size: 16px;}
-:-ms-input-placeholder {color: #bacce5; font-size: 16px;}
+* {
+  box-sizing: border-box;
+  line-height: 1;
+}
+body {
+  margin: 0;
+}
+h1 {
+  font-size: 2em;
+  margin: 0;
+  font-weight: 700;
+}
+p {
+  margin: 0;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  padding: 0;
+}
+button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+input {
+  padding: 0;
+}
+::placeholder {
+  color: #bacce5;
+  font-size: 16px;
+}
+::-moz-placeholder {
+  color: #bacce5;
+  font-size: 16px;
+}
+:-ms-input-placeholder {
+  color: #bacce5;
+  font-size: 16px;
+}
 
-html {font-size: 15px;}
+html {
+  font-size: 15px;
+}
 
 // Custom CSS
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 500;
-  src: local(""), 
-    url(./Fonts/Inter-Regular.woff2) format("woff2"), 
+  src: local(""), url(./Fonts/Inter-Regular.woff2) format("woff2"),
     url(./Fonts/Inter-Regular.woff) format("woff");
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 600;
-  src: local(""), 
-    url(./Fonts/Inter-Medium.woff2) format("woff2"),
+  src: local(""), url(./Fonts/Inter-Medium.woff2) format("woff2"),
     url(./Fonts/Inter-Medium.woff) format("woff");
+  font-display: swap;
 }
 
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  src: local(""), 
-    url(./Fonts/Inter-Bold.woff2) format("woff2"),
+  src: local(""), url(./Fonts/Inter-Bold.woff2) format("woff2"),
     url(./Fonts/Inter-Bold.woff) format("woff");
+  font-display: swap;
 }
 
 body {
@@ -55,7 +90,7 @@ body {
     right: 0;
     top: 0;
     bottom: 0;
-    background: linear-gradient(180deg, #00123F 0%, #0D6EFD 100%);
+    background: linear-gradient(180deg, #00123f 0%, #0d6efd 100%);
     z-index: -1;
   }
 }
@@ -105,9 +140,9 @@ main {
   justify-content: space-between;
   flex-grow: 1;
 
-   .button {
+  .button {
     align-self: center;
-   }
+  }
 }
 
 .bottom-content-top {
@@ -126,7 +161,7 @@ input {
   outline: none;
 
   &::placeholder {
-    color: #BACCE5;
+    color: #bacce5;
   }
 }
 
