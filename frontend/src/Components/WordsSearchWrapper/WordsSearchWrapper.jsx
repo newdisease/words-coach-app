@@ -284,7 +284,7 @@ const WordsSearchWrapper = () => {
     }
   };
 
-  const transtateWord = (expression) =>
+  const getTranstateWord = (expression) =>
     axios
       .post("translate/", { word: expression })
       .then((response) => {
@@ -300,7 +300,7 @@ const WordsSearchWrapper = () => {
     setButtonAddState(null);
     setErrorMessage(null);
     setTitleState(STATE_LOADING);
-    transtateWord(expression);
+    getTranstateWord(expression.toLowerCase());
   };
 
   return (
