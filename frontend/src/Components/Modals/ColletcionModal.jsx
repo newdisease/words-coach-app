@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useAxios } from "../../Hooks";
 import { addWordsFromCollection } from "../../Reducers/AuthSlice";
 import {
   dictSetWord,
@@ -14,16 +14,12 @@ const CollectionModal = ({ show, onHide, setErrorMsgs }) => {
   const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState([]);
   const [loadedCollections, setLoadedCollections] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { request, isLoading } = useAxios();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsLoading(true);
-    axios.get("wordssets/").then((res) => {
-      setCollections(res.data);
-      setIsLoading(false);
-    });
+    request("get", "wordssets/").then((data) => setCollections(data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleOnChange = (e) => {
@@ -39,32 +35,31 @@ const CollectionModal = ({ show, onHide, setErrorMsgs }) => {
     e.preventDefault();
     setErrorMsgs([]);
     selectedCollection.forEach((collection) => {
-      axios
-        .post(`wordssets/${collection}/`)
-        .then((res) => {
-          if (!res.data.words_set) {
+      request("post", `wordssets/${collection}/`)
+        .then((data) => {
+          if (!data.words_set) {
             setLoadedCollections((prevLoadedCollections) => [
               ...loadedCollections,
-              res.data,
+              data,
             ]);
             dispatch(
               dictSetWord({
-                id: res.data.set_of_words,
-                itemTitle: res.data.set_of_words,
+                id: data.set_of_words,
+                itemTitle: data.set_of_words,
               })
             );
-            dispatch(addWordsFromCollection(res.data.count));
+            dispatch(addWordsFromCollection(data.count));
             dispatch(
               dictSetWordsFromCollection({
-                set_of_words: res.data.set_of_words,
-                added_words: res.data.added_words,
+                set_of_words: data.set_of_words,
+                added_words: data.added_words,
               })
             );
           }
-          if (res.data.words_set) {
+          if (data.words_set) {
             setErrorMsgs((prevError) => [
               ...prevError,
-              capitalizeFirstLetter(res.data.words_set),
+              capitalizeFirstLetter(data.words_set),
             ]);
           }
         })

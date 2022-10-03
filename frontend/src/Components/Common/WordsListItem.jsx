@@ -1,5 +1,6 @@
+import { textToSpeech } from "../../Services/TextToSpeech.js";
 import { Button } from "../Common";
-import { ResetIcon, TrashIcon } from "./Icons";
+import { ResetIcon, TrashIcon, VolumeUpIcon } from "./Icons";
 import { capitalizeFirstLetter } from "./utils";
 
 import classnames from "classnames";
@@ -31,11 +32,22 @@ const WordsListItem = ({
     >
       <div className="item">
         <p className="item-title">
-          {uk_word
-            ? capitalizeFirstLetter(uk_word)
-            : capitalizeFirstLetter(itemTitle)}
+          {en_word ? (
+            <>
+              {capitalizeFirstLetter(en_word)}{" "}
+              <Button
+                className="voice"
+                btnType="icon"
+                onClick={() => textToSpeech(en_word)}
+              >
+                <VolumeUpIcon />
+              </Button>{" "}
+            </>
+          ) : (
+            capitalizeFirstLetter(itemTitle)
+          )}
         </p>
-        <p className="item-content">{en_word || "collection"}</p>
+        <p className="item-content">{uk_word || "collection"}</p>
       </div>
       <div className="flex controls-wrapper">
         {isProgress && (
