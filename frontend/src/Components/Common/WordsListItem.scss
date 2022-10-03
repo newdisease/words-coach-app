@@ -25,6 +25,16 @@ $yellow-dot-color: #ffb11b;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 5px;
+
+    .voice {
+      margin-left: 2px;
+      vertical-align: middle;
+      svg {
+        fill: $accent-color;
+        width: 16px;
+        height: 16px;
+      }
+    }
   }
 
   .item-content {
@@ -79,6 +89,11 @@ $yellow-dot-color: #ffb11b;
 
     .item-title {
       color: white;
+      .voice {
+        svg {
+          fill: white;
+        }
+      }
     }
 
     .item-content {
