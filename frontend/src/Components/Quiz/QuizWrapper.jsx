@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import { CorrectIcon, WrongIcon } from "../Common/Icons";
 import { COMPLETE, CORRECT, INCORRECT, IN_PROGRESS } from "./QuizConstants";
 import QuizInput from "./QuizInput";
 
+import { useAxios } from "../../Hooks";
 import "./Quiz.scss";
 
 const QuizButton = ({ replyStatus, onClick, onSubmit, onRestart, user }) => {
@@ -86,29 +86,18 @@ const QuizProgress = ({ quizProgress, replyStatus }) => {
   );
 };
 
-const TypedQuizAnswer = ({
-  setAnswer,
-  replyStatus,
-  wordForCheck,
-  isLoading,
-}) => {
+const TypedQuizAnswer = ({ setAnswer, replyStatus, wordForCheck }) => {
   if (!wordForCheck) {
     return null;
   }
   return (
-    <>
-      {isLoading ? (
-        <Spinner spinnerSize="x-small" />
-      ) : (
-        <form id="quiz-form" className="quiz-form flex flex-j-b">
-          <QuizInput
-            setAnswer={setAnswer}
-            amount={wordForCheck.length}
-            replyStatus={replyStatus}
-          />
-        </form>
-      )}
-    </>
+    <form id="quiz-form" className="quiz-form flex flex-j-b">
+      <QuizInput
+        setAnswer={setAnswer}
+        amount={wordForCheck.length}
+        replyStatus={replyStatus}
+      />
+    </form>
   );
 };
 
@@ -149,24 +138,21 @@ const QuizWrapper = () => {
   const [index, setIndex] = useState(0);
   const [quizProgress, setQuizProgress] = useState(0);
   const [replyStatus, setReplyStatus] = useState(IN_PROGRESS);
-  const [isLoading, setIsLoading] = useState(false);
   const [word, setWord] = useState({});
   const [score, setScore] = useState(0);
   const [answer, setAnswer] = useState("");
   const { user } = useSelector((state) => state.user);
+  const { request, isLoading, clearError } = useAxios();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
+    clearError();
     if (user.words_in_progress < 10) {
       navigate("/");
     } else {
-      setIsLoading(true);
-      axios.get("/quiz/").then((res) => {
-        setQuiz(res.data);
-        setIsLoading(false);
-      });
+      request("get", "quiz").then((data) => setQuiz(data));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quiz.length === 0]);
@@ -208,16 +194,13 @@ const QuizWrapper = () => {
   };
 
   const onUpdateItem = (id) => {
-    setIsLoading(true);
-    axios
-      .patch(`/dictionary/${id}/`, { progress: quiz[index].progress + 1 })
-      .then((res) => {
-        if (res.data.progress > 2) {
-          dispatch(changeCountOfWordsInProgress(DEC));
-        }
-      })
-      .catch((err) => console.log(err));
-    setIsLoading(false);
+    request("patch", `/dictionary/${id}/`, {
+      progress: quiz[index].progress + 1,
+    }).then((data) => {
+      if (data.progress > 2) {
+        dispatch(changeCountOfWordsInProgress(DEC));
+      }
+    });
   };
 
   const onSubmit = (e) => {
@@ -269,7 +252,6 @@ const QuizWrapper = () => {
               setAnswer={setAnswer}
               replyStatus={replyStatus}
               wordForCheck={word.wordForCheck}
-              isLoading={isLoading}
             />
           </>
         )}

@@ -108,6 +108,7 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
         focusNextChar(target);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [characterArray]
   );
 
@@ -133,6 +134,7 @@ const QuizInput = ({ amount, replyStatus, setAnswer }) => {
     });
     setAnswer(updatedCharacters.join(""));
     setCharacterArray(updatedCharacters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount, characterArray, inputElements]);
 
   const icons = {

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useAxios } from "../../Hooks";
 import {
   changeCountOfWordsInDictionary,
   changeCountOfWordsInProgress,
@@ -14,16 +14,15 @@ import "./DictionaryList.scss";
 
 const SeacrhDictionaryWords = ({ setSearchWords }) => {
   const [output, setOutput] = useState("");
+  const { request, error, clearError } = useAxios();
 
   useEffect(() => {
     const getData = setTimeout(() => {
       if (output.length >= 1) {
-        axios
-          .get(`/dictionary/?search=${output}`)
-          .then((res) => {
-            setSearchWords(res.data);
-          })
-          .catch((err) => console.log(err));
+        clearError();
+        request("get", `/dictionary/?search=${output}`)
+          .then((res) => setSearchWords(res))
+          .catch(console.log(error));
       } else {
         setSearchWords(null);
       }
@@ -45,27 +44,23 @@ const SeacrhDictionaryWords = ({ setSearchWords }) => {
 const DictionaryList = ({ user }) => {
   const [dictionary, setDictionary] = useState([]);
   const [searchWords, setSearchWords] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(0);
   const { addedWords } = useSelector((state) => state.dict);
   const wordsInDictionary = user.words_in_dictionary;
+  const { request, isLoading, error, clearError } = useAxios();
 
   const dispatch = useDispatch();
 
   const limit = 5;
 
   const onRequest = () => {
-    setIsLoading(true);
-    axios
-      .get(`/dictionary/?limit=${limit}&offset=${offset}`)
-      .then((res) => {
-        onDictionaryLoaded(res.data.results);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
+    request("get", `/dictionary/?limit=${limit}&offset=${offset}`).then((res) =>
+      onDictionaryLoaded(res.results)
+    );
   };
 
   useEffect(() => {
+    clearError();
     onRequest();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -77,28 +72,19 @@ const DictionaryList = ({ user }) => {
 
   const onUpdateItem = (id) => {
     const prevProgress = dictionary.find((item) => item.id === id).progress;
-    setIsLoading(true);
-    axios
-      .patch(`/dictionary/${id}/`, {
-        progress: 0,
-      })
+    request("patch", `/dictionary/${id}/`, { progress: 0 })
       .then((res) => {
-        setDictionary(
-          dictionary.map((item) => (item.id === id ? res.data : item))
-        );
-        setIsLoading(false);
+        setDictionary(dictionary.map((item) => (item.id === id ? res : item)));
         if (prevProgress > 2) {
           dispatch(changeCountOfWordsInProgress(INC));
         }
       })
-      .catch((err) => console.log(err));
+      .catch(console.log(error));
   };
 
   const onDeleteItem = (id) => {
     const prevProgress = dictionary.find((item) => item.id === id).progress;
-    setIsLoading(true);
-    axios
-      .delete(`/dictionary/${id}/`)
+    request("delete", `/dictionary/${id}/`)
       .then(() => {
         const filteredDictionary = dictionary.filter((item) => item.id !== id);
         setDictionary(filteredDictionary);
@@ -106,7 +92,6 @@ const DictionaryList = ({ user }) => {
         setSearchWords(
           searchWords ? searchWords.filter((item) => item.id !== id) : null
         );
-        setIsLoading(false);
         if (filteredDictionary.length === 0) {
           onRequest();
         }
@@ -118,9 +103,7 @@ const DictionaryList = ({ user }) => {
           dispatch(dictUnsetWord(id));
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch(console.log(error));
   };
 
   return (

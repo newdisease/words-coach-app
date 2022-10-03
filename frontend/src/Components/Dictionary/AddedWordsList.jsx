@@ -1,7 +1,7 @@
-import axios from "axios";
 import classnames from "classnames";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useAxios } from "../../Hooks";
 import {
   removeWordsFromCollectionInDict,
   removeWordsFromCollectionInProgress,
@@ -19,6 +19,7 @@ const AddedWordsList = () => {
   const { addedWords, wordsFromAddedCollections } = useSelector(
     (state) => state.dict
   );
+  const { request } = useAxios();
   const dispatch = useDispatch();
 
   let listAddedWords = [...addedWords]?.reverse();
@@ -29,45 +30,33 @@ const AddedWordsList = () => {
   const onDeleteItem = (id) => {
     if (typeof id === "number") {
       const word = addedWords.find((item) => item.id === id);
-      axios
-        .post("/dictionary/delete/", {
-          words: [word],
-        })
-        .then((res) => {
-          dispatch(dictUnsetWord(id));
-          dispatch(removeWordsFromCollectionInDict(res.data.deleted_words));
-          dispatch(
-            removeWordsFromCollectionInProgress(
-              res.data.deleted_words_in_progress
-            )
-          );
-        })
-        .catch((e) => console.log(e));
+      request("post", "/dictionary/delete/", { words: [word] }).then((data) => {
+        dispatch(dictUnsetWord(id));
+        dispatch(removeWordsFromCollectionInDict(data.deleted_words));
+        dispatch(
+          removeWordsFromCollectionInProgress(data.deleted_words_in_progress)
+        );
+      });
     } else {
       const wordsSet = wordsFromAddedCollections.find(
         (item) => item.set_of_words === id
       );
-      axios
-        .post("/dictionary/delete/", {
-          words: wordsSet.added_words,
-        })
-        .then((res) => {
-          if (!res.data.message) {
-            dispatch(removeWordsFromCollectionInDict(res.data.deleted_words));
-            dispatch(
-              removeWordsFromCollectionInProgress(
-                res.data.deleted_words_in_progress
-              )
-            );
-            dispatch(dictUnsetWordFromCollection(id));
-            dispatch(dictUnsetWord(id));
-          } else {
-            console.log(res.data.message);
-            dispatch(dictUnsetWordFromCollection(id));
-            dispatch(dictUnsetWord(id));
-          }
-        })
-        .catch((e) => console.log(e));
+      request("post", "/dictionary/delete/", {
+        words: wordsSet.added_words,
+      }).then((data) => {
+        if (!data.message) {
+          dispatch(removeWordsFromCollectionInDict(data.deleted_words));
+          dispatch(
+            removeWordsFromCollectionInProgress(data.deleted_words_in_progress)
+          );
+          dispatch(dictUnsetWordFromCollection(id));
+          dispatch(dictUnsetWord(id));
+        } else {
+          console.log(data.message);
+          dispatch(dictUnsetWordFromCollection(id));
+          dispatch(dictUnsetWord(id));
+        }
+      });
     }
   };
 

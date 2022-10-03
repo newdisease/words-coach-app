@@ -1,12 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 // import { createSpeechlySpeechRecognition } from "@speechly/speech-recognition-polyfill";
-import axios from "axios";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { useAxios } from "../../Hooks";
 import {
   changeCountOfWordsInDictionary,
   changeCountOfWordsInProgress,
@@ -194,18 +194,18 @@ const WordsSearchWrapper = () => {
 
   const { isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const { request } = useAxios();
 
   const { language, ukWord, enWord } = translatedWord || {};
 
   const addWordToDB = () => {
     setButtonAddState(STATE_LOADING);
-    axios
-      .post("dictionary/", { uk_word: ukWord, en_word: enWord })
-      .then((res) => {
+    request("post", "dictionary/", { uk_word: ukWord, en_word: enWord })
+      .then((data) => {
         setButtonAddState(STATE_SUCCESS);
         dispatch(changeCountOfWordsInProgress(INC));
         dispatch(changeCountOfWordsInDictionary(INC));
-        dispatch(dictSetWord(res.data));
+        dispatch(dictSetWord(data));
       })
       .catch((error) => {
         setButtonAddState(STATE_ERROR);
@@ -285,10 +285,9 @@ const WordsSearchWrapper = () => {
   };
 
   const getTranstateWord = (expression) =>
-    axios
-      .post("translate/", { word: expression })
-      .then((response) => {
-        setTranslatedWord(response.data);
+    request("post", "translate/", { word: expression })
+      .then((data) => {
+        setTranslatedWord(data);
         setTitleState(STATE_SUCCESS);
       })
       .catch((error) => {
