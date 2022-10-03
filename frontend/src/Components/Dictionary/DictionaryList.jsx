@@ -72,14 +72,12 @@ const DictionaryList = ({ user }) => {
 
   const onUpdateItem = (id) => {
     const prevProgress = dictionary.find((item) => item.id === id).progress;
-    request("patch", `/dictionary/${id}/`, { progress: 0 })
-      .then((res) => {
-        setDictionary(dictionary.map((item) => (item.id === id ? res : item)));
-        if (prevProgress > 2) {
-          dispatch(changeCountOfWordsInProgress(INC));
-        }
-      })
-      .catch(console.log(error));
+    request("patch", `/dictionary/${id}/`, { progress: 0 }).then((res) => {
+      setDictionary(dictionary.map((item) => (item.id === id ? res : item)));
+      if (prevProgress > 2) {
+        dispatch(changeCountOfWordsInProgress(INC));
+      }
+    });
   };
 
   const onDeleteItem = (id) => {
