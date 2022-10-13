@@ -5,6 +5,9 @@ import environ
 
 env = environ.FileAwareEnv()
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env('DEBUG')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
