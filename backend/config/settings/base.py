@@ -5,14 +5,13 @@ import environ
 
 env = environ.FileAwareEnv()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+DEBUG = env.bool('DEBUG', default=False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -21,7 +20,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # Translation API key
-DEEPL_AUTH_KEY = env('DEEPL_AUTH_KEY')
+DEEPL_AUTH_KEY = env('DEEPL_AUTH_KEY', default='')
 
 # Application definition
 

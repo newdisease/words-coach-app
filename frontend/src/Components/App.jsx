@@ -9,7 +9,7 @@ import { store } from "../Store";
 import Header from "./Header/Header";
 import { DictionaryPage, ErrorPage, MainPage, QuizPage } from "./Pages";
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || '/api/';
 
 function App() {
   useEffect(() => {

@@ -9,7 +9,7 @@ import {
   loginUnsetUser,
 } from "../../Reducers/AuthSlice";
 
-function GoogleAuth({ onHide, setError }) {
+function GoogleAuthButton({ onHide, setError }) {
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) =>
       axios
@@ -44,4 +44,7 @@ function GoogleAuth({ onHide, setError }) {
   );
 }
 
-export default GoogleAuth;
+export default function GoogleAuth(props) {
+  if (!process.env.REACT_APP_GOOGLE_CLIENT_ID) return null;
+  return <GoogleAuthButton {...props} />;
+}

@@ -1,3 +1,4 @@
+# Legacy deployment reference. Fly.io uses the root Dockerfile and fly.toml.
 version: '2'
 
 services:

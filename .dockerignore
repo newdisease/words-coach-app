@@ -1,0 +1,15 @@
+.git
+.github
+**/.env
+**/.env.*
+**/venv
+**/.venv
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/.DS_Store
+frontend/build
+backend/config/django_static
+screenshots
+nginx/certbot
+deploy/audit

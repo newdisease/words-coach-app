@@ -6,7 +6,9 @@
 - interactive learning process
 - following the progress
 
-To start using the app, just follow the link: **[words-coach-app.fun](https://words-coach-app.fun/)**
+To start using the app, just follow the link: **[words-coach-app.fly.dev](https://words-coach-app.fly.dev/)**
+
+Deployment is on Fly.io: React and Django share one app, with PostgreSQL on a private Fly database app. See [deployment instructions](deploy/README.md) and the [Fly sleep audit](deploy/FLY_AUDIT.md).
 
 ### Screenshots
 

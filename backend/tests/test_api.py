@@ -1,3 +1,6 @@
+from unittest.mock import patch
+from django.test import override_settings
+
 from api.models import Dictionary, WordInSet, WordsSet
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -75,7 +78,10 @@ class TestApi(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
-    def test_post_translation(self):
+    @override_settings(DEEPL_AUTH_KEY='test-key')
+    @patch('api.views.translate_views.translate_text', return_value={'ukWord': 'тест', 'enWord': 'test'})
+    @patch('api.views.translate_views.detect_language', return_value='EN')
+    def test_post_translation(self, detect, translate):
         response = self.client.post(
             reverse('api:translate'),
             {
@@ -113,3 +119,15 @@ class TestApi(APITestCase):
                 'deleted_words_in_progress': 1,
             },
         )
+
+    @override_settings(DEEPL_AUTH_KEY='')
+    def test_translation_without_key(self):
+        response = self.client.post(reverse('api:translate'), {'word': 'test'})
+        self.assertEqual(response.status_code, 503)
+
+    def test_health_does_not_query_database(self):
+        self.client.credentials()
+        with self.assertNumQueries(0):
+            response = self.client.get('/healthz')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'status': 'ok'})

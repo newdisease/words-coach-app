@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
 from accounts.views import GoogleLogin
+from .health import health
 
 
 urlpatterns = [
+    path('healthz', health),
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('api/accounts/', include('dj_rest_auth.urls')),

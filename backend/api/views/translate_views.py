@@ -1,6 +1,7 @@
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from django.conf import settings
 
 from ..serializers import TranslationSerializer
 from ..services import detect_language, translate_text
@@ -11,6 +12,10 @@ class TranslationCreateView(CreateAPIView):
     serializer_class = TranslationSerializer
 
     def create(self, request, *args, **kwargs):
+        if not settings.DEEPL_AUTH_KEY:
+            return Response(
+                {'detail': 'Translation is temporarily unavailable.'}, status=503
+            )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         word = serializer.validated_data['word']
