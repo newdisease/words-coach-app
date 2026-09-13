@@ -7,6 +7,7 @@ import { fetchUserInfo } from "../Reducers/AuthSlice";
 import { store } from "../Store";
 
 import Header from "./Header/Header";
+import InteractiveBackground from "./InteractiveBackground";
 import { DictionaryPage, ErrorPage, MainPage, QuizPage } from "./Pages";
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || '/api/';
@@ -19,6 +20,7 @@ function App() {
   return (
     <Provider store={store}>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+        <InteractiveBackground />
         <div className="app">
           <Header />
           <main>
